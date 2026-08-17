@@ -1,5 +1,6 @@
 import * as React from "react";
 import { api, type Category, type Expense } from "@/lib/api";
+import { useExpenseEvents } from "@/lib/events";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
@@ -28,6 +29,12 @@ export default function Review() {
   React.useEffect(() => {
     load();
   }, [load]);
+
+  // Reload the queue whenever the inbox agent (or anything else) inserts a
+  // new expense, instead of the user having to refresh to see it. A refetch
+  // is cheap here and keeps min_confidence filtering in one place (the SQL
+  // function) rather than duplicating it client-side.
+  useExpenseEvents(load);
 
   async function assignCategory(id: number, categoryId: number) {
     await api.expenses.updateCategory(id, categoryId);

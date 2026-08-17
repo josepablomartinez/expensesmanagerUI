@@ -1,5 +1,6 @@
 import * as React from "react";
 import { api, type Expense } from "@/lib/api";
+import { useExpenseEvents } from "@/lib/events";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -19,15 +20,24 @@ export default function Expenses() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
+  const load = React.useCallback(() => {
     setLoading(true);
     setError(null);
-    api.expenses
+    return api.expenses
       .list({ from, to, limit: 200 })
       .then(setExpenses)
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
       .finally(() => setLoading(false));
   }, [from, to]);
+
+  React.useEffect(() => {
+    load();
+  }, [load]);
+
+  // Reload when a new expense lands -- it may fall inside the current
+  // from/to range (e.g. today's date), so just refetch rather than trying
+  // to guess client-side whether it belongs in the visible list.
+  useExpenseEvents(load);
 
   const total = expenses.reduce((sum, e) => sum + (e.amount ?? 0), 0);
 
