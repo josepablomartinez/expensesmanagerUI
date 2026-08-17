@@ -51,6 +51,18 @@ export interface BulkApproveResult {
   count: number;
 }
 
+export interface CreateExpenseRequest {
+  commerce?: string;
+  currency: string;
+  date: string; // YYYY-MM-DD
+  amount: number;
+  category_id?: number;
+  entity: string;
+  type: string; // CARD/CASH/SINPE
+  motive?: string;
+  amount_colones?: number; // required when currency is USD
+}
+
 class ApiError extends Error {
   constructor(
     public status: number,
@@ -113,6 +125,11 @@ export const api = {
       request<BulkApproveResult>(`/expenses/bulk-approve`, {
         method: "POST",
         body: JSON.stringify({ ids }),
+      }),
+    create: (body: CreateExpenseRequest) =>
+      request<{ id: number }>(`/expenses`, {
+        method: "POST",
+        body: JSON.stringify(body),
       }),
   },
   categories: {

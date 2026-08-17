@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import Login from "@/pages/Login";
+import Home from "@/pages/Home";
+import Search from "@/pages/Search";
+import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
-import Expenses from "@/pages/Expenses";
 import Categories from "@/pages/Categories";
 import Reports from "@/pages/Reports";
 
@@ -14,13 +16,14 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route element={<AppShell />}>
-        <Route index element={<Navigate to="/review" replace />} />
+        <Route index element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />
-        <Route path="/expenses" element={<Expenses />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/reports" element={<Reports />} />
       </Route>
-      <Route path="*" element={<Navigate to="/review" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
