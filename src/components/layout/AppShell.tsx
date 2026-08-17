@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ListChecks, Tags, BarChart3, Home, Search, Plus } from "lucide-react";
+import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,10 @@ export function AppShell() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <NavLink to="/" className="text-sm font-semibold tracking-tight">
+          <NavLink to="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-sky-400 text-primary-foreground shadow-sm">
+              <Wallet className="h-4 w-4" />
+            </span>
             Expenses
           </NavLink>
           <nav className="flex items-center gap-1 rounded-full border border-border bg-secondary/40 p-1">

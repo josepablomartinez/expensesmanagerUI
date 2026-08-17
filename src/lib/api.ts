@@ -63,6 +63,19 @@ export interface CreateExpenseRequest {
   amount_colones?: number; // required when currency is USD
 }
 
+export interface SplitRequest {
+  amount: number;
+  category_id?: number;
+  reason?: string;
+}
+
+export interface SplitResult {
+  id: number;
+  parent_expense_id: number;
+  amount: number;
+  category_id: number | null;
+}
+
 class ApiError extends Error {
   constructor(
     public status: number,
@@ -128,6 +141,11 @@ export const api = {
       }),
     create: (body: CreateExpenseRequest) =>
       request<{ id: number }>(`/expenses`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    split: (id: number, body: SplitRequest) =>
+      request<SplitResult>(`/expenses/${id}/split`, {
         method: "POST",
         body: JSON.stringify(body),
       }),

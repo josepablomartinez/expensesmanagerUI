@@ -1,9 +1,13 @@
 import * as React from "react";
-import { api, type Expense } from "@/lib/api";
+import { Split } from "lucide-react";
+import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
+import { formatMoney } from "@/lib/format";
+import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 
 const PAGE_DAYS = 7;
 
@@ -32,8 +36,14 @@ interface DayGroup {
 export default function Home() {
   const [daysBack, setDaysBack] = React.useState(PAGE_DAYS);
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
+  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    api.categories.list().then(setCategories).catch(() => {});
+  }, []);
 
   const load = React.useCallback(() => {
     setLoading(true);
@@ -81,51 +91,85 @@ export default function Home() {
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());
         const dayTotal = group.items.reduce((sum, e) => sum + (e.amount ?? 0), 0);
+        const dayCurrency = group.items[0]?.currency ?? "CRC";
 
         return (
-          <div key={group.iso} className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-sm font-semibold text-muted-foreground">{formatDayLabel(group.iso)}</h2>
-              {group.items.length > 0 && (
-                <span className="text-xs text-muted-foreground">{dayTotal.toFixed(2)}</span>
-              )}
-            </div>
-
-            {group.items.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                {isToday ? "There are no expenses for today." : "No expenses this day."}
-              </p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {group.items.map((expense) => (
-                  <Card key={expense.id}>
-                    <CardContent className="flex items-center justify-between gap-4 pt-4">
-                      <div className="flex flex-col">
-                        <span className="font-medium">{expense.commerce ?? expense.entity}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {expense.category_name ?? "Uncategorized"}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {!expense.reviewed && expense.confidence != null && (
-                          <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
-                        )}
-                        <span className="font-medium">
-                          {expense.currency} {expense.amount?.toFixed(2)}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+          <Card key={group.iso} className="border-border/80 shadow-sm">
+            <CardContent className="flex flex-col gap-3 pt-4">
+              <div className="flex items-baseline justify-between border-b border-border pb-2">
+                <h2 className="text-sm font-semibold text-foreground">{formatDayLabel(group.iso)}</h2>
+                {group.items.length > 0 && (
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {formatMoney(dayTotal, dayCurrency)}
+                  </span>
+                )}
               </div>
-            )}
-          </div>
+
+              {group.items.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  {isToday ? "There are no expenses for today." : "No expenses this day."}
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {group.items.map((expense) => {
+                    const Icon = getCategoryIcon(mainCategoryOf(expense.category_name));
+                    return (
+                      <div
+                        key={expense.id}
+                        className="flex items-center justify-between gap-4 rounded-md bg-secondary/40 px-3 py-2"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                            <Icon className="h-4 w-4" />
+                          </span>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {expense.category_name ?? "Uncategorized"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!expense.reviewed && expense.confidence != null && (
+                            <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
+                          )}
+                          <span className="font-medium">{formatMoney(expense.amount, expense.currency)}</span>
+                          {expense.reviewed && (
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              aria-label="Split expense"
+                              onClick={() => setSplitTarget(expense)}
+                            >
+                              <Split className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         );
       })}
 
       <Button variant="outline" onClick={() => setDaysBack((d) => d + PAGE_DAYS)} disabled={loading}>
         {loading ? "Loading…" : "See more"}
       </Button>
+
+      {splitTarget && (
+        <SplitExpenseDialog
+          expense={splitTarget}
+          categories={categories}
+          onClose={() => setSplitTarget(null)}
+          onSplit={() => {
+            setSplitTarget(null);
+            load();
+          }}
+        />
+      )}
     </div>
   );
 }

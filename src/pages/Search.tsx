@@ -1,9 +1,14 @@
 import * as React from "react";
+import { Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
+import { formatMoney } from "@/lib/format";
+import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 
 function firstOfMonth() {
   const d = new Date();
@@ -26,6 +31,7 @@ export default function Search() {
 
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -33,15 +39,19 @@ export default function Search() {
     api.categories.list().then(setCategories).catch(() => {});
   }, []);
 
-  React.useEffect(() => {
+  const load = React.useCallback(() => {
     setLoading(true);
     setError(null);
-    api.expenses
+    return api.expenses
       .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: 500 })
       .then(setExpenses)
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
       .finally(() => setLoading(false));
   }, [from, to, categoryId]);
+
+  React.useEffect(() => {
+    load();
+  }, [load]);
 
   const results = React.useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -101,7 +111,7 @@ export default function Search() {
       <Card>
         <CardContent className="flex items-center justify-between pt-4">
           <span className="text-sm text-muted-foreground">{results.length} expenses</span>
-          <span className="text-lg font-semibold">{total.toFixed(2)}</span>
+          <span className="text-lg font-semibold">{formatMoney(total, results[0]?.currency ?? "CRC")}</span>
         </CardContent>
       </Card>
 
@@ -113,25 +123,53 @@ export default function Search() {
         <p className="text-sm text-muted-foreground">No expenses match your search.</p>
       ) : (
         <div className="flex flex-col gap-2">
-          {results.map((expense) => (
-            <Card key={expense.id}>
-              <CardContent className="flex items-center justify-between gap-4 pt-4">
-                <div className="flex flex-col">
-                  <span className="font-medium">{expense.commerce ?? expense.entity}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {expense.date.slice(0, 10)} · {expense.category_name ?? "Uncategorized"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {!expense.reviewed && <Badge variant="outline">Unreviewed</Badge>}
-                  <span className="font-medium">
-                    {expense.currency} {expense.amount?.toFixed(2)}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {results.map((expense) => {
+            const Icon = getCategoryIcon(mainCategoryOf(expense.category_name));
+            return (
+              <Card key={expense.id}>
+                <CardContent className="flex items-center justify-between gap-4 pt-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {expense.date.slice(0, 10)} · {expense.category_name ?? "Uncategorized"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {!expense.reviewed && <Badge variant="outline">Unreviewed</Badge>}
+                    <span className="font-medium">{formatMoney(expense.amount, expense.currency)}</span>
+                    {expense.reviewed && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label="Split expense"
+                        onClick={() => setSplitTarget(expense)}
+                      >
+                        <Split className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
+      )}
+
+      {splitTarget && (
+        <SplitExpenseDialog
+          expense={splitTarget}
+          categories={categories}
+          onClose={() => setSplitTarget(null)}
+          onSplit={() => {
+            setSplitTarget(null);
+            load();
+          }}
+        />
       )}
     </div>
   );

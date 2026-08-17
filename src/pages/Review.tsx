@@ -1,6 +1,8 @@
 import * as React from "react";
+import { Check } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
+import { formatMoney } from "@/lib/format";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
@@ -9,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 export default function Review() {
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const [selected, setSelected] = React.useState<Set<number>>(new Set());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -36,15 +39,35 @@ export default function Review() {
   // function) rather than duplicating it client-side.
   useExpenseEvents(load);
 
+  function toggleSelected(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
   async function assignCategory(id: number, categoryId: number) {
     await api.expenses.updateCategory(id, categoryId);
     setExpenses((prev) => prev.filter((e) => e.id !== id));
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
   }
 
-  async function approveAll() {
-    if (expenses.length === 0) return;
-    await api.expenses.bulkApprove(expenses.map((e) => e.id));
-    setExpenses([]);
+  async function approveIds(ids: number[]) {
+    if (ids.length === 0) return;
+    await api.expenses.bulkApprove(ids);
+    const idSet = new Set(ids);
+    setExpenses((prev) => prev.filter((e) => !idSet.has(e.id)));
+    setSelected((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
   }
 
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
@@ -56,7 +79,20 @@ export default function Review() {
         <h1 className="text-xl font-semibold">Review queue</h1>
         <div className="flex items-center gap-2">
           <Badge variant="secondary">{expenses.length} pending</Badge>
-          <Button size="sm" variant="outline" onClick={approveAll} disabled={expenses.length === 0}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => approveIds([...selected])}
+            disabled={selected.size === 0}
+          >
+            Approve selected ({selected.size})
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => approveIds(expenses.map((e) => e.id))}
+            disabled={expenses.length === 0}
+          >
             Approve all
           </Button>
         </div>
@@ -69,11 +105,20 @@ export default function Review() {
           {expenses.map((expense) => (
             <Card key={expense.id}>
               <CardContent className="flex items-center justify-between gap-4 pt-4">
-                <div className="flex flex-col">
-                  <span className="font-medium">{expense.commerce ?? expense.entity}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {expense.date.slice(0, 10)} · {expense.currency} {expense.amount?.toFixed(2)}
-                  </span>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-border accent-primary"
+                    checked={selected.has(expense.id)}
+                    onChange={() => toggleSelected(expense.id)}
+                    aria-label={`Select ${expense.commerce ?? expense.entity}`}
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {expense.date.slice(0, 10)} · {formatMoney(expense.amount, expense.currency)}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {expense.confidence != null && (
@@ -92,6 +137,14 @@ export default function Review() {
                       </option>
                     ))}
                   </Select>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    aria-label="Approve"
+                    onClick={() => approveIds([expense.id])}
+                  >
+                    <Check className="h-4 w-4" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
