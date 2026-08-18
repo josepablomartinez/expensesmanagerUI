@@ -6,7 +6,9 @@ import Search from "@/pages/Search";
 import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
 import Categories from "@/pages/Categories";
-import Reports from "@/pages/Reports";
+import ReportsLayout from "@/pages/reports/ReportsLayout";
+import BudgetVsActual from "@/pages/reports/BudgetVsActual";
+import Burndown from "@/pages/reports/Burndown";
 
 // Routes are open for now since the Go API has no /auth/login endpoint yet.
 // Once it does, wrap this <Route element={<AppShell />}> in <ProtectedRoute>
@@ -21,7 +23,11 @@ export default function App() {
         <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/reports" element={<Reports />} />
+        <Route path="/reports" element={<ReportsLayout />}>
+          <Route index element={<Navigate to="budget-vs-actual" replace />} />
+          <Route path="budget-vs-actual" element={<BudgetVsActual />} />
+          <Route path="burndown" element={<Burndown />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
