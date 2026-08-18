@@ -1,5 +1,6 @@
 import * as React from "react";
 import { api, type BudgetVsActual } from "@/lib/api";
+import { formatMoney } from "@/lib/format";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 
@@ -63,7 +64,7 @@ export default function Reports() {
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{row.category_name}</span>
                     <span className="text-sm text-muted-foreground">
-                      {row.actual_crc.toFixed(0)} / {row.budget?.toFixed(0) ?? "—"}
+                      {formatMoney(row.actual_crc, "CRC")} / {row.budget != null ? formatMoney(row.budget, "CRC") : "—"}
                     </span>
                   </div>
                   <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">

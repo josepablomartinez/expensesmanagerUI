@@ -1,27 +1,51 @@
 import * as React from "react";
+import { useSearchParams } from "react-router-dom";
 import { Check } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatMoney } from "@/lib/format";
+import { formatExpenseAmount } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { InfoModal } from "@/components/InfoModal";
 
 export default function Review() {
+  const [searchParams] = useSearchParams();
+  const focusId = searchParams.get("focus");
+
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  // Category picked per row, kept local until the user hits the checkmark --
+  // picking a category no longer submits anything by itself.
+  const [selections, setSelections] = React.useState<Record<number, string>>({});
   const [selected, setSelected] = React.useState<Set<number>>(new Set());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [actionError, setActionError] = React.useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
+
+  const rowRefs = React.useRef<Record<number, HTMLDivElement | null>>({});
+  const hasScrolledToFocus = React.useRef(false);
 
   const load = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [reviewRows, categoryRows] = await Promise.all([api.expenses.review(0.7), api.categories.list()]);
+      // No confidence cutoff -- this is "every unreviewed expense", so a
+      // deep link from the Unreviewed badge in Search always finds its item
+      // here regardless of how confident the auto-categorization was.
+      const [reviewRows, categoryRows] = await Promise.all([api.expenses.review(), api.categories.list()]);
       setExpenses(reviewRows);
       setCategories(categoryRows);
+      setSelections((prev) => {
+        const next = { ...prev };
+        for (const e of reviewRows) {
+          if (!(e.id in next)) next[e.id] = e.category_id ? String(e.category_id) : "";
+        }
+        return next;
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
     } finally {
@@ -39,6 +63,15 @@ export default function Review() {
   // function) rather than duplicating it client-side.
   useExpenseEvents(load);
 
+  React.useEffect(() => {
+    if (!focusId || hasScrolledToFocus.current || loading) return;
+    const el = rowRefs.current[Number(focusId)];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      hasScrolledToFocus.current = true;
+    }
+  }, [focusId, loading, expenses]);
+
   function toggleSelected(id: number) {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -48,30 +81,46 @@ export default function Review() {
     });
   }
 
-  async function assignCategory(id: number, categoryId: number) {
-    await api.expenses.updateCategory(id, categoryId);
-    setExpenses((prev) => prev.filter((e) => e.id !== id));
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
+  async function confirmApprove(expense: Expense) {
+    const categoryId = Number(selections[expense.id]);
+    if (!categoryId) return;
+    setActionError(null);
+    try {
+      await api.expenses.updateCategory(expense.id, categoryId);
+      setExpenses((prev) => prev.filter((e) => e.id !== expense.id));
+      setSelected((prev) => {
+        const next = new Set(prev);
+        next.delete(expense.id);
+        return next;
+      });
+      setSuccessMessage(`${expense.commerce ?? expense.entity} approved.`);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to approve");
+    }
   }
 
   async function approveIds(ids: number[]) {
     if (ids.length === 0) return;
-    await api.expenses.bulkApprove(ids);
-    const idSet = new Set(ids);
-    setExpenses((prev) => prev.filter((e) => !idSet.has(e.id)));
-    setSelected((prev) => {
-      const next = new Set(prev);
-      ids.forEach((id) => next.delete(id));
-      return next;
-    });
+    setActionError(null);
+    try {
+      await api.expenses.bulkApprove(ids);
+      const idSet = new Set(ids);
+      setExpenses((prev) => prev.filter((e) => !idSet.has(e.id)));
+      setSelected((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+      setSuccessMessage(ids.length === 1 ? "1 expense approved." : `${ids.length} expenses approved.`);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to approve");
+    }
   }
 
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
   if (error) return <p className="text-sm text-destructive">{error}</p>;
+
+  const focusedExpenseMissing = focusId != null && !expenses.some((e) => String(e.id) === focusId);
 
   return (
     <div className="flex flex-col gap-4">
@@ -98,12 +147,25 @@ export default function Review() {
         </div>
       </div>
 
+      {actionError && <p className="text-sm text-destructive">{actionError}</p>}
+      {focusedExpenseMissing && (
+        <p className="text-sm text-muted-foreground">
+          That expense isn't in the review queue anymore (it may have already been approved).
+        </p>
+      )}
+
       {expenses.length === 0 ? (
         <p className="text-sm text-muted-foreground">Nothing to review.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {expenses.map((expense) => (
-            <Card key={expense.id}>
+            <Card
+              key={expense.id}
+              ref={(el) => {
+                rowRefs.current[expense.id] = el;
+              }}
+              className={cn(String(expense.id) === focusId && "ring-2 ring-primary")}
+            >
               <CardContent className="flex items-center justify-between gap-4 pt-4">
                 <div className="flex items-center gap-3">
                   <input
@@ -116,7 +178,7 @@ export default function Review() {
                   <div className="flex flex-col">
                     <span className="font-medium">{expense.commerce ?? expense.entity}</span>
                     <span className="text-xs text-muted-foreground">
-                      {expense.date.slice(0, 10)} · {formatMoney(expense.amount, expense.currency)}
+                      {expense.date.slice(0, 10)} · {formatExpenseAmount(expense)}
                     </span>
                   </div>
                 </div>
@@ -125,8 +187,10 @@ export default function Review() {
                     <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
                   )}
                   <Select
-                    defaultValue={expense.category_id ?? ""}
-                    onChange={(e) => assignCategory(expense.id, Number(e.target.value))}
+                    value={selections[expense.id] ?? ""}
+                    onChange={(e) =>
+                      setSelections((prev) => ({ ...prev, [expense.id]: e.target.value }))
+                    }
                   >
                     <option value="" disabled>
                       Choose category
@@ -141,7 +205,8 @@ export default function Review() {
                     size="icon"
                     variant="outline"
                     aria-label="Approve"
-                    onClick={() => approveIds([expense.id])}
+                    disabled={!selections[expense.id]}
+                    onClick={() => confirmApprove(expense)}
                   >
                     <Check className="h-4 w-4" />
                   </Button>
@@ -151,6 +216,8 @@ export default function Review() {
           ))}
         </div>
       )}
+
+      {successMessage && <InfoModal message={successMessage} onClose={() => setSuccessMessage(null)} />}
     </div>
   );
 }

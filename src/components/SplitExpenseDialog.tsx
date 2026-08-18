@@ -56,7 +56,12 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
           <CardTitle className="text-base text-foreground">
             Split "{expense.commerce ?? expense.entity}"
           </CardTitle>
-          <p className="text-xs text-muted-foreground">Total {formatMoney(expense.amount, expense.currency)}</p>
+          <p className="text-xs text-muted-foreground">
+            Total {formatMoney(expense.amount, expense.currency)}
+            {expense.colones_amount != null && expense.currency !== "CRC" && (
+              <> · {formatMoney(expense.colones_amount, "CRC")}</>
+            )}
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">

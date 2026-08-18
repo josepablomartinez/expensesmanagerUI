@@ -2,7 +2,7 @@ import * as React from "react";
 import { Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,8 +90,7 @@ export default function Home() {
 
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());
-        const dayTotal = group.items.reduce((sum, e) => sum + (e.amount ?? 0), 0);
-        const dayCurrency = group.items[0]?.currency ?? "CRC";
+        const dayTotal = group.items.reduce((sum, e) => sum + crcValue(e), 0);
 
         return (
           <Card key={group.iso} className="border-border/80 shadow-sm">
@@ -100,7 +99,7 @@ export default function Home() {
                 <h2 className="text-sm font-semibold text-foreground">{formatDayLabel(group.iso)}</h2>
                 {group.items.length > 0 && (
                   <span className="text-xs font-medium text-muted-foreground">
-                    {formatMoney(dayTotal, dayCurrency)}
+                    {formatMoney(dayTotal, "CRC")}
                   </span>
                 )}
               </div>
@@ -133,7 +132,7 @@ export default function Home() {
                           {!expense.reviewed && expense.confidence != null && (
                             <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
                           )}
-                          <span className="font-medium">{formatMoney(expense.amount, expense.currency)}</span>
+                          <span className="font-medium">{formatExpenseAmount(expense)}</span>
                           {expense.reviewed && (
                             <Button
                               size="icon"

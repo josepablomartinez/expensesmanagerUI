@@ -10,6 +10,7 @@ export interface Expense {
   date: string;
   hour: string | null;
   amount: number | null;
+  colones_amount: number | null;
   category_id: number | null;
   category_name?: string | null;
   budget?: number | null;

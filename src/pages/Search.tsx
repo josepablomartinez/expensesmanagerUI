@@ -1,7 +1,8 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,7 @@ type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
 
 export default function Search() {
+  const navigate = useNavigate();
   const [from, setFrom] = React.useState(firstOfMonth());
   const [to, setTo] = React.useState(today());
   const [categoryId, setCategoryId] = React.useState("");
@@ -64,14 +66,14 @@ export default function Search() {
     const sorted = [...rows].sort((a, b) => {
       const cmp =
         sortBy === "amount"
-          ? (a.amount ?? 0) - (b.amount ?? 0)
+          ? crcValue(a) - crcValue(b)
           : a.date.localeCompare(b.date);
       return sortDir === "asc" ? cmp : -cmp;
     });
     return sorted;
   }, [expenses, query, sortBy, sortDir]);
 
-  const total = results.reduce((sum, e) => sum + (e.amount ?? 0), 0);
+  const total = results.reduce((sum, e) => sum + crcValue(e), 0);
 
   return (
     <div className="flex flex-col gap-4">
@@ -111,7 +113,7 @@ export default function Search() {
       <Card>
         <CardContent className="flex items-center justify-between pt-4">
           <span className="text-sm text-muted-foreground">{results.length} expenses</span>
-          <span className="text-lg font-semibold">{formatMoney(total, results[0]?.currency ?? "CRC")}</span>
+          <span className="text-lg font-semibold">{formatMoney(total, "CRC")}</span>
         </CardContent>
       </Card>
 
@@ -140,8 +142,18 @@ export default function Search() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {!expense.reviewed && <Badge variant="outline">Unreviewed</Badge>}
-                    <span className="font-medium">{formatMoney(expense.amount, expense.currency)}</span>
+                    {!expense.reviewed && (
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/review?focus=${expense.id}`)}
+                        aria-label="Go to this expense in Review"
+                      >
+                        <Badge variant="outline" className="cursor-pointer hover:bg-accent">
+                          Unreviewed
+                        </Badge>
+                      </button>
+                    )}
+                    <span className="font-medium">{formatExpenseAmount(expense)}</span>
                     {expense.reviewed && (
                       <Button
                         size="icon"
