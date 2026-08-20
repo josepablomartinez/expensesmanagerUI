@@ -10,6 +10,23 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function nowHour() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+// Mirrors the "Format1" node in the manual Cash/SINPE n8n workflow: cash
+// entries rarely have a bank-issued authorization code, so we derive a
+// stable one from the transaction's own fields instead of leaving it blank.
+function generateAuthCode(str: string) {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).toUpperCase().padStart(8, "0");
+}
+
 export default function AddExpense() {
   const navigate = useNavigate();
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -19,8 +36,11 @@ export default function AddExpense() {
   const [currency, setCurrency] = React.useState("CRC");
   const [amountColones, setAmountColones] = React.useState("");
   const [date, setDate] = React.useState(today());
+  const [hour, setHour] = React.useState(nowHour());
   const [type, setType] = React.useState("CARD");
   const entity = "MANUAL";
+  const country = "CRC";
+  const city = "SJO";
   const [categoryId, setCategoryId] = React.useState("");
   const [motive, setMotive] = React.useState("");
 
@@ -45,12 +65,19 @@ export default function AddExpense() {
       return;
     }
 
+    const seed = `${date}|${parsedAmount}|${commerce || "Desconocido"}|${type}`;
+    const authorization = `GEN-${generateAuthCode(seed)}`;
+
     setSaving(true);
     try {
       await api.expenses.create({
+        country,
+        city,
         commerce: commerce || undefined,
+        authorization,
         currency,
         date,
+        hour,
         amount: parsedAmount,
         category_id: categoryId ? Number(categoryId) : undefined,
         entity,
@@ -106,6 +133,7 @@ export default function AddExpense() {
 
             <div className="flex gap-2">
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="flex-1" />
+              <Input type="time" value={hour} onChange={(e) => setHour(e.target.value)} className="flex-1" />
               <Select value={type} onChange={(e) => setType(e.target.value)} className="w-28">
                 <option value="CARD">Card</option>
                 <option value="CASH">Cash</option>

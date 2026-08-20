@@ -53,9 +53,13 @@ export interface BulkApproveResult {
 }
 
 export interface CreateExpenseRequest {
+  country?: string;
+  city?: string;
   commerce?: string;
+  authorization?: string;
   currency: string;
   date: string; // YYYY-MM-DD
+  hour?: string; // HH:MM
   amount: number;
   category_id?: number;
   entity: string;
