@@ -5,7 +5,7 @@ services:
       args:
         # Baked into the JS bundle at build time (browser-side, so it must be
         # a URL reachable from the *browser*, not the internal Docker network).
-        VITE_API_URL: http://localhost:8080
+        VITE_API_URL: http://localhost:8081
     restart: unless-stopped
     ports:
       - "5173:80"
