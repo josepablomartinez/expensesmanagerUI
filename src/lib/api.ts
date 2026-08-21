@@ -134,11 +134,18 @@ export const api = {
         method: "PUT",
         body: JSON.stringify({ category_id: categoryId }),
       }),
-    updateAmount: (id: number, amount: number) =>
-      request<{ id: number; amount: number; category_id: number | null; reviewed: boolean }>(`/expenses/${id}/monto`, {
-        method: "PUT",
-        body: JSON.stringify({ amount }),
-      }),
+    update: (id: number, body: { amount?: number; categoryId?: number; reason?: string }) =>
+      request<{ id: number; amount: number; category_id: number | null; reason: string | null; reviewed: boolean }>(
+        `/expenses/${id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            ...(body.amount !== undefined ? { amount: body.amount } : {}),
+            ...(body.categoryId !== undefined ? { category_id: body.categoryId } : {}),
+            ...(body.reason !== undefined ? { reason: body.reason } : {}),
+          }),
+        },
+      ),
     bulkApprove: (ids: number[]) =>
       request<BulkApproveResult>(`/expenses/bulk-approve`, {
         method: "POST",

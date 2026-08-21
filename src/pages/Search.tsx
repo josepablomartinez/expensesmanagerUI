@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Split } from "lucide-react";
+import { Split, Pencil } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
@@ -10,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
+import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 
 function firstOfMonth() {
   const d = new Date();
@@ -34,6 +35,7 @@ export default function Search() {
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
+  const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -155,14 +157,24 @@ export default function Search() {
                     )}
                     <span className="font-medium">{formatExpenseAmount(expense)}</span>
                     {expense.reviewed && (
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label="Split expense"
-                        onClick={() => setSplitTarget(expense)}
-                      >
-                        <Split className="h-4 w-4" />
-                      </Button>
+                      <>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Edit category"
+                          onClick={() => setEditTarget(expense)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Split expense"
+                          onClick={() => setSplitTarget(expense)}
+                        >
+                          <Split className="h-4 w-4" />
+                        </Button>
+                      </>
                     )}
                   </div>
                 </CardContent>
@@ -179,6 +191,18 @@ export default function Search() {
           onClose={() => setSplitTarget(null)}
           onSplit={() => {
             setSplitTarget(null);
+            load();
+          }}
+        />
+      )}
+
+      {editTarget && (
+        <EditCategoryDialog
+          expense={editTarget}
+          categories={categories}
+          onClose={() => setEditTarget(null)}
+          onSave={() => {
+            setEditTarget(null);
             load();
           }}
         />
