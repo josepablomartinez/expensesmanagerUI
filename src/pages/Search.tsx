@@ -4,6 +4,7 @@ import { Split, Pencil } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
+import { localISODate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -14,10 +15,10 @@ import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 
 function firstOfMonth() {
   const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
+  return localISODate(new Date(d.getFullYear(), d.getMonth(), 1));
 }
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return localISODate(new Date());
 }
 
 type SortBy = "date" | "amount";

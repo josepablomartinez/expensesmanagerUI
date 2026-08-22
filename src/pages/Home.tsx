@@ -4,6 +4,7 @@ import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
+import { localISODate as isoDate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +12,6 @@ import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 
 const PAGE_DAYS = 7;
-
-function isoDate(d: Date) {
-  return d.toISOString().slice(0, 10);
-}
 
 function addDays(d: Date, n: number) {
   const copy = new Date(d);

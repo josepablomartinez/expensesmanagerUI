@@ -1,13 +1,14 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { api, type Category } from "@/lib/api";
+import { localISODate } from "@/lib/date";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return localISODate(new Date());
 }
 
 function nowHour() {
