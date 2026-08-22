@@ -21,6 +21,8 @@ export default function Review() {
   // picking a category no longer submits anything by itself.
   const [selections, setSelections] = React.useState<Record<number, string>>({});
   const [selected, setSelected] = React.useState<Set<number>>(new Set());
+  // "Always categorize this commerce as X" per row, opt-in via its own checkbox.
+  const [alwaysCategorize, setAlwaysCategorize] = React.useState<Record<number, boolean>>({});
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [actionError, setActionError] = React.useState<string | null>(null);
@@ -93,7 +95,24 @@ export default function Review() {
         next.delete(expense.id);
         return next;
       });
-      setSuccessMessage(`${expense.commerce ?? expense.entity} approved.`);
+
+      let ruleWarning = "";
+      if (alwaysCategorize[expense.id] && expense.commerce) {
+        try {
+          await api.merchantRules.create({ commercePattern: expense.commerce, categoryId });
+        } catch (err) {
+          // The approval already succeeded -- don't lose that just because
+          // the rule failed to save, but surface it separately.
+          ruleWarning = ` (merchant rule not saved: ${err instanceof Error ? err.message : "unknown error"})`;
+        }
+      }
+      setAlwaysCategorize((prev) => {
+        const next = { ...prev };
+        delete next[expense.id];
+        return next;
+      });
+
+      setSuccessMessage(`${expense.commerce ?? expense.entity} approved.${ruleWarning}`);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to approve");
     }
@@ -201,6 +220,29 @@ export default function Review() {
                       </option>
                     ))}
                   </Select>
+                  <label
+                    className={cn(
+                      "flex items-center gap-1.5 text-xs text-muted-foreground",
+                      !expense.commerce && "opacity-50",
+                    )}
+                    title={
+                      expense.commerce
+                        ? `Always categorize "${expense.commerce}" this way`
+                        : "No commerce name on this expense to match future ones against"
+                    }
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-border accent-primary"
+                      checked={alwaysCategorize[expense.id] ?? false}
+                      disabled={!expense.commerce}
+                      onChange={(e) =>
+                        setAlwaysCategorize((prev) => ({ ...prev, [expense.id]: e.target.checked }))
+                      }
+                      aria-label={`Always categorize ${expense.commerce ?? expense.entity} this way`}
+                    />
+                    Always
+                  </label>
                   <Button
                     size="icon"
                     variant="outline"

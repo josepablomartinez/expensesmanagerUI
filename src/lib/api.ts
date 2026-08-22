@@ -52,6 +52,13 @@ export interface BulkApproveResult {
   count: number;
 }
 
+export interface MerchantRule {
+  id: number;
+  commerce_pattern: string;
+  category_id: number;
+  active: boolean;
+}
+
 export interface CreateExpenseRequest {
   country?: string;
   city?: string;
@@ -164,6 +171,13 @@ export const api = {
   },
   categories: {
     list: () => request<Category[]>("/categories"),
+  },
+  merchantRules: {
+    create: (body: { commercePattern: string; categoryId: number }) =>
+      request<MerchantRule>(`/merchant-rules`, {
+        method: "POST",
+        body: JSON.stringify({ commerce_pattern: body.commercePattern, category_id: body.categoryId }),
+      }),
   },
   reports: {
     budgetVsActual: (year: number, month: number) =>
