@@ -1,7 +1,8 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet, Settings } from "lucide-react";
+import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet, Settings, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
 
 const TOP_NAV_ITEMS = [
@@ -17,6 +18,7 @@ const BOTTOM_NAV_ITEMS = [
 
 export function AppShell() {
   const { token, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -48,6 +50,14 @@ export function AppShell() {
             ))}
           </nav>
           <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             <NavLink
               to="/settings"
               aria-label="Settings"

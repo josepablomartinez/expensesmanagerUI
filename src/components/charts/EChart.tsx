@@ -1,8 +1,8 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 
-// App is dark-theme-only for v1 (index.html hardcodes class="dark"), so these
-// just need to resolve the current --var values -- no light/dark branching.
+// Resolves the current theme's CSS variable value so chart colors follow
+// whichever of .dark / :root is active on <html>.
 function cssVar(name: string) {
   const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return value ? `hsl(${value})` : "";

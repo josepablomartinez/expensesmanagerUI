@@ -1,8 +1,10 @@
 import * as React from "react";
+import { useSearchParams } from "react-router-dom";
 import { Flame } from "lucide-react";
 import { api, type BudgetVsActual as BudgetVsActualRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { PeriodSelect } from "@/components/reports/PeriodSelect";
 import { EChart, chartColors } from "@/components/charts/EChart";
@@ -20,11 +22,13 @@ function severityBarClass(pct: number) {
 
 export default function BudgetVsActual() {
   const now = new Date();
+  const [searchParams] = useSearchParams();
   const [year, setYear] = React.useState(now.getFullYear());
   const [month, setMonth] = React.useState(now.getMonth() + 1);
   const [rows, setRows] = React.useState<BudgetVsActualRow[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = React.useState(5);
 
   const [selectedMainId, setSelectedMainId] = React.useState<number | null>(null);
   const [selectedSubId, setSelectedSubId] = React.useState<number | null>(null);
@@ -33,6 +37,7 @@ export default function BudgetVsActual() {
   React.useEffect(() => {
     setLoading(true);
     setError(null);
+    setVisibleCount(5);
     api.reports
       .budgetVsActual(year, month)
       .then(setRows)
@@ -59,17 +64,31 @@ export default function BudgetVsActual() {
     });
   }, [groups, selectedMainId]);
 
+  // Deep-link support: the favorite-categories widget on Home links here with
+  // ?category=<id> so its bar click lands directly on that category's detail.
+  React.useEffect(() => {
+    const catParam = searchParams.get("category");
+    if (!catParam) return;
+    const catId = Number(catParam);
+    const row = rows.find((r) => r.category_id === catId);
+    if (row?.main_category_id != null) {
+      setSelectedMainId(row.main_category_id);
+      setSelectedSubId(row.category_id);
+      detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [rows, searchParams]);
+
   const selectedGroup = groups.find((g) => g.mainCategoryId === selectedMainId) ?? null;
   const selectedRow = selectedGroup?.subcategories.find((r) => r.category_id === selectedSubId) ?? null;
 
-  const topFive = React.useMemo(
+  const highestUsed = React.useMemo(
     () =>
       rows
         .filter((r) => (r.pct_used ?? 0) > 0)
-        .sort((a, b) => (b.pct_used ?? 0) - (a.pct_used ?? 0))
-        .slice(0, 5),
+        .sort((a, b) => (b.pct_used ?? 0) - (a.pct_used ?? 0)),
     [rows],
   );
+  const visibleRows = highestUsed.slice(0, visibleCount);
 
   function selectRow(row: BudgetVsActualRow) {
     if (row.main_category_id == null) return;
@@ -143,9 +162,9 @@ export default function BudgetVsActual() {
       ) : (
         <div className="grid gap-6 md:grid-cols-[1fr_320px] md:items-start">
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-medium text-muted-foreground">Top 5 highest used</p>
+            <p className="text-xs font-medium text-muted-foreground">Highest used</p>
             <div className="flex flex-col gap-2">
-              {topFive.map((row) => {
+              {visibleRows.map((row) => {
                 const pct = row.pct_used ?? 0;
                 const over = pct >= 100;
                 return (
@@ -166,23 +185,25 @@ export default function BudgetVsActual() {
                           {formatMoney(row.actual_crc, "CRC")} / {row.budget != null ? formatMoney(row.budget, "CRC") : "—"}
                         </span>
                       </div>
-                      <div className="relative h-2 w-full rounded-full bg-secondary">
-                        <div
-                          className={cn("h-full rounded-full", severityBarClass(pct))}
-                          style={{ width: `${Math.min(pct, 100)}%` }}
-                        />
-                        {over && (
-                          <Flame
-                            className="absolute -right-1 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-red-500"
-                            aria-hidden="true"
+                      <div className="flex items-center gap-2">
+                        <div className="relative h-2 w-full rounded-full bg-secondary">
+                          <div
+                            className={cn("h-full rounded-full", severityBarClass(pct))}
+                            style={{ width: `${Math.min(pct, 100)}%` }}
                           />
-                        )}
+                        </div>
+                        {over && <Flame className="h-5 w-5 shrink-0 text-red-500" aria-hidden="true" />}
                       </div>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
+            {highestUsed.length > visibleCount && (
+              <Button variant="outline" size="sm" onClick={() => setVisibleCount((c) => c + 5)}>
+                See more
+              </Button>
+            )}
           </div>
 
           <div ref={detailRef} className="md:sticky md:top-6">

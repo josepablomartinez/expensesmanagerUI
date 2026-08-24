@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { Flame } from "lucide-react";
 import { api, type BudgetVsActual } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
@@ -16,6 +17,7 @@ function severityBarClass(pct: number) {
 }
 
 export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCategoryIds: number[] }) {
+  const navigate = useNavigate();
   const [rows, setRows] = React.useState<BudgetVsActual[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -51,7 +53,18 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
             const pct = row.pct_used ?? 0;
             const over = pct >= 100;
             return (
-              <div key={row.category_id} className="flex flex-col gap-1.5">
+              <div
+                key={row.category_id}
+                role="button"
+                tabIndex={0}
+                onClick={() => navigate(`/reports/budget-vs-actual?category=${row.category_id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    navigate(`/reports/budget-vs-actual?category=${row.category_id}`);
+                  }
+                }}
+                className="-mx-1.5 flex cursor-pointer flex-col gap-1.5 rounded-md px-1.5 py-1 transition-colors hover:bg-secondary/40"
+              >
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{splitCategoryName(row.category_name).subName}</span>
                   <span className="text-muted-foreground">
@@ -59,17 +72,14 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
                     {row.budget != null ? ` / ${formatMoney(row.budget, "CRC")}` : ""}
                   </span>
                 </div>
-                <div className="relative h-2 w-full rounded-full bg-secondary">
-                  <div
-                    className={cn("h-full rounded-full", severityBarClass(pct))}
-                    style={{ width: `${Math.min(pct, 100)}%` }}
-                  />
-                  {over && (
-                    <Flame
-                      className="absolute -right-1 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-red-500"
-                      aria-hidden="true"
+                <div className="flex items-center gap-2">
+                  <div className="relative h-2 w-full rounded-full bg-secondary">
+                    <div
+                      className={cn("h-full rounded-full", severityBarClass(pct))}
+                      style={{ width: `${Math.min(pct, 100)}%` }}
                     />
-                  )}
+                  </div>
+                  {over && <Flame className="h-5 w-5 shrink-0 text-red-500" aria-hidden="true" />}
                 </div>
               </div>
             );
