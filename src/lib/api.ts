@@ -181,7 +181,7 @@ export const api = {
   },
   merchantRules: {
     create: (body: { commercePattern: string; categoryId: number }) =>
-      request<MerchantRule>(`/merchant-rules`, {
+      request<MerchantRule>(`/merchant/rules`, {
         method: "POST",
         body: JSON.stringify({ commerce_pattern: body.commercePattern, category_id: body.categoryId }),
       }),
