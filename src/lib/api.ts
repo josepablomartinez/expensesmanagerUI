@@ -26,11 +26,12 @@ export interface Category {
   category: string;
   subcategory: string;
   budget: number | null;
+  main_category_id: number;
 }
 
 export interface BudgetVsActual {
   category_id: number;
-  main_category_id: number | null;
+  main_category_id: number;
   category_name: string;
   budget: number | null;
   actual_crc: number;
