@@ -1,10 +1,11 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { PieChart, TrendingDown } from "lucide-react";
+import { PieChart, TrendingDown, LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const REPORT_TABS = [
   { to: "/reports/budget-vs-actual", label: "Budget vs actual", icon: PieChart },
   { to: "/reports/burndown", label: "Burn-down", icon: TrendingDown },
+  { to: "/reports/subcategories-by-month", label: "Subcategorías x mes", icon: LineChart },
 ];
 
 export default function ReportsLayout() {

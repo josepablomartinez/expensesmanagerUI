@@ -47,6 +47,13 @@ export interface BudgetBurndownRow {
   expected_crc: number;
 }
 
+export interface CategoryMonthMatrixRow {
+  subcategoria_id: number;
+  subcategoria_nombre: string;
+  month: number;
+  total_crc: number;
+}
+
 export interface BulkApproveResult {
   approved_ids: number[];
   count: number;
@@ -187,6 +194,10 @@ export const api = {
       if (categoryId) q.set("category_id", String(categoryId));
       return request<BudgetBurndownRow[]>(`/reports/burndown?${q}`);
     },
+    categoryMonthMatrix: (year: number, categoryId: number) =>
+      request<CategoryMonthMatrixRow[]>(
+        `/reports/category-month-matrix?year=${year}&category_id=${categoryId}`,
+      ),
   },
 };
 

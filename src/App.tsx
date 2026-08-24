@@ -9,6 +9,7 @@ import Categories from "@/pages/Categories";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
+import SubcategoriesByMonth from "@/pages/reports/SubcategoriesByMonth";
 
 // Routes are open for now since the Go API has no /auth/login endpoint yet.
 // Once it does, wrap this <Route element={<AppShell />}> in <ProtectedRoute>
@@ -27,6 +28,7 @@ export default function App() {
           <Route index element={<Navigate to="budget-vs-actual" replace />} />
           <Route path="budget-vs-actual" element={<BudgetVsActual />} />
           <Route path="burndown" element={<Burndown />} />
+          <Route path="subcategories-by-month" element={<SubcategoriesByMonth />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
