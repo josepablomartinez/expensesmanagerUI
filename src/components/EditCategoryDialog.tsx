@@ -47,7 +47,7 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
       <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="text-base text-foreground">
-            Edit category for "{expense.commerce ?? expense.entity}"
+            Edit category for "{expense.merchant ?? expense.entity}"
           </CardTitle>
         </CardHeader>
         <CardContent>

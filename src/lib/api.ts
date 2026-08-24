@@ -4,7 +4,7 @@ export interface Expense {
   id: number;
   country: string | null;
   city: string | null;
-  commerce: string | null;
+  merchant: string | null;
   authorization: string | null;
   currency: string | null;
   date: string;
@@ -69,7 +69,7 @@ export interface MerchantRule {
 export interface CreateExpenseRequest {
   country?: string;
   city?: string;
-  commerce?: string;
+  merchant?: string;
   authorization?: string;
   currency: string;
   date: string; // YYYY-MM-DD

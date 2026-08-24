@@ -32,7 +32,7 @@ export default function AddExpense() {
   const navigate = useNavigate();
   const [categories, setCategories] = React.useState<Category[]>([]);
 
-  const [commerce, setCommerce] = React.useState("");
+  const [merchant, setMerchant] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [currency, setCurrency] = React.useState("CRC");
   const [amountColones, setAmountColones] = React.useState("");
@@ -66,7 +66,7 @@ export default function AddExpense() {
       return;
     }
 
-    const seed = `${date}|${parsedAmount}|${commerce || "Desconocido"}|${type}`;
+    const seed = `${date}|${parsedAmount}|${merchant || "Desconocido"}|${type}`;
     const authorization = `GEN-${generateAuthCode(seed)}`;
 
     setSaving(true);
@@ -74,7 +74,7 @@ export default function AddExpense() {
       await api.expenses.create({
         country,
         city,
-        commerce: commerce || undefined,
+        merchant: merchant || undefined,
         authorization,
         currency,
         date,
@@ -103,7 +103,7 @@ export default function AddExpense() {
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
-            <Input placeholder="Commerce / merchant" value={commerce} onChange={(e) => setCommerce(e.target.value)} autoFocus />
+            <Input placeholder="Merchant" value={merchant} onChange={(e) => setMerchant(e.target.value)} autoFocus />
 
             <div className="flex gap-2">
               <Input

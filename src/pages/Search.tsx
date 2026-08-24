@@ -63,7 +63,7 @@ export default function Search() {
     let rows = expenses;
     if (q) {
       rows = rows.filter(
-        (e) => e.commerce?.toLowerCase().includes(q) || e.motive?.toLowerCase().includes(q),
+        (e) => e.merchant?.toLowerCase().includes(q) || e.motive?.toLowerCase().includes(q),
       );
     }
     const sorted = [...rows].sort((a, b) => {
@@ -84,7 +84,7 @@ export default function Search() {
 
       <div className="flex flex-col gap-2">
         <Input
-          placeholder="Search by commerce or note…"
+          placeholder="Search by merchant or note…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -138,7 +138,7 @@ export default function Search() {
                       <Icon className="h-4 w-4" />
                     </span>
                     <div className="flex flex-col">
-                      <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                      <span className="font-medium">{expense.merchant ?? expense.entity}</span>
                       <span className="text-xs text-muted-foreground">
                         {expense.date.slice(0, 10)} · {expense.category_name ?? "Uncategorized"}
                       </span>

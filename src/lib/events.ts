@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export interface ExpenseEvent {
   type: "created" | "deleted";
   id: number;
-  commerce?: string | null;
+  merchant?: string | null;
   entity?: string;
   amount?: number | null;
   currency?: string | null;

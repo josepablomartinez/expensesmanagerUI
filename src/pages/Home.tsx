@@ -121,7 +121,7 @@ export default function Home() {
                             <Icon className="h-4 w-4" />
                           </span>
                           <div className="flex flex-col">
-                            <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                            <span className="font-medium">{expense.merchant ?? expense.entity}</span>
                             <span className="text-xs text-muted-foreground">
                               {expense.category_name ?? "Uncategorized"}
                             </span>

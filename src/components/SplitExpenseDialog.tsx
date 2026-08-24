@@ -54,7 +54,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
       <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="text-base text-foreground">
-            Split "{expense.commerce ?? expense.entity}"
+            Split "{expense.merchant ?? expense.entity}"
           </CardTitle>
           <p className="text-xs text-muted-foreground">
             Total {formatMoney(expense.amount, expense.currency)}

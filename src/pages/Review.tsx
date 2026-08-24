@@ -21,7 +21,7 @@ export default function Review() {
   // picking a category no longer submits anything by itself.
   const [selections, setSelections] = React.useState<Record<number, string>>({});
   const [selected, setSelected] = React.useState<Set<number>>(new Set());
-  // "Always categorize this commerce as X" per row, opt-in via its own checkbox.
+  // "Always categorize this merchant as X" per row, opt-in via its own checkbox.
   const [alwaysCategorize, setAlwaysCategorize] = React.useState<Record<number, boolean>>({});
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -97,9 +97,9 @@ export default function Review() {
       });
 
       let ruleWarning = "";
-      if (alwaysCategorize[expense.id] && expense.commerce) {
+      if (alwaysCategorize[expense.id] && expense.merchant) {
         try {
-          await api.merchantRules.create({ commercePattern: expense.commerce, categoryId });
+          await api.merchantRules.create({ commercePattern: expense.merchant, categoryId });
         } catch (err) {
           // The approval already succeeded -- don't lose that just because
           // the rule failed to save, but surface it separately.
@@ -112,7 +112,7 @@ export default function Review() {
         return next;
       });
 
-      setSuccessMessage(`${expense.commerce ?? expense.entity} approved.${ruleWarning}`);
+      setSuccessMessage(`${expense.merchant ?? expense.entity} approved.${ruleWarning}`);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to approve");
     }
@@ -192,10 +192,10 @@ export default function Review() {
                     className="h-4 w-4 rounded border-border accent-primary"
                     checked={selected.has(expense.id)}
                     onChange={() => toggleSelected(expense.id)}
-                    aria-label={`Select ${expense.commerce ?? expense.entity}`}
+                    aria-label={`Select ${expense.merchant ?? expense.entity}`}
                   />
                   <div className="flex flex-col">
-                    <span className="font-medium">{expense.commerce ?? expense.entity}</span>
+                    <span className="font-medium">{expense.merchant ?? expense.entity}</span>
                     <span className="text-xs text-muted-foreground">
                       {expense.date.slice(0, 10)} · {formatExpenseAmount(expense)}
                     </span>
@@ -223,23 +223,23 @@ export default function Review() {
                   <label
                     className={cn(
                       "flex items-center gap-1.5 text-xs text-muted-foreground",
-                      !expense.commerce && "opacity-50",
+                      !expense.merchant && "opacity-50",
                     )}
                     title={
-                      expense.commerce
-                        ? `Always categorize "${expense.commerce}" this way`
-                        : "No commerce name on this expense to match future ones against"
+                      expense.merchant
+                        ? `Always categorize "${expense.merchant}" this way`
+                        : "No merchant name on this expense to match future ones against"
                     }
                   >
                     <input
                       type="checkbox"
                       className="h-4 w-4 rounded border-border accent-primary"
                       checked={alwaysCategorize[expense.id] ?? false}
-                      disabled={!expense.commerce}
+                      disabled={!expense.merchant}
                       onChange={(e) =>
                         setAlwaysCategorize((prev) => ({ ...prev, [expense.id]: e.target.checked }))
                       }
-                      aria-label={`Always categorize ${expense.commerce ?? expense.entity} this way`}
+                      aria-label={`Always categorize ${expense.merchant ?? expense.entity} this way`}
                     />
                     Always
                   </label>
