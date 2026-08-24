@@ -130,6 +130,16 @@ export interface SplitResult {
   category_id: number | null;
 }
 
+export interface DeleteExpenseRequest {
+  deleted_reason: string;
+}
+
+export interface DeleteExpenseResult {
+  id: number;
+  deleted: boolean;
+  deleted_reason: string;
+}
+
 class ApiError extends Error {
   constructor(
     public status: number,
@@ -208,6 +218,11 @@ export const api = {
     split: (id: number, body: SplitRequest) =>
       request<SplitResult>(`/expenses/${id}/split`, {
         method: "POST",
+        body: JSON.stringify(body),
+      }),
+    delete: (id: number, body: DeleteExpenseRequest) =>
+      request<DeleteExpenseResult>(`/expenses/${id}`, {
+        method: "DELETE",
         body: JSON.stringify(body),
       }),
   },

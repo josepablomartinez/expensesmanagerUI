@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Split, Pencil } from "lucide-react";
+import { Split, Pencil, Trash2 } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
+import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
 
 function firstOfMonth() {
   const d = new Date();
@@ -37,6 +38,7 @@ export default function Search() {
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -175,6 +177,14 @@ export default function Search() {
                         >
                           <Split className="h-4 w-4" />
                         </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Delete expense"
+                          onClick={() => setDeleteTarget(expense)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </>
                     )}
                   </div>
@@ -204,6 +214,17 @@ export default function Search() {
           onClose={() => setEditTarget(null)}
           onSave={() => {
             setEditTarget(null);
+            load();
+          }}
+        />
+      )}
+
+      {deleteTarget && (
+        <DeleteExpenseDialog
+          expense={deleteTarget}
+          onClose={() => setDeleteTarget(null)}
+          onDeleted={() => {
+            setDeleteTarget(null);
             load();
           }}
         />
