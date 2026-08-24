@@ -6,6 +6,7 @@ import Search from "@/pages/Search";
 import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
 import Categories from "@/pages/Categories";
+import Settings from "@/pages/Settings";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/reports" element={<ReportsLayout />}>
           <Route index element={<Navigate to="budget-vs-actual" replace />} />
           <Route path="budget-vs-actual" element={<BudgetVsActual />} />

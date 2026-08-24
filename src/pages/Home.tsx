@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Split, Pencil } from "lucide-react";
-import { api, type Category, type Expense } from "@/lib/api";
+import { api, type Category, type Expense, type Settings } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
+import { Greeting } from "@/components/dashboard/Greeting";
+import { ExchangeRateWidget } from "@/components/dashboard/ExchangeRateWidget";
+import { FavoriteCategoriesWidget } from "@/components/dashboard/FavoriteCategoriesWidget";
 
 const PAGE_DAYS = 7;
 
@@ -39,9 +42,11 @@ export default function Home() {
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [settings, setSettings] = React.useState<Settings | null>(null);
 
   React.useEffect(() => {
     api.categories.list().then(setCategories).catch(() => {});
+    api.settings.get().then(setSettings).catch(() => {});
   }, []);
 
   const load = React.useCallback(() => {
@@ -85,7 +90,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold">Expenses</h1>
+      <Greeting name={settings?.first_name} />
+
+      <ExchangeRateWidget favoriteBanks={settings?.favorite_banks ?? []} />
+      <FavoriteCategoriesWidget favoriteCategoryIds={settings?.favorite_category_ids ?? []} />
+
+      <h2 className="text-sm font-semibold text-muted-foreground">Recent expenses</h2>
 
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());

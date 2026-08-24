@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet } from "lucide-react";
+import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,25 @@ export function AppShell() {
               </NavLink>
             ))}
           </nav>
-          <div>{token && <Button variant="ghost" size="sm" onClick={logout}>Log out</Button>}</div>
+          <div className="flex items-center gap-1">
+            <NavLink
+              to="/settings"
+              aria-label="Settings"
+              className={({ isActive }) =>
+                cn(
+                  "flex h-9 w-9 items-center justify-center rounded-md transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                )
+              }
+            >
+              <Settings className="h-4 w-4" />
+            </NavLink>
+            {token && (
+              <Button variant="ghost" size="sm" onClick={logout}>
+                Log out
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 

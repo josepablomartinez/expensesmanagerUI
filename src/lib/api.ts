@@ -66,6 +66,40 @@ export interface MerchantRule {
   active: boolean;
 }
 
+export interface Settings {
+  id: number;
+  display_currency: string;
+  favorite_banks: string[];
+  favorite_category_ids: number[];
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  updated_at: string;
+}
+
+export interface UpdateSettingsRequest {
+  display_currency?: string;
+  favorite_banks?: string[];
+  favorite_category_ids?: number[];
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+}
+
+export interface Bank {
+  id: number;
+  name: string;
+  code: string;
+}
+
+export interface ExchangeRateLatest {
+  bank_id: number;
+  code: string;
+  name: string;
+  date: string;
+  buy_price: number;
+}
+
 export interface CreateExpenseRequest {
   country?: string;
   city?: string;
@@ -185,6 +219,17 @@ export const api = {
         method: "POST",
         body: JSON.stringify({ commerce_pattern: body.commercePattern, category_id: body.categoryId }),
       }),
+  },
+  settings: {
+    get: () => request<Settings>("/settings"),
+    update: (body: UpdateSettingsRequest) =>
+      request<Settings>("/settings", { method: "PUT", body: JSON.stringify(body) }),
+  },
+  banks: {
+    list: () => request<Bank[]>("/banks"),
+  },
+  exchangeRates: {
+    list: () => request<ExchangeRateLatest[]>("/exchange-rates"),
   },
   reports: {
     budgetVsActual: (year: number, month: number) =>
