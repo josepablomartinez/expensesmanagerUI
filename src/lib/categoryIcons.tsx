@@ -10,6 +10,9 @@ import {
   Building2,
   MoreHorizontal,
   Tag,
+  TrendingUp,
+  Heart,
+  Receipt,
   type LucideIcon,
 } from "lucide-react";
 
@@ -18,15 +21,18 @@ import {
 const ICONS: Record<string, LucideIcon> = {
   Alimentacion: Utensils,
   Personal: User,
-  Health: HeartPulse,
-  Subscriptions: Repeat2,
+  Salud: HeartPulse,
+  Subscripciones: Repeat2,
   Mascotas: PawPrint,
-  Transport: Car,
+  Transporte: Car,
   Viajes: Plane,
   Navidad: Gift,
   Apto2: Building2,
   Apto14: Building2,
   Otros: MoreHorizontal,
+  Inversiones: TrendingUp,
+  Mama: Heart,
+  PagosExtra: Receipt,
 };
 
 export function mainCategoryOf(categoryName?: string | null): string | null {
