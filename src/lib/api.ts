@@ -29,6 +29,11 @@ export interface Category {
   main_category_id: number;
 }
 
+export interface MainCategory {
+  id: number;
+  name: string;
+}
+
 export interface BudgetVsActual {
   category_id: number;
   main_category_id: number;
@@ -228,6 +233,33 @@ export const api = {
   },
   categories: {
     list: () => request<Category[]>("/categories"),
+    create: (body: { mainCategoryId: number; subcategory: string; budget?: number }) =>
+      request<Category>("/categories", {
+        method: "POST",
+        body: JSON.stringify({
+          main_category_id: body.mainCategoryId,
+          subcategory: body.subcategory,
+          ...(body.budget !== undefined ? { budget: body.budget } : {}),
+        }),
+      }),
+    update: (id: number, body: { subcategory?: string; budget?: number }) =>
+      request<Category>(`/categories/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
+  },
+  mainCategories: {
+    list: () => request<MainCategory[]>("/main-categories"),
+    create: (name: string) =>
+      request<MainCategory>("/main-categories", {
+        method: "POST",
+        body: JSON.stringify({ name }),
+      }),
+    update: (id: number, name: string) =>
+      request<MainCategory>(`/main-categories/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ name }),
+      }),
   },
   merchantRules: {
     create: (body: { commercePattern: string; categoryId: number }) =>
