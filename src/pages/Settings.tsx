@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { CreditCardsSection } from "@/components/settings/CreditCardsSection";
 
 interface CategoryGroup {
   name: string;
@@ -212,6 +213,8 @@ export default function Settings() {
           )}
         </CardContent>
       </Card>
+
+      <CreditCardsSection banks={banks} />
 
       <Card>
         <CardHeader>

@@ -19,6 +19,9 @@ export interface Expense {
   type: string | null;
   motive: string | null;
   reviewed: boolean | null;
+  credit_card_id: number | null;
+  card_type?: string | null;
+  card_last4?: string | null;
 }
 
 export interface Category {
@@ -106,6 +109,41 @@ export interface ExchangeRateLatest {
   buy_price: number;
 }
 
+export type CardType = "mastercard" | "visa" | "amex";
+
+export interface CreditCard {
+  id: number;
+  bank_id: number;
+  bank_name: string;
+  card_type: CardType;
+  last4: string;
+  credit_limit: number;
+  limit_currency: string;
+  cutoff_day: number | null;
+  due_day: number | null;
+  active: boolean;
+}
+
+export interface CreateCreditCardRequest {
+  bank_id: number;
+  card_type: CardType;
+  last4: string;
+  credit_limit: number;
+  limit_currency?: string;
+  cutoff_day?: number;
+  due_day?: number;
+}
+
+export interface UpdateCreditCardRequest {
+  card_type?: CardType;
+  last4?: string;
+  credit_limit?: number;
+  limit_currency?: string;
+  cutoff_day?: number;
+  due_day?: number;
+  active?: boolean;
+}
+
 export interface CreateExpenseRequest {
   country?: string;
   city?: string;
@@ -120,6 +158,7 @@ export interface CreateExpenseRequest {
   type: string; // CARD/CASH/SINPE
   motive?: string;
   amount_colones?: number; // required when currency is USD
+  credit_card_id?: number;
 }
 
 export interface SplitRequest {
@@ -198,18 +237,26 @@ export const api = {
         method: "PUT",
         body: JSON.stringify({ category_id: categoryId }),
       }),
-    update: (id: number, body: { amount?: number; categoryId?: number; reason?: string }) =>
-      request<{ id: number; amount: number; category_id: number | null; reason: string | null; reviewed: boolean }>(
-        `/expenses/${id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            ...(body.amount !== undefined ? { amount: body.amount } : {}),
-            ...(body.categoryId !== undefined ? { category_id: body.categoryId } : {}),
-            ...(body.reason !== undefined ? { reason: body.reason } : {}),
-          }),
-        },
-      ),
+    update: (
+      id: number,
+      body: { amount?: number; categoryId?: number; reason?: string; creditCardId?: number },
+    ) =>
+      request<{
+        id: number;
+        amount: number;
+        category_id: number | null;
+        reason: string | null;
+        reviewed: boolean;
+        credit_card_id: number | null;
+      }>(`/expenses/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          ...(body.amount !== undefined ? { amount: body.amount } : {}),
+          ...(body.categoryId !== undefined ? { category_id: body.categoryId } : {}),
+          ...(body.reason !== undefined ? { reason: body.reason } : {}),
+          ...(body.creditCardId !== undefined ? { credit_card_id: body.creditCardId } : {}),
+        }),
+      }),
     bulkApprove: (ids: number[]) =>
       request<BulkApproveResult>(`/expenses/bulk-approve`, {
         method: "POST",
@@ -278,6 +325,13 @@ export const api = {
   },
   exchangeRates: {
     list: () => request<ExchangeRateLatest[]>("/exchange-rates"),
+  },
+  creditCards: {
+    list: () => request<CreditCard[]>("/credit-cards"),
+    create: (body: CreateCreditCardRequest) =>
+      request<CreditCard>("/credit-cards", { method: "POST", body: JSON.stringify(body) }),
+    update: (id: number, body: UpdateCreditCardRequest) =>
+      request<CreditCard>(`/credit-cards/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   },
   reports: {
     budgetVsActual: (year: number, month: number) =>

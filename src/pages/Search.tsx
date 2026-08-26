@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Split, Pencil, Trash2 } from "lucide-react";
-import { api, type Category, type Expense } from "@/lib/api";
+import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { api, type Category, type CreditCard, type Expense } from "@/lib/api";
 import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate } from "@/lib/date";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
+import { ExpenseDetailPanel } from "@/components/expenses/ExpenseDetailPanel";
 
 function firstOfMonth() {
   const d = new Date();
@@ -36,6 +37,8 @@ export default function Search() {
 
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const [creditCards, setCreditCards] = React.useState<CreditCard[]>([]);
+  const [expandedId, setExpandedId] = React.useState<number | null>(null);
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
@@ -44,6 +47,7 @@ export default function Search() {
 
   React.useEffect(() => {
     api.categories.list().then(setCategories).catch(() => {});
+    api.creditCards.list().then(setCreditCards).catch(() => {});
   }, []);
 
   const load = React.useCallback(() => {
@@ -132,62 +136,77 @@ export default function Search() {
         <div className="flex flex-col gap-2">
           {results.map((expense) => {
             const Icon = getCategoryIcon(mainCategoryOf(expense.category_name));
+            const isExpanded = expandedId === expense.id;
             return (
               <Card key={expense.id}>
-                <CardContent className="flex items-center justify-between gap-4 pt-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{expense.merchant ?? expense.entity}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {expense.date.slice(0, 10)} · {expense.category_name ?? "Uncategorized"}
+                <CardContent className="pt-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <button
+                      type="button"
+                      className="flex flex-1 items-center gap-3 text-left"
+                      onClick={() => setExpandedId(isExpanded ? null : expense.id)}
+                      aria-expanded={isExpanded}
+                      aria-label="Toggle expense details"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                        <Icon className="h-4 w-4" />
                       </span>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{expense.merchant ?? expense.entity}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {expense.date.slice(0, 10)} · {expense.category_name ?? "Uncategorized"}
+                        </span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </button>
+                    <div className="flex items-center gap-2">
+                      {!expense.reviewed && (
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/review?focus=${expense.id}`)}
+                          aria-label="Go to this expense in Review"
+                        >
+                          <Badge variant="outline" className="cursor-pointer hover:bg-accent">
+                            Unreviewed
+                          </Badge>
+                        </button>
+                      )}
+                      <span className="font-medium">{formatExpenseAmount(expense)}</span>
+                      {expense.reviewed && (
+                        <>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Edit category"
+                            onClick={() => setEditTarget(expense)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Split expense"
+                            onClick={() => setSplitTarget(expense)}
+                          >
+                            <Split className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Delete expense"
+                            onClick={() => setDeleteTarget(expense)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {!expense.reviewed && (
-                      <button
-                        type="button"
-                        onClick={() => navigate(`/review?focus=${expense.id}`)}
-                        aria-label="Go to this expense in Review"
-                      >
-                        <Badge variant="outline" className="cursor-pointer hover:bg-accent">
-                          Unreviewed
-                        </Badge>
-                      </button>
-                    )}
-                    <span className="font-medium">{formatExpenseAmount(expense)}</span>
-                    {expense.reviewed && (
-                      <>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label="Edit category"
-                          onClick={() => setEditTarget(expense)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label="Split expense"
-                          onClick={() => setSplitTarget(expense)}
-                        >
-                          <Split className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label="Delete expense"
-                          onClick={() => setDeleteTarget(expense)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                  {isExpanded && <ExpenseDetailPanel expense={expense} creditCards={creditCards} />}
                 </CardContent>
               </Card>
             );
