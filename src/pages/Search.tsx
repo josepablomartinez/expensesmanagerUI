@@ -2,7 +2,8 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { api, type Category, type CreditCard, type Expense } from "@/lib/api";
-import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
+import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,7 @@ type SortDir = "asc" | "desc";
 
 export default function Search() {
   const navigate = useNavigate();
+  const { currency } = useCurrency();
   const [from, setFrom] = React.useState(firstOfMonth());
   const [to, setTo] = React.useState(today());
   const [categoryId, setCategoryId] = React.useState("");
@@ -75,14 +77,14 @@ export default function Search() {
     const sorted = [...rows].sort((a, b) => {
       const cmp =
         sortBy === "amount"
-          ? crcValue(a) - crcValue(b)
+          ? expenseValue(a, currency) - expenseValue(b, currency)
           : a.date.localeCompare(b.date);
       return sortDir === "asc" ? cmp : -cmp;
     });
     return sorted;
-  }, [expenses, query, sortBy, sortDir]);
+  }, [expenses, query, sortBy, sortDir, currency]);
 
-  const total = results.reduce((sum, e) => sum + crcValue(e), 0);
+  const total = results.reduce((sum, e) => sum + expenseValue(e, currency), 0);
 
   return (
     <div className="flex flex-col gap-4">
@@ -122,7 +124,7 @@ export default function Search() {
       <Card>
         <CardContent className="flex items-center justify-between pt-4">
           <span className="text-sm text-muted-foreground">{results.length} expenses</span>
-          <span className="text-lg font-semibold">{formatMoney(total, "CRC")}</span>
+          <span className="text-lg font-semibold">{formatMoney(total, currency)}</span>
         </CardContent>
       </Card>
 
@@ -180,7 +182,7 @@ export default function Search() {
                           </Badge>
                         </button>
                       )}
-                      <span className="font-medium">{formatExpenseAmount(expense)}</span>
+                      <span className="font-medium">{formatExpenseAmount(expense, currency)}</span>
                       {expense.reviewed && (
                         <>
                           <Button

@@ -3,6 +3,7 @@ import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet, Settings, Sun,
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
+import { useCurrency } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
 import { DuplicateAlertToast } from "@/components/DuplicateAlertToast";
 
@@ -20,6 +21,7 @@ const BOTTOM_NAV_ITEMS = [
 export function AppShell() {
   const { token, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { currency, toggleCurrency } = useCurrency();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -52,6 +54,15 @@ export function AppShell() {
             ))}
           </nav>
           <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label={currency === "CRC" ? "Switch to USD" : "Switch to CRC"}
+              onClick={toggleCurrency}
+              className="font-semibold"
+            >
+              {currency === "CRC" ? "₡" : "$"}
+            </Button>
             <Button
               variant="ghost"
               size="icon"

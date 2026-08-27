@@ -2,7 +2,8 @@ import * as React from "react";
 import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { api, type Category, type CreditCard, type Expense, type Settings } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatMoney, formatExpenseAmount, crcValue } from "@/lib/format";
+import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate as isoDate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,6 +38,7 @@ interface DayGroup {
 }
 
 export default function Home() {
+  const { currency } = useCurrency();
   const [daysBack, setDaysBack] = React.useState(PAGE_DAYS);
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -105,7 +107,7 @@ export default function Home() {
 
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());
-        const dayTotal = group.items.reduce((sum, e) => sum + crcValue(e), 0);
+        const dayTotal = group.items.reduce((sum, e) => sum + expenseValue(e, currency), 0);
 
         return (
           <Card key={group.iso} className="border-border/80 shadow-sm">
@@ -114,7 +116,7 @@ export default function Home() {
                 <h2 className="text-sm font-semibold text-foreground">{formatDayLabel(group.iso)}</h2>
                 {group.items.length > 0 && (
                   <span className="text-xs font-medium text-muted-foreground">
-                    {formatMoney(dayTotal, "CRC")}
+                    {formatMoney(dayTotal, currency)}
                   </span>
                 )}
               </div>
@@ -162,7 +164,7 @@ export default function Home() {
                             {!expense.reviewed && expense.confidence != null && (
                               <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
                             )}
-                            <span className="font-medium">{formatExpenseAmount(expense)}</span>
+                            <span className="font-medium">{formatExpenseAmount(expense, currency)}</span>
                             {expense.reviewed && (
                               <>
                                 <Button

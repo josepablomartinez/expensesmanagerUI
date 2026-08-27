@@ -11,6 +11,7 @@ export interface Expense {
   hour: string | null;
   amount: number | null;
   colones_amount: number | null;
+  dollars_amount: number | null;
   category_id: number | null;
   category_name?: string | null;
   budget?: number | null;
@@ -44,7 +45,9 @@ export interface BudgetVsActual {
   main_category_id: number;
   category_name: string;
   budget: number | null;
+  budget_usd: number | null;
   actual_crc: number;
+  actual_usd: number;
   pct_used: number | null;
 }
 
@@ -52,10 +55,14 @@ export interface BudgetBurndownRow {
   category_id: number;
   category_name: string;
   budget: number | null;
+  budget_usd: number | null;
   date: string;
   daily_crc: number;
+  daily_usd: number;
   cumulative_crc: number;
+  cumulative_usd: number;
   expected_crc: number;
+  expected_usd: number;
 }
 
 export interface CategoryMonthMatrixRow {
@@ -63,6 +70,7 @@ export interface CategoryMonthMatrixRow {
   subcategoria_nombre: string;
   month: number;
   total_crc: number;
+  total_usd: number;
 }
 
 export interface BulkApproveResult {
@@ -109,6 +117,7 @@ export interface ExchangeRateLatest {
   name: string;
   date: string;
   buy_price: number;
+  sell_price: number;
 }
 
 export type CardType = "mastercard" | "visa" | "amex";

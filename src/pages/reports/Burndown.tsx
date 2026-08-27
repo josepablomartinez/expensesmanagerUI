@@ -1,6 +1,7 @@
 import * as React from "react";
 import { api, type BudgetBurndownRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { PeriodSelect } from "@/components/reports/PeriodSelect";
@@ -14,6 +15,7 @@ function dayOfMonth(dateStr: string) {
 }
 
 export default function Burndown() {
+  const { currency } = useCurrency();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
   const [month, setMonth] = React.useState(now.getMonth() + 1);
@@ -64,12 +66,15 @@ export default function Burndown() {
     const muted = chartColors.mutedForeground();
     const border = chartColors.border();
 
+    const cumulativeOf = (r: (typeof rows)[number]) => (currency === "USD" ? r.cumulative_usd : r.cumulative_crc);
+    const expectedOf = (r: (typeof rows)[number]) => (currency === "USD" ? r.expected_usd : r.expected_crc);
+
     const days = rows.map((r) => dayOfMonth(r.date));
-    const expected = rows.map((r) => r.expected_crc);
-    const crossIndex = rows.findIndex((r) => r.cumulative_crc > r.expected_crc);
-    const underPace = rows.map((r, i) => (crossIndex === -1 || i <= crossIndex ? r.cumulative_crc : null));
-    const overPace = rows.map((r, i) => (crossIndex !== -1 && i >= crossIndex ? r.cumulative_crc : null));
-    const budget = rows[0]?.budget ?? null;
+    const expected = rows.map(expectedOf);
+    const crossIndex = rows.findIndex((r) => cumulativeOf(r) > expectedOf(r));
+    const underPace = rows.map((r, i) => (crossIndex === -1 || i <= crossIndex ? cumulativeOf(r) : null));
+    const overPace = rows.map((r, i) => (crossIndex !== -1 && i >= crossIndex ? cumulativeOf(r) : null));
+    const budget = (currency === "USD" ? rows[0]?.budget_usd : rows[0]?.budget) ?? null;
 
     // Two null-padded segments (rather than one series recolored by
     // visualMap) so under/over-pace portions render in different colors.
@@ -85,7 +90,7 @@ export default function Burndown() {
           const list = (Array.isArray(params) ? params : [params]).filter((p) => p.value != null);
           const lines = list.map((p) => {
             const displayName = p.seriesName === "Expected pace" ? "Expected pace" : "Actual";
-            return `${p.marker ?? ""}${displayName}: ${formatMoney(p.value as number, "CRC")}`;
+            return `${p.marker ?? ""}${displayName}: ${formatMoney(p.value as number, currency)}`;
           });
           return [list[0]?.name ?? "", ...lines].join("<br/>");
         },
@@ -104,7 +109,7 @@ export default function Burndown() {
       },
       yAxis: {
         type: "value",
-        axisLabel: { color: muted, formatter: (v: number) => formatMoney(v, "CRC") },
+        axisLabel: { color: muted, formatter: (v: number) => formatMoney(v, currency) },
         splitLine: { lineStyle: { color: border, opacity: 0.3 } },
       },
       series: [
@@ -152,14 +157,14 @@ export default function Burndown() {
                   symbolSize: 6,
                   itemStyle: { color: destructive },
                   label: { show: false },
-                  data: [{ name: "crossover", coord: [crossIndex, rows[crossIndex].cumulative_crc] }],
+                  data: [{ name: "crossover", coord: [crossIndex, cumulativeOf(rows[crossIndex])] }],
                 }
               : undefined,
         },
       ],
     };
     return option;
-  }, [rows]);
+  }, [rows, currency]);
 
   return (
     <div className="flex flex-col gap-4">

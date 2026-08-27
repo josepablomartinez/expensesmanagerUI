@@ -1,6 +1,7 @@
 import * as React from "react";
 import { api, type Expense } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
+  const { currency } = useCurrency();
+  const equivalent = currency === "CRC" ? expense.colones_amount : expense.dollars_amount;
   const [reason, setReason] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
@@ -46,8 +49,8 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
           </CardTitle>
           <p className="text-xs text-muted-foreground">
             {formatMoney(expense.amount, expense.currency)}
-            {expense.colones_amount != null && expense.currency !== "CRC" && (
-              <> · {formatMoney(expense.colones_amount, "CRC")}</>
+            {equivalent != null && expense.currency !== currency && (
+              <> · {formatMoney(equivalent, currency)}</>
             )}
           </p>
         </CardHeader>

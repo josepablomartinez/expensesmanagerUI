@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { CreditCardsSection } from "@/components/settings/CreditCardsSection";
+import { useCurrency } from "@/lib/currency";
 
 interface CategoryGroup {
   name: string;
@@ -52,6 +53,7 @@ function ToggleChip({
 }
 
 export default function Settings() {
+  const { currency, setCurrency } = useCurrency();
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [banks, setBanks] = React.useState<Bank[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -59,7 +61,6 @@ export default function Settings() {
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
 
-  const [displayCurrency, setDisplayCurrency] = React.useState("CRC");
   const [favoriteBanks, setFavoriteBanks] = React.useState<Set<string>>(new Set());
   const [favoriteCategoryIds, setFavoriteCategoryIds] = React.useState<Set<number>>(new Set());
   const [firstName, setFirstName] = React.useState("");
@@ -70,7 +71,6 @@ export default function Settings() {
   React.useEffect(() => {
     Promise.all([api.settings.get(), api.categories.list(), api.banks.list()])
       .then(([settings, cats, bankList]) => {
-        setDisplayCurrency(settings.display_currency);
         setFavoriteBanks(new Set(settings.favorite_banks));
         setFavoriteCategoryIds(new Set(settings.favorite_category_ids));
         setFirstName(settings.first_name ?? "");
@@ -120,7 +120,6 @@ export default function Settings() {
     setSaved(false);
     try {
       await api.settings.update({
-        display_currency: displayCurrency,
         favorite_banks: Array.from(favoriteBanks),
         favorite_category_ids: Array.from(favoriteCategoryIds),
         first_name: firstName.trim() === "" ? null : firstName.trim(),
@@ -149,11 +148,8 @@ export default function Settings() {
         </CardHeader>
         <CardContent className="pt-0">
           <Select
-            value={displayCurrency}
-            onChange={(e) => {
-              setSaved(false);
-              setDisplayCurrency(e.target.value);
-            }}
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value === "USD" ? "USD" : "CRC")}
             className="w-40"
           >
             <option value="CRC">CRC (₡)</option>

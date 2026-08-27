@@ -1,6 +1,7 @@
 import * as React from "react";
 import { api, type CategoryMonthMatrixRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { EChart, chartColors } from "@/components/charts/EChart";
@@ -10,6 +11,7 @@ import type { EChartsOption } from "echarts";
 const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function SubcategoriesByMonth() {
+  const { currency } = useCurrency();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
 
@@ -61,12 +63,13 @@ export default function SubcategoriesByMonth() {
 
     const bySubcategory = new Map<number, { name: string; totals: number[] }>();
     for (const row of rows) {
+      const total = currency === "USD" ? row.total_usd : row.total_crc;
       const existing = bySubcategory.get(row.subcategoria_id);
       if (existing) {
-        existing.totals[row.month - 1] = row.total_crc;
+        existing.totals[row.month - 1] = total;
       } else {
         const totals = new Array(12).fill(0);
-        totals[row.month - 1] = row.total_crc;
+        totals[row.month - 1] = total;
         bySubcategory.set(row.subcategoria_id, { name: row.subcategoria_nombre, totals });
       }
     }
@@ -86,7 +89,7 @@ export default function SubcategoriesByMonth() {
         trigger: "axis",
         formatter: (params) => {
           const list = Array.isArray(params) ? params : [params];
-          const lines = list.map((p) => `${p.marker ?? ""}${p.seriesName}: ${formatMoney(p.value as number, "CRC")}`);
+          const lines = list.map((p) => `${p.marker ?? ""}${p.seriesName}: ${formatMoney(p.value as number, currency)}`);
           return [list[0]?.name ?? "", ...lines].join("<br/>");
         },
       },
@@ -104,13 +107,13 @@ export default function SubcategoriesByMonth() {
       },
       yAxis: {
         type: "value",
-        axisLabel: { color: muted, formatter: (v: number) => formatMoney(v, "CRC") },
+        axisLabel: { color: muted, formatter: (v: number) => formatMoney(v, currency) },
         splitLine: { lineStyle: { color: border, opacity: 0.3 } },
       },
       series,
     };
     return option;
-  }, [rows]);
+  }, [rows, currency]);
 
   return (
     <div className="flex flex-col gap-4">

@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatExpenseAmount } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { InfoModal } from "@/components/InfoModal";
 
 export default function Review() {
+  const { currency } = useCurrency();
   const [searchParams] = useSearchParams();
   const focusId = searchParams.get("focus");
 
@@ -197,7 +199,7 @@ export default function Review() {
                   <div className="flex flex-col">
                     <span className="font-medium">{expense.merchant ?? expense.entity}</span>
                     <span className="text-xs text-muted-foreground">
-                      {expense.date.slice(0, 10)} · {formatExpenseAmount(expense)}
+                      {expense.date.slice(0, 10)} · {formatExpenseAmount(expense, currency)}
                     </span>
                   </div>
                 </div>

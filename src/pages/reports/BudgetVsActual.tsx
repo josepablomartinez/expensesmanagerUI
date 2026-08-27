@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Flame } from "lucide-react";
 import { api, type BudgetVsActual as BudgetVsActualRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
@@ -21,6 +22,7 @@ function severityBarClass(pct: number) {
 }
 
 export default function BudgetVsActual() {
+  const { currency } = useCurrency();
   const now = new Date();
   const [searchParams] = useSearchParams();
   const [year, setYear] = React.useState(now.getFullYear());
@@ -98,7 +100,9 @@ export default function BudgetVsActual() {
   }
 
   const donutOption = React.useMemo(() => {
-    if (!selectedRow || selectedRow.budget == null) return null;
+    const budget = currency === "USD" ? selectedRow?.budget_usd : selectedRow?.budget;
+    const actual = currency === "USD" ? (selectedRow?.actual_usd ?? 0) : (selectedRow?.actual_crc ?? 0);
+    if (!selectedRow || budget == null) return null;
     const pct = selectedRow.pct_used ?? 0;
     const over = pct > 100;
     const primary = chartColors.primary();
@@ -109,12 +113,12 @@ export default function BudgetVsActual() {
 
     const data = over
       ? [
-          { name: "Budget", value: selectedRow.budget, itemStyle: { color: primary } },
-          { name: "Over budget", value: selectedRow.actual_crc - selectedRow.budget, itemStyle: { color: destructive } },
+          { name: "Budget", value: budget, itemStyle: { color: primary } },
+          { name: "Over budget", value: actual - budget, itemStyle: { color: destructive } },
         ]
       : [
-          { name: "Spent", value: selectedRow.actual_crc, itemStyle: { color: primary } },
-          { name: "Remaining", value: selectedRow.budget - selectedRow.actual_crc, itemStyle: { color: border } },
+          { name: "Spent", value: actual, itemStyle: { color: primary } },
+          { name: "Remaining", value: budget - actual, itemStyle: { color: border } },
         ];
 
     const option: EChartsOption = {
@@ -130,7 +134,7 @@ export default function BudgetVsActual() {
         trigger: "item",
         formatter: (p) => {
           const point = p as { name: string; value: number };
-          return `${point.name}: ${formatMoney(point.value, "CRC")}`;
+          return `${point.name}: ${formatMoney(point.value, currency)}`;
         },
       },
       series: [
@@ -146,7 +150,7 @@ export default function BudgetVsActual() {
       ],
     };
     return option;
-  }, [selectedRow]);
+  }, [selectedRow, currency]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -167,6 +171,8 @@ export default function BudgetVsActual() {
               {visibleRows.map((row) => {
                 const pct = row.pct_used ?? 0;
                 const over = pct >= 100;
+                const actual = currency === "USD" ? row.actual_usd : row.actual_crc;
+                const budget = currency === "USD" ? row.budget_usd : row.budget;
                 return (
                   <Card
                     key={row.category_id}
@@ -182,7 +188,7 @@ export default function BudgetVsActual() {
                       <div className="flex items-center justify-between">
                         <span className="font-medium">{row.category_name}</span>
                         <span className="text-sm text-muted-foreground">
-                          {formatMoney(row.actual_crc, "CRC")} / {row.budget != null ? formatMoney(row.budget, "CRC") : "—"}
+                          {formatMoney(actual, currency)} / {budget != null ? formatMoney(budget, currency) : "—"}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -240,7 +246,8 @@ export default function BudgetVsActual() {
                       <>
                         <EChart option={donutOption} height={220} />
                         <p className="text-center text-xs text-muted-foreground">
-                          {formatMoney(selectedRow.actual_crc, "CRC")} / {formatMoney(selectedRow.budget, "CRC")}
+                          {formatMoney(currency === "USD" ? selectedRow.actual_usd : selectedRow.actual_crc, currency)} /{" "}
+                          {formatMoney(currency === "USD" ? selectedRow.budget_usd : selectedRow.budget, currency)}
                         </p>
                       </>
                     ) : (

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Flame } from "lucide-react";
 import { api, type BudgetVsActual } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { splitCategoryName } from "@/lib/categoryGrouping";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ function severityBarClass(pct: number) {
 
 export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCategoryIds: number[] }) {
   const navigate = useNavigate();
+  const { currency } = useCurrency();
   const [rows, setRows] = React.useState<BudgetVsActual[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -52,6 +54,8 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
           filtered.map((row) => {
             const pct = row.pct_used ?? 0;
             const over = pct >= 100;
+            const actual = currency === "USD" ? row.actual_usd : row.actual_crc;
+            const budget = currency === "USD" ? row.budget_usd : row.budget;
             return (
               <div
                 key={row.category_id}
@@ -68,8 +72,8 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{splitCategoryName(row.category_name).subName}</span>
                   <span className="text-muted-foreground">
-                    {formatMoney(row.actual_crc, "CRC")}
-                    {row.budget != null ? ` / ${formatMoney(row.budget, "CRC")}` : ""}
+                    {formatMoney(actual, currency)}
+                    {budget != null ? ` / ${formatMoney(budget, currency)}` : ""}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">

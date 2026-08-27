@@ -1,6 +1,7 @@
 import * as React from "react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Props) {
+  const { currency } = useCurrency();
+  const equivalent = currency === "CRC" ? expense.colones_amount : expense.dollars_amount;
   const [amount, setAmount] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
   const [reason, setReason] = React.useState("");
@@ -58,8 +61,8 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
           </CardTitle>
           <p className="text-xs text-muted-foreground">
             Total {formatMoney(expense.amount, expense.currency)}
-            {expense.colones_amount != null && expense.currency !== "CRC" && (
-              <> · {formatMoney(expense.colones_amount, "CRC")}</>
+            {equivalent != null && expense.currency !== currency && (
+              <> · {formatMoney(equivalent, currency)}</>
             )}
           </p>
         </CardHeader>
