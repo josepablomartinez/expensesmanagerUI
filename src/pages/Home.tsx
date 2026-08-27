@@ -154,6 +154,11 @@ export default function Home() {
                             )}
                           </button>
                           <div className="flex items-center gap-2">
+                            {expense.flag_type && (
+                              <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
+                                Possible duplicate
+                              </Badge>
+                            )}
                             {!expense.reviewed && expense.confidence != null && (
                               <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
                             )}

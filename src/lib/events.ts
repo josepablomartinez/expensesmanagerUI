@@ -16,6 +16,7 @@ export interface ExpenseEvent {
   date_event?: string;
   confidence?: number | null;
   reviewed?: boolean;
+  flag_type?: string | null;
 }
 
 // Subscribes to GET /events (SSE) for the component's lifetime and calls

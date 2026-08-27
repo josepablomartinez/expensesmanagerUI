@@ -22,6 +22,8 @@ export interface Expense {
   credit_card_id: number | null;
   card_type?: string | null;
   card_last4?: string | null;
+  flag_type: string | null;
+  flag_reason: string | null;
 }
 
 export interface Category {

@@ -202,6 +202,11 @@ export default function Review() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {expense.flag_type && (
+                    <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
+                      Possible duplicate
+                    </Badge>
+                  )}
                   {expense.confidence != null && (
                     <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
                   )}

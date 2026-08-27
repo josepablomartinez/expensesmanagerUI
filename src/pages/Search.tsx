@@ -164,6 +164,11 @@ export default function Search() {
                       )}
                     </button>
                     <div className="flex items-center gap-2">
+                      {expense.flag_type && (
+                        <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
+                          Possible duplicate
+                        </Badge>
+                      )}
                       {!expense.reviewed && (
                         <button
                           type="button"

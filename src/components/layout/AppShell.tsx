@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
+import { DuplicateAlertToast } from "@/components/DuplicateAlertToast";
 
 const TOP_NAV_ITEMS = [
   { to: "/review", label: "Review", icon: ListChecks },
@@ -22,6 +23,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <DuplicateAlertToast />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <NavLink to="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight">

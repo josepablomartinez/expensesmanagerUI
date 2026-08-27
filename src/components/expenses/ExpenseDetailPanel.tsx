@@ -19,7 +19,7 @@ export function ExpenseDetailPanel({ expense, creditCards }: { expense: Expense;
   const typeLabel = TYPE_LABELS[expense.type ?? ""] ?? expense.type;
 
   const hasCard = expense.credit_card_id != null && expense.card_type;
-  const nothingToShow = !bank && !hasCard && !expense.motive;
+  const nothingToShow = !bank && !hasCard && !expense.motive && !expense.flag_reason;
 
   return (
     <div className="mt-2 flex flex-col gap-2 rounded-md border border-border bg-secondary/30 p-3 text-sm">
@@ -40,6 +40,7 @@ export function ExpenseDetailPanel({ expense, creditCards }: { expense: Expense;
           </div>
 
           {expense.motive && <p className="text-muted-foreground">{expense.motive}</p>}
+          {expense.flag_reason && <p className="text-destructive">{expense.flag_reason}</p>}
         </>
       )}
     </div>
