@@ -1,7 +1,9 @@
 import { getGreeting } from "@/lib/greeting";
+import { useT } from "@/lib/language";
 
 export function Greeting({ name }: { name?: string | null }) {
-  const { text, icon: Icon } = getGreeting();
+  const t = useT();
+  const { text, icon: Icon } = getGreeting(t.dashboard.greeting);
 
   return (
     <div className="flex items-center gap-3">

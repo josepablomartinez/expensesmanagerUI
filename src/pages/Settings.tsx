@@ -7,6 +7,7 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { CreditCardsSection } from "@/components/settings/CreditCardsSection";
 import { useCurrency } from "@/lib/currency";
+import { useLanguage } from "@/lib/language";
 
 interface CategoryGroup {
   name: string;
@@ -54,6 +55,7 @@ function ToggleChip({
 
 export default function Settings() {
   const { currency, setCurrency } = useCurrency();
+  const { language, setLanguage, t } = useLanguage();
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [banks, setBanks] = React.useState<Bank[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -79,7 +81,7 @@ export default function Settings() {
         setCategories(cats);
         setBanks(bankList);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
+      .catch((err) => setError(err instanceof Error ? err.message : t.settings.failedToLoad))
       .finally(() => setLoading(false));
   }, []);
 
@@ -128,23 +130,23 @@ export default function Settings() {
       });
       setSaved(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      setError(err instanceof Error ? err.message : t.settings.failedToSave);
     } finally {
       setSaving(false);
     }
   }
 
-  if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
+  if (loading) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold">Settings</h1>
+      <h1 className="text-xl font-semibold">{t.settings.title}</h1>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Card>
         <CardHeader>
-          <CardTitle>Currency display</CardTitle>
+          <CardTitle>{t.settings.currencyDisplay}</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           <Select
@@ -160,11 +162,27 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Favorite categories</CardTitle>
+          <CardTitle>{t.settings.language}</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <Select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value === "es" ? "es" : "en")}
+            className="w-40"
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </Select>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.settings.favoriteCategories}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 pt-0">
           {groups.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No categories yet.</p>
+            <p className="text-sm text-muted-foreground">{t.settings.noCategoriesYet}</p>
           ) : (
             <>
               <Select
@@ -193,11 +211,11 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Favorite banks</CardTitle>
+          <CardTitle>{t.settings.favoriteBanks}</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           {banks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No banks with exchange-rate history yet.</p>
+            <p className="text-sm text-muted-foreground">{t.settings.noBanksYet}</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {banks.map((b) => (
@@ -214,13 +232,13 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Personal info</CardTitle>
+          <CardTitle>{t.settings.personalInfo}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 pt-0">
           <div className="flex gap-3">
             <div className="flex flex-1 flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground" htmlFor="first_name">
-                First name
+                {t.settings.firstName}
               </label>
               <Input
                 id="first_name"
@@ -234,7 +252,7 @@ export default function Settings() {
             </div>
             <div className="flex flex-1 flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground" htmlFor="last_name">
-                Last name
+                {t.settings.lastName}
               </label>
               <Input
                 id="last_name"
@@ -249,7 +267,7 @@ export default function Settings() {
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-muted-foreground" htmlFor="email">
-              Email
+              {t.settings.email}
             </label>
             <Input
               id="email"
@@ -267,9 +285,9 @@ export default function Settings() {
 
       <div className="flex items-center gap-3">
         <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving…" : "Save"}
+          {saving ? t.common.saving : t.common.save}
         </Button>
-        {saved && <span className="text-sm text-muted-foreground">Saved.</span>}
+        {saved && <span className="text-sm text-muted-foreground">{t.common.saved}</span>}
       </div>
     </div>
   );

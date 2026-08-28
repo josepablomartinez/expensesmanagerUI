@@ -93,6 +93,7 @@ export interface Settings {
   first_name: string | null;
   last_name: string | null;
   email: string | null;
+  language: string;
   updated_at: string;
 }
 
@@ -103,6 +104,7 @@ export interface UpdateSettingsRequest {
   first_name?: string | null;
   last_name?: string | null;
   email?: string | null;
+  language?: string;
 }
 
 export interface Bank {

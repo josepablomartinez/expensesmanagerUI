@@ -2,6 +2,7 @@ import * as React from "react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
+import { useT } from "@/lib/language";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ interface Props {
 
 export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Props) {
   const { currency } = useCurrency();
+  const t = useT();
   const equivalent = currency === "CRC" ? expense.colones_amount : expense.dollars_amount;
   const [amount, setAmount] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
@@ -29,11 +31,11 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
 
     const parsed = Number(amount);
     if (!parsed || parsed <= 0) {
-      setError("Enter a valid amount");
+      setError(t.dialogs.splitExpense.enterValidAmount);
       return;
     }
     if (expense.amount != null && parsed >= expense.amount) {
-      setError("Split amount must be less than the full expense amount");
+      setError(t.dialogs.splitExpense.amountMustBeLess);
       return;
     }
 
@@ -46,7 +48,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
       });
       onSplit();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to split expense");
+      setError(err instanceof Error ? err.message : t.dialogs.splitExpense.failedToSplit);
     } finally {
       setSaving(false);
     }
@@ -57,10 +59,10 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
       <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="text-base text-foreground">
-            Split "{expense.merchant ?? expense.entity}"
+            {t.dialogs.splitExpense.title(expense.merchant ?? expense.entity)}
           </CardTitle>
           <p className="text-xs text-muted-foreground">
-            Total {formatMoney(expense.amount, expense.currency)}
+            {t.dialogs.splitExpense.total} {formatMoney(expense.amount, expense.currency)}
             {equivalent != null && expense.currency !== currency && (
               <> · {formatMoney(equivalent, currency)}</>
             )}
@@ -69,7 +71,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
-              placeholder="Amount to split off"
+              placeholder={t.dialogs.splitExpense.amountToSplitOff}
               type="number"
               inputMode="decimal"
               step="0.01"
@@ -78,7 +80,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
               autoFocus
             />
             <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-              <option value="">Uncategorized</option>
+              <option value="">{t.common.uncategorized}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.category} / {c.subcategory}
@@ -87,17 +89,17 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
             </Select>
             {!categoryId && (
               <p className="-mt-1 text-xs text-muted-foreground">
-                Left uncategorized, so it'll show up in Review.
+                {t.dialogs.splitExpense.leftUncategorizedNote}
               </p>
             )}
-            <Input placeholder="Reason (optional)" value={reason} onChange={(e) => setReason(e.target.value)} />
+            <Input placeholder={t.dialogs.splitExpense.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
-                Cancel
+                {t.common.cancel}
               </Button>
               <Button type="submit" className="flex-1" disabled={saving}>
-                {saving ? "Splitting…" : "Split"}
+                {saving ? t.dialogs.splitExpense.splitting : t.dialogs.splitExpense.split}
               </Button>
             </div>
           </form>

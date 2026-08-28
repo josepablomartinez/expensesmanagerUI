@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { useT } from "@/lib/language";
 
 function today() {
   return localISODate(new Date());
@@ -29,6 +30,7 @@ function generateAuthCode(str: string) {
 }
 
 export default function AddExpense() {
+  const t = useT();
   const navigate = useNavigate();
   const [categories, setCategories] = React.useState<Category[]>([]);
 
@@ -58,11 +60,11 @@ export default function AddExpense() {
 
     const parsedAmount = Number(amount);
     if (!parsedAmount || parsedAmount <= 0) {
-      setError("Enter a valid amount");
+      setError(t.addExpense.enterValidAmount);
       return;
     }
     if (currency === "USD" && (!amountColones || Number(amountColones) <= 0)) {
-      setError("Amount in colones is required for USD expenses");
+      setError(t.addExpense.amountInColonesRequired);
       return;
     }
 
@@ -88,7 +90,7 @@ export default function AddExpense() {
       });
       navigate("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save expense");
+      setError(err instanceof Error ? err.message : t.addExpense.failedToSaveExpense);
     } finally {
       setSaving(false);
     }
@@ -96,18 +98,18 @@ export default function AddExpense() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-4">
-      <h1 className="text-xl font-semibold">Add expense</h1>
+      <h1 className="text-xl font-semibold">{t.addExpense.title}</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Details</CardTitle>
+          <CardTitle>{t.addExpense.details}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
-            <Input placeholder="Merchant" value={merchant} onChange={(e) => setMerchant(e.target.value)} autoFocus />
+            <Input placeholder={t.addExpense.merchantPlaceholder} value={merchant} onChange={(e) => setMerchant(e.target.value)} autoFocus />
 
             <div className="flex gap-2">
               <Input
-                placeholder="Amount"
+                placeholder={t.addExpense.amountPlaceholder}
                 type="number"
                 inputMode="decimal"
                 step="0.01"
@@ -123,7 +125,7 @@ export default function AddExpense() {
 
             {currency === "USD" && (
               <Input
-                placeholder="Amount in colones"
+                placeholder={t.addExpense.amountInColonesPlaceholder}
                 type="number"
                 inputMode="decimal"
                 step="0.01"
@@ -136,14 +138,14 @@ export default function AddExpense() {
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="flex-1" />
               <Input type="time" value={hour} onChange={(e) => setHour(e.target.value)} className="flex-1" />
               <Select value={type} onChange={(e) => setType(e.target.value)} className="w-28">
-                <option value="CARD">Card</option>
-                <option value="CASH">Cash</option>
-                <option value="SINPE">Sinpe</option>
+                <option value="CARD">{t.addExpense.cardOption}</option>
+                <option value="CASH">{t.addExpense.cashOption}</option>
+                <option value="SINPE">{t.addExpense.sinpeOption}</option>
               </Select>
             </div>
 
             <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-              <option value="">Uncategorized</option>
+              <option value="">{t.common.uncategorized}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.category} / {c.subcategory}
@@ -151,12 +153,12 @@ export default function AddExpense() {
               ))}
             </Select>
 
-            <Input placeholder="Note (optional)" value={motive} onChange={(e) => setMotive(e.target.value)} />
+            <Input placeholder={t.addExpense.notePlaceholder} value={motive} onChange={(e) => setMotive(e.target.value)} />
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
             <Button type="submit" disabled={saving}>
-              {saving ? "Saving…" : "Save expense"}
+              {saving ? t.common.saving : t.addExpense.saveExpense}
             </Button>
           </form>
         </CardContent>

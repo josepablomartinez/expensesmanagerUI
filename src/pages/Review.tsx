@@ -5,6 +5,7 @@ import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatExpenseAmount } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
+import { useT } from "@/lib/language";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { InfoModal } from "@/components/InfoModal";
 
 export default function Review() {
   const { currency } = useCurrency();
+  const t = useT();
   const [searchParams] = useSearchParams();
   const focusId = searchParams.get("focus");
 
@@ -51,7 +53,7 @@ export default function Review() {
         return next;
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
+      setError(err instanceof Error ? err.message : t.review.failedToLoad);
     } finally {
       setLoading(false);
     }
@@ -105,7 +107,7 @@ export default function Review() {
         } catch (err) {
           // The approval already succeeded -- don't lose that just because
           // the rule failed to save, but surface it separately.
-          ruleWarning = ` (merchant rule not saved: ${err instanceof Error ? err.message : "unknown error"})`;
+          ruleWarning = t.review.merchantRuleNotSaved(err instanceof Error ? err.message : t.review.unknownError);
         }
       }
       setAlwaysCategorize((prev) => {
@@ -114,9 +116,9 @@ export default function Review() {
         return next;
       });
 
-      setSuccessMessage(`${expense.merchant ?? expense.entity} approved.${ruleWarning}`);
+      setSuccessMessage(t.review.approved(expense.merchant ?? expense.entity) + ruleWarning);
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to approve");
+      setActionError(err instanceof Error ? err.message : t.review.failedToApprove);
     }
   }
 
@@ -132,13 +134,13 @@ export default function Review() {
         ids.forEach((id) => next.delete(id));
         return next;
       });
-      setSuccessMessage(ids.length === 1 ? "1 expense approved." : `${ids.length} expenses approved.`);
+      setSuccessMessage(t.review.approvedCount(ids.length));
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to approve");
+      setActionError(err instanceof Error ? err.message : t.review.failedToApprove);
     }
   }
 
-  if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
+  if (loading) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
   if (error) return <p className="text-sm text-destructive">{error}</p>;
 
   const focusedExpenseMissing = focusId != null && !expenses.some((e) => String(e.id) === focusId);
@@ -146,16 +148,16 @@ export default function Review() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Review queue</h1>
+        <h1 className="text-xl font-semibold">{t.review.queueTitle}</h1>
         <div className="flex items-center gap-2">
-          <Badge variant="secondary">{expenses.length} pending</Badge>
+          <Badge variant="secondary">{t.review.pendingCount(expenses.length)}</Badge>
           <Button
             size="sm"
             variant="outline"
             onClick={() => approveIds([...selected])}
             disabled={selected.size === 0}
           >
-            Approve selected ({selected.size})
+            {t.review.approveSelected(selected.size)}
           </Button>
           <Button
             size="sm"
@@ -163,7 +165,7 @@ export default function Review() {
             onClick={() => approveIds(expenses.map((e) => e.id))}
             disabled={expenses.length === 0}
           >
-            Approve all
+            {t.review.approveAll}
           </Button>
         </div>
       </div>
@@ -171,12 +173,12 @@ export default function Review() {
       {actionError && <p className="text-sm text-destructive">{actionError}</p>}
       {focusedExpenseMissing && (
         <p className="text-sm text-muted-foreground">
-          That expense isn't in the review queue anymore (it may have already been approved).
+          {t.review.focusedExpenseMissing}
         </p>
       )}
 
       {expenses.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nothing to review.</p>
+        <p className="text-sm text-muted-foreground">{t.review.nothingToReview}</p>
       ) : (
         <div className="flex flex-col gap-2">
           {expenses.map((expense) => (
@@ -194,7 +196,7 @@ export default function Review() {
                     className="h-4 w-4 rounded border-border accent-primary"
                     checked={selected.has(expense.id)}
                     onChange={() => toggleSelected(expense.id)}
-                    aria-label={`Select ${expense.merchant ?? expense.entity}`}
+                    aria-label={t.review.selectExpense(expense.merchant ?? expense.entity)}
                   />
                   <div className="flex flex-col">
                     <span className="font-medium">{expense.merchant ?? expense.entity}</span>
@@ -206,11 +208,11 @@ export default function Review() {
                 <div className="flex items-center gap-2">
                   {expense.flag_type && (
                     <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
-                      Possible duplicate
+                      {t.common.possibleDuplicate}
                     </Badge>
                   )}
                   {expense.confidence != null && (
-                    <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
+                    <Badge variant="outline">{t.common.confidencePercent(Math.round(expense.confidence * 100))}</Badge>
                   )}
                   <Select
                     value={selections[expense.id] ?? ""}
@@ -219,7 +221,7 @@ export default function Review() {
                     }
                   >
                     <option value="" disabled>
-                      Choose category
+                      {t.review.chooseCategory}
                     </option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -234,8 +236,8 @@ export default function Review() {
                     )}
                     title={
                       expense.merchant
-                        ? `Always categorize "${expense.merchant}" this way`
-                        : "No merchant name on this expense to match future ones against"
+                        ? t.review.alwaysCategorizeTooltip(expense.merchant)
+                        : t.review.noMerchantNameTooltip
                     }
                   >
                     <input
@@ -246,14 +248,14 @@ export default function Review() {
                       onChange={(e) =>
                         setAlwaysCategorize((prev) => ({ ...prev, [expense.id]: e.target.checked }))
                       }
-                      aria-label={`Always categorize ${expense.merchant ?? expense.entity} this way`}
+                      aria-label={t.review.alwaysCategorizeAria(expense.merchant ?? expense.entity)}
                     />
-                    Always
+                    {t.review.always}
                   </label>
                   <Button
                     size="icon"
                     variant="outline"
-                    aria-label="Approve"
+                    aria-label={t.review.approve}
                     disabled={!selections[expense.id]}
                     onClick={() => confirmApprove(expense)}
                   >

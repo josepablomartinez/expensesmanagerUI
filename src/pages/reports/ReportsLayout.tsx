@@ -1,14 +1,16 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { PieChart, TrendingDown, LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const REPORT_TABS = [
-  { to: "/reports/budget-vs-actual", label: "Budget vs actual", icon: PieChart },
-  { to: "/reports/burndown", label: "Burn-down", icon: TrendingDown },
-  { to: "/reports/subcategories-by-month", label: "Subcategorías x mes", icon: LineChart },
-];
+import { useT } from "@/lib/language";
 
 export default function ReportsLayout() {
+  const t = useT();
+  const REPORT_TABS = [
+    { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
+    { to: "/reports/burndown", label: t.reportsLayout.tabs.burndown, icon: TrendingDown },
+    { to: "/reports/subcategories-by-month", label: t.reportsLayout.tabs.subcategoriesByMonth, icon: LineChart },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       <nav className="flex w-fit items-center gap-1 rounded-full border border-border bg-secondary/40 p-1">

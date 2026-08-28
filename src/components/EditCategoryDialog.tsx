@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { useT } from "@/lib/language";
 
 interface Props {
   expense: Expense;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function EditCategoryDialog({ expense, categories, onClose, onSave }: Props) {
+  const t = useT();
   const [categoryId, setCategoryId] = React.useState(
     expense.category_id ? String(expense.category_id) : "",
   );
@@ -27,7 +29,7 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
     setError(null);
 
     if (!categoryId) {
-      setError("Choose a category");
+      setError(t.dialogs.editCategory.chooseCategoryRequired);
       return;
     }
 
@@ -36,7 +38,7 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
       await api.expenses.update(expense.id, { categoryId: Number(categoryId), reason });
       onSave();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update category");
+      setError(err instanceof Error ? err.message : t.dialogs.editCategory.failedToUpdate);
     } finally {
       setSaving(false);
     }
@@ -47,14 +49,14 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
       <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="text-base text-foreground">
-            Edit category for "{expense.merchant ?? expense.entity}"
+            {t.dialogs.editCategory.title(expense.merchant ?? expense.entity)}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} autoFocus>
               <option value="" disabled>
-                Choose category
+                {t.dialogs.editCategory.chooseCategory}
               </option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -62,14 +64,14 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
                 </option>
               ))}
             </Select>
-            <Input placeholder="Reason (optional)" value={reason} onChange={(e) => setReason(e.target.value)} />
+            <Input placeholder={t.dialogs.editCategory.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
-                Cancel
+                {t.common.cancel}
               </Button>
               <Button type="submit" className="flex-1" disabled={saving}>
-                {saving ? "Saving…" : "Save"}
+                {saving ? t.common.saving : t.common.save}
               </Button>
             </div>
           </form>

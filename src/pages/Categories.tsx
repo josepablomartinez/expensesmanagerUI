@@ -5,6 +5,7 @@ import { getCategoryIcon } from "@/lib/categoryIcons";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useT } from "@/lib/language";
 
 interface MainGroup {
   mainCategoryId: number;
@@ -43,6 +44,7 @@ function errorMessage(err: unknown, fallback: string) {
 // static heading and a text input, mirroring the row-level edit affordance
 // below rather than keeping the whole page permanently in edit mode.
 function MainCategoryName({ name, onSave }: { name: string; onSave: (name: string) => Promise<void> }) {
+  const t = useT();
   const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(name);
   const [saving, setSaving] = React.useState(false);
@@ -78,7 +80,7 @@ function MainCategoryName({ name, onSave }: { name: string; onSave: (name: strin
       await onSave(trimmed);
       setEditing(false);
     } catch (err) {
-      setError(errorMessage(err, "Failed to rename"));
+      setError(errorMessage(err, t.categories.failedToRename));
     } finally {
       setSaving(false);
     }
@@ -131,6 +133,7 @@ function SubcategoryRow({
   category: Category;
   onSave: (patch: { subcategory?: string; budget?: number }) => Promise<void>;
 }) {
+  const t = useT();
   const [subcategory, setSubcategory] = React.useState(category.subcategory);
   const [budget, setBudget] = React.useState(category.budget != null ? String(category.budget) : "");
   const [saving, setSaving] = React.useState(false);
@@ -158,7 +161,7 @@ function SubcategoryRow({
       if (budgetNum !== null && budgetNum !== category.budget) patch.budget = budgetNum;
       await onSave(patch);
     } catch (err) {
-      setError(errorMessage(err, "Failed to save"));
+      setError(errorMessage(err, t.categories.failedToSave));
     } finally {
       setSaving(false);
     }
@@ -178,7 +181,7 @@ function SubcategoryRow({
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSave()}
-          placeholder="Budget"
+          placeholder={t.categories.budgetPlaceholder}
           inputMode="decimal"
           className="h-8 w-32"
           disabled={saving}
@@ -193,7 +196,7 @@ function SubcategoryRow({
           <Check className="h-4 w-4" />
         </Button>
       </div>
-      {!budgetValid && <p className="text-xs text-destructive">Budget must be a number</p>}
+      {!budgetValid && <p className="text-xs text-destructive">{t.categories.budgetMustBeNumber}</p>}
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
@@ -203,6 +206,7 @@ function SubcategoryRow({
 // list -- toggled by a button rather than always visible, same pattern as
 // MainCategoryName's edit toggle.
 function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: number) => Promise<void> }) {
+  const t = useT();
   const [open, setOpen] = React.useState(false);
   const [subcategory, setSubcategory] = React.useState("");
   const [budget, setBudget] = React.useState("");
@@ -217,7 +221,7 @@ function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: n
         className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
         <Plus className="h-3.5 w-3.5" />
-        Add subcategory
+        {t.categories.addSubcategory}
       </button>
     );
   }
@@ -225,12 +229,12 @@ function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: n
   async function handleAdd() {
     const trimmed = subcategory.trim();
     if (!trimmed) {
-      setError("Name is required");
+      setError(t.categories.nameRequired);
       return;
     }
     const budgetNum = budget.trim() === "" ? undefined : Number(budget);
     if (budgetNum !== undefined && Number.isNaN(budgetNum)) {
-      setError("Budget must be a number");
+      setError(t.categories.budgetMustBeNumber);
       return;
     }
     setSaving(true);
@@ -241,7 +245,7 @@ function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: n
       setBudget("");
       setOpen(false);
     } catch (err) {
-      setError(errorMessage(err, "Failed to add"));
+      setError(errorMessage(err, t.categories.failedToAdd));
     } finally {
       setSaving(false);
     }
@@ -254,20 +258,20 @@ function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: n
           autoFocus
           value={subcategory}
           onChange={(e) => setSubcategory(e.target.value)}
-          placeholder="New subcategory"
+          placeholder={t.categories.newSubcategoryPlaceholder}
           className="h-8 flex-1"
           disabled={saving}
         />
         <Input
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
-          placeholder="Budget"
+          placeholder={t.categories.budgetPlaceholder}
           inputMode="decimal"
           className="h-8 w-32"
           disabled={saving}
         />
         <Button size="sm" onClick={handleAdd} disabled={saving}>
-          Add
+          {t.categories.add}
         </Button>
         <Button
           size="icon"
@@ -293,6 +297,7 @@ function AddSubcategoryForm({ onAdd }: { onAdd: (subcategory: string, budget?: n
 // It only creates the group -- subcategories get added to it afterwards via
 // AddSubcategoryForm, since a main category can't hold a budget on its own.
 function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void> }) {
+  const t = useT();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [saving, setSaving] = React.useState(false);
@@ -302,7 +307,7 @@ function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void>
     return (
       <Button variant="outline" onClick={() => setOpen(true)} className="gap-1.5">
         <Plus className="h-4 w-4" />
-        Add category
+        {t.categories.addCategory}
       </Button>
     );
   }
@@ -310,7 +315,7 @@ function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void>
   async function handleAdd() {
     const trimmed = name.trim();
     if (!trimmed) {
-      setError("Name is required");
+      setError(t.categories.nameRequired);
       return;
     }
     setSaving(true);
@@ -320,7 +325,7 @@ function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void>
       setName("");
       setOpen(false);
     } catch (err) {
-      setError(errorMessage(err, "Failed to add"));
+      setError(errorMessage(err, t.categories.failedToAdd));
     } finally {
       setSaving(false);
     }
@@ -335,12 +340,12 @@ function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void>
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-            placeholder="New category name"
+            placeholder={t.categories.newCategoryNamePlaceholder}
             className="h-8 flex-1"
             disabled={saving}
           />
           <Button size="sm" onClick={handleAdd} disabled={saving}>
-            Add
+            {t.categories.add}
           </Button>
           <Button
             size="icon"
@@ -363,6 +368,7 @@ function AddMainCategoryForm({ onAdd }: { onAdd: (name: string) => Promise<void>
 }
 
 export default function Categories() {
+  const t = useT();
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [mainCategories, setMainCategories] = React.useState<MainCategory[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -374,7 +380,7 @@ export default function Categories() {
         setCategories(cats);
         setMainCategories(mainCats);
       })
-      .catch((err) => setError(errorMessage(err, "Failed to load")));
+      .catch((err) => setError(errorMessage(err, t.categories.failedToLoad)));
   }, []);
 
   React.useEffect(() => {
@@ -408,12 +414,12 @@ export default function Categories() {
     await load();
   }
 
-  if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
+  if (loading) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Categories</h1>
+        <h1 className="text-xl font-semibold">{t.categories.title}</h1>
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
@@ -434,7 +440,7 @@ export default function Categories() {
               </CardHeader>
               <CardContent className="pt-0">
                 {group.items.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No subcategories yet.</p>
+                  <p className="text-sm text-muted-foreground">{t.categories.noSubcategoriesYet}</p>
                 ) : (
                   group.items.map((c) => (
                     <SubcategoryRow key={c.id} category={c} onSave={(patch) => handleSaveSubcategory(c.id, patch)} />

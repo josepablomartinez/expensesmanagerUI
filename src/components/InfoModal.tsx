@@ -2,6 +2,7 @@ import * as React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/language";
 
 interface Props {
   message: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function InfoModal({ message, onClose }: Props) {
+  const t = useT();
   React.useEffect(() => {
     const timer = setTimeout(onClose, 1800);
     return () => clearTimeout(timer);
@@ -21,7 +23,7 @@ export function InfoModal({ message, onClose }: Props) {
           <CheckCircle2 className="h-10 w-10 text-primary" />
           <p className="text-sm font-medium">{message}</p>
           <Button size="sm" variant="outline" onClick={onClose}>
-            OK
+            {t.common.ok}
           </Button>
         </CardContent>
       </Card>

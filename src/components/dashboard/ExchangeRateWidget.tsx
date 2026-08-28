@@ -3,8 +3,10 @@ import { Landmark } from "lucide-react";
 import { api, type ExchangeRateLatest } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useT } from "@/lib/language";
 
 export function ExchangeRateWidget({ favoriteBanks }: { favoriteBanks: string[] }) {
+  const t = useT();
   const [rates, setRates] = React.useState<ExchangeRateLatest[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -27,13 +29,13 @@ export function ExchangeRateWidget({ favoriteBanks }: { favoriteBanks: string[] 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Exchange rate</CardTitle>
+        <CardTitle>{t.dashboard.exchangeRate.title}</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="text-sm text-muted-foreground">{t.common.loading}</p>
         ) : rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No rate data for your favorite banks yet.</p>
+          <p className="text-sm text-muted-foreground">{t.dashboard.exchangeRate.noRateData}</p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {rows.map((r) => (

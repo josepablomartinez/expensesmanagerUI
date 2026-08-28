@@ -2,6 +2,7 @@ import * as React from "react";
 import { api, type Expense } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
+import { useT } from "@/lib/language";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ interface Props {
 
 export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
   const { currency } = useCurrency();
+  const t = useT();
   const equivalent = currency === "CRC" ? expense.colones_amount : expense.dollars_amount;
   const [reason, setReason] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -25,7 +27,7 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
 
     const trimmed = reason.trim();
     if (!trimmed) {
-      setError("Enter a reason for deleting this expense");
+      setError(t.dialogs.deleteExpense.reasonRequired);
       return;
     }
 
@@ -34,7 +36,7 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
       await api.expenses.delete(expense.id, { deleted_reason: trimmed });
       onDeleted();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete expense");
+      setError(err instanceof Error ? err.message : t.dialogs.deleteExpense.failedToDelete);
     } finally {
       setSaving(false);
     }
@@ -45,7 +47,7 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
       <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="text-base text-foreground">
-            Delete "{expense.merchant ?? expense.entity}"
+            {t.dialogs.deleteExpense.title(expense.merchant ?? expense.entity)}
           </CardTitle>
           <p className="text-xs text-muted-foreground">
             {formatMoney(expense.amount, expense.currency)}
@@ -57,7 +59,7 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
-              placeholder="Reason for deleting (required)"
+              placeholder={t.dialogs.deleteExpense.reasonPlaceholder}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               autoFocus
@@ -65,10 +67,10 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
-                Cancel
+                {t.common.cancel}
               </Button>
               <Button type="submit" variant="destructive" className="flex-1" disabled={saving}>
-                {saving ? "Deleting…" : "Delete"}
+                {saving ? t.dialogs.deleteExpense.deleting : t.dialogs.deleteExpense.delete}
               </Button>
             </div>
           </form>

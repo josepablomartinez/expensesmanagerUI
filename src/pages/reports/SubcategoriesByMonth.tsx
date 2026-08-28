@@ -6,12 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
+import { useT } from "@/lib/language";
 import type { EChartsOption } from "echarts";
-
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function SubcategoriesByMonth() {
   const { currency } = useCurrency();
+  const t = useT();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
 
@@ -52,7 +52,7 @@ export default function SubcategoriesByMonth() {
     api.reports
       .categoryMonthMatrix(year, categoryId)
       .then(setRows)
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
+      .catch((err) => setError(err instanceof Error ? err.message : t.subcategoriesByMonth.failedToLoad))
       .finally(() => setLoading(false));
   }, [year, categoryId]);
 
@@ -101,7 +101,7 @@ export default function SubcategoriesByMonth() {
       grid: { left: 56, right: 16, top: 40, bottom: 28 },
       xAxis: {
         type: "category",
-        data: MONTH_LABELS,
+        data: t.months.short,
         axisLabel: { color: muted },
         axisLine: { lineStyle: { color: border } },
       },
@@ -113,12 +113,12 @@ export default function SubcategoriesByMonth() {
       series,
     };
     return option;
-  }, [rows, currency]);
+  }, [rows, currency, t]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Subcategorías x mes</h1>
+        <h1 className="text-xl font-semibold">{t.subcategoriesByMonth.title}</h1>
         <Select value={year} onChange={(e) => setYear(Number(e.target.value))} className="w-fit">
           {[year - 1, year, year + 1].map((y) => (
             <option key={y} value={y}>
@@ -129,7 +129,7 @@ export default function SubcategoriesByMonth() {
       </div>
 
       {categories.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No budgeted categories for this year.</p>
+        <p className="text-sm text-muted-foreground">{t.subcategoriesByMonth.noBudgetedCategoriesForYear}</p>
       ) : (
         <>
           <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-fit">
@@ -143,13 +143,13 @@ export default function SubcategoriesByMonth() {
           <Card>
             <CardContent className="pt-4">
               {loading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <p className="text-sm text-muted-foreground">{t.common.loading}</p>
               ) : error ? (
                 <p className="text-sm text-destructive">{error}</p>
               ) : chartOption ? (
                 <EChart option={chartOption} height={360} />
               ) : (
-                <p className="text-sm text-muted-foreground">No subcategories under this category.</p>
+                <p className="text-sm text-muted-foreground">{t.subcategoriesByMonth.noSubcategories}</p>
               )}
             </CardContent>
           </Card>

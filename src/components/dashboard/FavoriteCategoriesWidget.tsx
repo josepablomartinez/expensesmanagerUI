@@ -7,6 +7,7 @@ import { useCurrency } from "@/lib/currency";
 import { splitCategoryName } from "@/lib/categoryGrouping";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/language";
 
 // pct_used comes back from fn_budget_vs_actual already scaled 0-100 -- same
 // severity convention as the Budget vs actual report page.
@@ -20,6 +21,7 @@ function severityBarClass(pct: number) {
 export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCategoryIds: number[] }) {
   const navigate = useNavigate();
   const { currency } = useCurrency();
+  const t = useT();
   const [rows, setRows] = React.useState<BudgetVsActual[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -43,13 +45,13 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Favorite categories — this month</CardTitle>
+        <CardTitle>{t.dashboard.favoriteCategories.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 pt-0">
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="text-sm text-muted-foreground">{t.common.loading}</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No data for your favorite categories yet.</p>
+          <p className="text-sm text-muted-foreground">{t.dashboard.favoriteCategories.noData}</p>
         ) : (
           filtered.map((row) => {
             const pct = row.pct_used ?? 0;

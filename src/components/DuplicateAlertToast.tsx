@@ -2,6 +2,7 @@ import * as React from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { useExpenseEvents } from "@/lib/events";
 import { formatMoney } from "@/lib/format";
+import { useT } from "@/lib/language";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +20,7 @@ interface Alert {
 // once you're looking at the flagged row, but a fraud-testing pattern is
 // exactly the kind of thing worth surfacing immediately.
 export function DuplicateAlertToast() {
+  const t = useT();
   const [alerts, setAlerts] = React.useState<Alert[]>([]);
 
   const dismiss = React.useCallback((id: number) => {
@@ -29,7 +31,7 @@ export function DuplicateAlertToast() {
     if (event.type !== "created" || !event.flag_type) return;
     setAlerts((prev) => [
       ...prev,
-      { id: event.id, merchant: event.merchant ?? event.entity ?? "Unknown merchant", amount: event.amount ?? null, currency: event.currency ?? null },
+      { id: event.id, merchant: event.merchant ?? event.entity ?? t.common.unknownMerchant, amount: event.amount ?? null, currency: event.currency ?? null },
     ]);
     setTimeout(() => dismiss(event.id), DISMISS_AFTER_MS);
   });
@@ -43,7 +45,7 @@ export function DuplicateAlertToast() {
           <CardContent className="flex items-start gap-3 pt-4">
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
             <div className="flex-1 text-sm">
-              <p className="font-medium text-destructive">Possible duplicate charge</p>
+              <p className="font-medium text-destructive">{t.common.possibleDuplicateCharge}</p>
               <p className="text-muted-foreground">
                 {alert.merchant} · {formatMoney(alert.amount, alert.currency)}
               </p>
@@ -51,7 +53,7 @@ export function DuplicateAlertToast() {
             <Button
               size="icon"
               variant="ghost"
-              aria-label="Dismiss"
+              aria-label={t.common.dismiss}
               className="h-6 w-6 shrink-0"
               onClick={() => dismiss(alert.id)}
             >

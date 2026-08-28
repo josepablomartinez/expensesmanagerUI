@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { useT } from "@/lib/language";
 
 function errorMessage(err: unknown, fallback: string) {
   return err instanceof ApiError ? err.message : err instanceof Error ? err.message : fallback;
@@ -17,6 +18,7 @@ function errorMessage(err: unknown, fallback: string) {
 // entry -- deactivate and re-add for a typo, same tradeoff as categories not
 // supporting a name-only rename of the wrong subcategory.
 function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: UpdateCreditCardRequest) => Promise<void> }) {
+  const t = useT();
   const [editing, setEditing] = React.useState(false);
   const [creditLimit, setCreditLimit] = React.useState(String(card.credit_limit));
   const [cutoffDay, setCutoffDay] = React.useState(card.cutoff_day != null ? String(card.cutoff_day) : "");
@@ -33,7 +35,7 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
   async function handleSave() {
     const limitNum = Number(creditLimit);
     if (creditLimit.trim() === "" || Number.isNaN(limitNum) || limitNum <= 0) {
-      setError("Limit must be a positive number");
+      setError(t.creditCards.limitMustBePositive);
       return;
     }
     setSaving(true);
@@ -46,7 +48,7 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
       });
       setEditing(false);
     } catch (err) {
-      setError(errorMessage(err, "Failed to save"));
+      setError(errorMessage(err, t.creditCards.failedToSave));
     } finally {
       setSaving(false);
     }
@@ -58,7 +60,7 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
     try {
       await onSave({ active: !card.active });
     } catch (err) {
-      setError(errorMessage(err, "Failed to update"));
+      setError(errorMessage(err, t.creditCards.failedToUpdate));
     } finally {
       setSaving(false);
     }
@@ -74,21 +76,21 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
         <div className="flex flex-1 flex-col">
           <span className="flex items-center gap-2 font-medium">
             •••• {card.last4}
-            {!card.active && <span className="text-xs font-normal text-muted-foreground">(inactive)</span>}
+            {!card.active && <span className="text-xs font-normal text-muted-foreground">{t.creditCards.inactive}</span>}
           </span>
         </div>
         <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing((e) => !e)}>
           <Pencil className="h-3.5 w-3.5" />
         </Button>
         <Button size="sm" variant="outline" disabled={saving} onClick={handleToggleActive}>
-          {card.active ? "Deactivate" : "Activate"}
+          {card.active ? t.creditCards.deactivate : t.creditCards.activate}
         </Button>
       </div>
 
       {editing ? (
         <div className="flex flex-wrap items-center gap-2 pl-9">
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Limit ({card.limit_currency})</label>
+            <label className="text-xs text-muted-foreground">{t.creditCards.limitWithCurrency(card.limit_currency)}</label>
             <Input
               value={creditLimit}
               onChange={(e) => setCreditLimit(e.target.value)}
@@ -98,23 +100,23 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Cutoff day</label>
+            <label className="text-xs text-muted-foreground">{t.creditCards.cutoffDay}</label>
             <Input
               value={cutoffDay}
               onChange={(e) => setCutoffDay(e.target.value)}
               inputMode="numeric"
-              placeholder="1-31"
+              placeholder={t.creditCards.dayRangePlaceholder}
               className="h-8 w-20"
               disabled={saving}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Due day</label>
+            <label className="text-xs text-muted-foreground">{t.creditCards.dueDay}</label>
             <Input
               value={dueDay}
               onChange={(e) => setDueDay(e.target.value)}
               inputMode="numeric"
-              placeholder="1-31"
+              placeholder={t.creditCards.dayRangePlaceholder}
               className="h-8 w-20"
               disabled={saving}
             />
@@ -138,9 +140,9 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
         </div>
       ) : (
         <div className="pl-9 text-xs text-muted-foreground">
-          Limit {formatMoney(card.credit_limit, card.limit_currency)}
-          {card.cutoff_day != null && ` · Cutoff day ${card.cutoff_day}`}
-          {card.due_day != null && ` · Due day ${card.due_day}`}
+          {t.creditCards.limit} {formatMoney(card.credit_limit, card.limit_currency)}
+          {card.cutoff_day != null && t.creditCards.cutoffDaySuffix(card.cutoff_day)}
+          {card.due_day != null && t.creditCards.dueDaySuffix(card.due_day)}
         </div>
       )}
       {error && <p className="pl-9 text-xs text-destructive">{error}</p>}
@@ -149,6 +151,7 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
 }
 
 function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Parameters<typeof api.creditCards.create>[0]) => Promise<void> }) {
+  const t = useT();
   const [open, setOpen] = React.useState(false);
   const [bankId, setBankId] = React.useState("");
   const [cardType, setCardType] = React.useState<CardType>("visa");
@@ -164,7 +167,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
     return (
       <Button variant="outline" className="gap-1.5" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
-        Add credit card
+        {t.creditCards.addCreditCard}
       </Button>
     );
   }
@@ -181,16 +184,16 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
 
   async function handleAdd() {
     if (!bankId) {
-      setError("Choose a bank");
+      setError(t.creditCards.chooseBankRequired);
       return;
     }
     if (!/^\d{4}$/.test(last4)) {
-      setError("Last 4 digits must be exactly 4 numbers");
+      setError(t.creditCards.last4MustBeFourDigits);
       return;
     }
     const limitNum = Number(creditLimit);
     if (creditLimit.trim() === "" || Number.isNaN(limitNum) || limitNum <= 0) {
-      setError("Limit must be a positive number");
+      setError(t.creditCards.limitMustBePositive);
       return;
     }
     setSaving(true);
@@ -208,7 +211,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
       reset();
       setOpen(false);
     } catch (err) {
-      setError(errorMessage(err, "Failed to add card"));
+      setError(errorMessage(err, t.creditCards.failedToAddCard));
     } finally {
       setSaving(false);
     }
@@ -218,10 +221,10 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
     <div className="flex flex-col gap-2 border-t border-border pt-3">
       <div className="flex flex-wrap items-end gap-2">
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Bank</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.bank}</label>
           <Select value={bankId} onChange={(e) => setBankId(e.target.value)} className="h-8 w-48" disabled={saving}>
             <option value="" disabled>
-              Choose bank
+              {t.creditCards.chooseBankPlaceholder}
             </option>
             {banks.map((b) => (
               <option key={b.id} value={b.id}>
@@ -231,7 +234,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
           </Select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Type</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.type}</label>
           <Select value={cardType} onChange={(e) => setCardType(e.target.value as CardType)} className="h-8 w-32" disabled={saving}>
             <option value="visa">Visa</option>
             <option value="mastercard">Mastercard</option>
@@ -239,7 +242,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
           </Select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Last 4 digits</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.last4Digits}</label>
           <Input
             value={last4}
             onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
@@ -250,7 +253,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Limit</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.limit}</label>
           <Input
             value={creditLimit}
             onChange={(e) => setCreditLimit(e.target.value)}
@@ -261,36 +264,36 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Currency</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.currency}</label>
           <Select value={limitCurrency} onChange={(e) => setLimitCurrency(e.target.value)} className="h-8 w-24" disabled={saving}>
             <option value="CRC">CRC</option>
             <option value="USD">USD</option>
           </Select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Cutoff day</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.cutoffDay}</label>
           <Input
             value={cutoffDay}
             onChange={(e) => setCutoffDay(e.target.value.replace(/\D/g, "").slice(0, 2))}
             inputMode="numeric"
-            placeholder="1-31"
+            placeholder={t.creditCards.dayRangePlaceholder}
             className="h-8 w-20"
             disabled={saving}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground">Due day</label>
+          <label className="text-xs text-muted-foreground">{t.creditCards.dueDay}</label>
           <Input
             value={dueDay}
             onChange={(e) => setDueDay(e.target.value.replace(/\D/g, "").slice(0, 2))}
             inputMode="numeric"
-            placeholder="1-31"
+            placeholder={t.creditCards.dayRangePlaceholder}
             className="h-8 w-20"
             disabled={saving}
           />
         </div>
         <Button size="sm" disabled={saving} onClick={handleAdd}>
-          {saving ? "Adding…" : "Add"}
+          {saving ? t.creditCards.adding : t.creditCards.add}
         </Button>
         <Button
           size="icon"
@@ -312,6 +315,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
 }
 
 export function CreditCardsSection({ banks }: { banks: Bank[] }) {
+  const t = useT();
   const [cards, setCards] = React.useState<CreditCard[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -320,7 +324,7 @@ export function CreditCardsSection({ banks }: { banks: Bank[] }) {
     return api.creditCards
       .list()
       .then(setCards)
-      .catch((err) => setError(errorMessage(err, "Failed to load credit cards")));
+      .catch((err) => setError(errorMessage(err, t.creditCards.failedToLoad)));
   }, []);
 
   React.useEffect(() => {
@@ -340,16 +344,16 @@ export function CreditCardsSection({ banks }: { banks: Bank[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Credit cards</CardTitle>
+        <CardTitle>{t.creditCards.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 pt-0">
         {error && <p className="text-sm text-destructive">{error}</p>}
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="text-sm text-muted-foreground">{t.common.loading}</p>
         ) : (
           <>
             {cards.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No credit cards yet.</p>
+              <p className="text-sm text-muted-foreground">{t.creditCards.noCardsYet}</p>
             ) : (
               <div className="flex flex-col">
                 {cards.map((card) => (
@@ -358,10 +362,7 @@ export function CreditCardsSection({ banks }: { banks: Bank[] }) {
               </div>
             )}
             {banks.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                No banks on file yet — banks are created automatically from exchange-rate data, so add one there
-                first.
-              </p>
+              <p className="text-sm text-muted-foreground">{t.creditCards.noBanksYet}</p>
             ) : (
               <AddCreditCardForm banks={banks} onAdd={handleAdd} />
             )}

@@ -1,9 +1,5 @@
 import { Select } from "@/components/ui/select";
-
-export const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+import { useT } from "@/lib/language";
 
 interface PeriodSelectProps {
   year: number;
@@ -13,10 +9,11 @@ interface PeriodSelectProps {
 }
 
 export function PeriodSelect({ year, month, onYearChange, onMonthChange }: PeriodSelectProps) {
+  const t = useT();
   return (
     <div className="flex items-center gap-2">
       <Select value={month} onChange={(e) => onMonthChange(Number(e.target.value))}>
-        {MONTHS.map((m, i) => (
+        {t.months.full.map((m, i) => (
           <option key={m} value={i + 1}>
             {m}
           </option>

@@ -4,8 +4,10 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useT } from "@/lib/language";
 
 export default function Login() {
+  const t = useT();
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +25,7 @@ export default function Login() {
       const from = (location.state as { from?: Location })?.from?.pathname ?? "/review";
       navigate(from, { replace: true });
     } catch {
-      setError("Invalid credentials, or the API has no /auth/login endpoint yet.");
+      setError(t.login.invalidCredentials);
     } finally {
       setLoading(false);
     }
@@ -33,15 +35,15 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-lg text-foreground">Sign in</CardTitle>
+          <CardTitle className="text-lg text-foreground">{t.login.signIn}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
-            <Input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
-            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input placeholder={t.login.username} value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
+            <Input placeholder={t.login.password} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={loading}>
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? t.login.signingIn : t.login.signIn}
             </Button>
           </form>
         </CardContent>

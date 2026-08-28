@@ -4,6 +4,7 @@ import { api, type Category, type CreditCard, type Expense, type Settings } from
 import { useExpenseEvents } from "@/lib/events";
 import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
+import { useLanguage } from "@/lib/language";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate as isoDate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,11 +26,11 @@ function addDays(d: Date, n: number) {
   return copy;
 }
 
-function formatDayLabel(iso: string) {
-  if (iso === isoDate(new Date())) return "Today";
-  if (iso === isoDate(addDays(new Date(), -1))) return "Yesterday";
+function formatDayLabel(iso: string, todayLabel: string, yesterdayLabel: string, locale: string) {
+  if (iso === isoDate(new Date())) return todayLabel;
+  if (iso === isoDate(addDays(new Date(), -1))) return yesterdayLabel;
   const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "long", day: "numeric" });
+  return new Date(y, m - 1, d).toLocaleDateString(locale, { month: "long", day: "numeric" });
 }
 
 interface DayGroup {
@@ -39,6 +40,8 @@ interface DayGroup {
 
 export default function Home() {
   const { currency } = useCurrency();
+  const { language, t } = useLanguage();
+  const locale = language === "es" ? "es-CR" : "en-US";
   const [daysBack, setDaysBack] = React.useState(PAGE_DAYS);
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -65,7 +68,7 @@ export default function Home() {
     return api.expenses
       .list({ from, to, limit: 500 })
       .then(setExpenses)
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
+      .catch((err) => setError(err instanceof Error ? err.message : t.home.failedToLoad))
       .finally(() => setLoading(false));
   }, [daysBack]);
 
@@ -93,7 +96,7 @@ export default function Home() {
     return days;
   }, [expenses, daysBack]);
 
-  if (loading && expenses.length === 0) return <p className="text-sm text-muted-foreground">Loading…</p>;
+  if (loading && expenses.length === 0) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
   if (error) return <p className="text-sm text-destructive">{error}</p>;
 
   return (
@@ -103,7 +106,7 @@ export default function Home() {
       <ExchangeRateWidget favoriteBanks={settings?.favorite_banks ?? []} />
       <FavoriteCategoriesWidget favoriteCategoryIds={settings?.favorite_category_ids ?? []} />
 
-      <h2 className="text-sm font-semibold text-muted-foreground">Recent expenses</h2>
+      <h2 className="text-sm font-semibold text-muted-foreground">{t.home.recentExpenses}</h2>
 
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());
@@ -113,7 +116,9 @@ export default function Home() {
           <Card key={group.iso} className="border-border/80 shadow-sm">
             <CardContent className="flex flex-col gap-3 pt-4">
               <div className="flex items-baseline justify-between border-b border-border pb-2">
-                <h2 className="text-sm font-semibold text-foreground">{formatDayLabel(group.iso)}</h2>
+                <h2 className="text-sm font-semibold text-foreground">
+                  {formatDayLabel(group.iso, t.home.today, t.home.yesterday, locale)}
+                </h2>
                 {group.items.length > 0 && (
                   <span className="text-xs font-medium text-muted-foreground">
                     {formatMoney(dayTotal, currency)}
@@ -123,7 +128,7 @@ export default function Home() {
 
               {group.items.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  {isToday ? "There are no expenses for today." : "No expenses this day."}
+                  {isToday ? t.home.noExpensesToday : t.home.noExpensesThisDay}
                 </p>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -138,7 +143,7 @@ export default function Home() {
                             className="flex flex-1 items-center gap-3 text-left"
                             onClick={() => setExpandedId(isExpanded ? null : expense.id)}
                             aria-expanded={isExpanded}
-                            aria-label="Toggle expense details"
+                            aria-label={t.common.toggleExpenseDetails}
                           >
                             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
                               <Icon className="h-4 w-4" />
@@ -146,7 +151,7 @@ export default function Home() {
                             <div className="flex flex-col">
                               <span className="font-medium">{expense.merchant ?? expense.entity}</span>
                               <span className="text-xs text-muted-foreground">
-                                {expense.category_name ?? "Uncategorized"}
+                                {expense.category_name ?? t.common.uncategorized}
                               </span>
                             </div>
                             {isExpanded ? (
@@ -158,11 +163,13 @@ export default function Home() {
                           <div className="flex items-center gap-2">
                             {expense.flag_type && (
                               <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
-                                Possible duplicate
+                                {t.common.possibleDuplicate}
                               </Badge>
                             )}
                             {!expense.reviewed && expense.confidence != null && (
-                              <Badge variant="outline">{Math.round(expense.confidence * 100)}% confident</Badge>
+                              <Badge variant="outline">
+                                {t.common.confidencePercent(Math.round(expense.confidence * 100))}
+                              </Badge>
                             )}
                             <span className="font-medium">{formatExpenseAmount(expense, currency)}</span>
                             {expense.reviewed && (
@@ -170,7 +177,7 @@ export default function Home() {
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  aria-label="Edit category"
+                                  aria-label={t.common.editCategory}
                                   onClick={() => setEditTarget(expense)}
                                 >
                                   <Pencil className="h-4 w-4" />
@@ -178,7 +185,7 @@ export default function Home() {
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  aria-label="Split expense"
+                                  aria-label={t.common.splitExpense}
                                   onClick={() => setSplitTarget(expense)}
                                 >
                                   <Split className="h-4 w-4" />
@@ -186,7 +193,7 @@ export default function Home() {
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  aria-label="Delete expense"
+                                  aria-label={t.common.deleteExpense}
                                   onClick={() => setDeleteTarget(expense)}
                                 >
                                   <Trash2 className="h-4 w-4" />
@@ -207,7 +214,7 @@ export default function Home() {
       })}
 
       <Button variant="outline" onClick={() => setDaysBack((d) => d + PAGE_DAYS)} disabled={loading}>
-        {loading ? "Loading…" : "See more"}
+        {loading ? t.common.loading : t.home.seeMore}
       </Button>
 
       {splitTarget && (

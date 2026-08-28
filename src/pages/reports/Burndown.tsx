@@ -7,6 +7,7 @@ import { Select } from "@/components/ui/select";
 import { PeriodSelect } from "@/components/reports/PeriodSelect";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
+import { useT } from "@/lib/language";
 import type { EChartsOption } from "echarts";
 
 function dayOfMonth(dateStr: string) {
@@ -16,6 +17,7 @@ function dayOfMonth(dateStr: string) {
 
 export default function Burndown() {
   const { currency } = useCurrency();
+  const t = useT();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
   const [month, setMonth] = React.useState(now.getMonth() + 1);
@@ -55,7 +57,7 @@ export default function Burndown() {
     api.reports
       .burndown(year, month, categoryId)
       .then(setRows)
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
+      .catch((err) => setError(err instanceof Error ? err.message : t.burndown.failedToLoad))
       .finally(() => setLoading(false));
   }, [year, month, categoryId]);
 
@@ -89,14 +91,14 @@ export default function Burndown() {
         formatter: (params) => {
           const list = (Array.isArray(params) ? params : [params]).filter((p) => p.value != null);
           const lines = list.map((p) => {
-            const displayName = p.seriesName === "Expected pace" ? "Expected pace" : "Actual";
+            const displayName = p.seriesName === t.burndown.expectedPace ? t.burndown.expectedPace : t.burndown.actual;
             return `${p.marker ?? ""}${displayName}: ${formatMoney(p.value as number, currency)}`;
           });
           return [list[0]?.name ?? "", ...lines].join("<br/>");
         },
       },
       legend: {
-        data: ["Actual", "Expected pace"],
+        data: [t.burndown.actual, t.burndown.expectedPace],
         top: 0,
         textStyle: { color: muted },
       },
@@ -114,7 +116,7 @@ export default function Burndown() {
       },
       series: [
         {
-          name: "Expected pace",
+          name: t.burndown.expectedPace,
           type: "line",
           data: expected,
           showSymbol: false,
@@ -123,7 +125,7 @@ export default function Burndown() {
           lineStyle: { type: "dashed", color: muted, width: 1.5 },
         },
         {
-          name: "Actual",
+          name: t.burndown.actual,
           type: "line",
           data: underPace,
           showSymbol: false,
@@ -135,14 +137,14 @@ export default function Burndown() {
             budget != null
               ? {
                   symbol: "none",
-                  label: { formatter: "Budget", color: muted },
+                  label: { formatter: t.burndown.budget, color: muted },
                   lineStyle: { type: "dashed", color: border },
                   data: [{ yAxis: budget }],
                 }
               : undefined,
         },
         {
-          name: "Actual",
+          name: t.burndown.actual,
           type: "line",
           data: overPace,
           showSymbol: false,
@@ -164,17 +166,17 @@ export default function Burndown() {
       ],
     };
     return option;
-  }, [rows, currency]);
+  }, [rows, currency, t]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Burn-down</h1>
+        <h1 className="text-xl font-semibold">{t.burndown.title}</h1>
         <PeriodSelect year={year} month={month} onYearChange={setYear} onMonthChange={setMonth} />
       </div>
 
       {categories.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No budgeted categories for this period.</p>
+        <p className="text-sm text-muted-foreground">{t.burndown.noBudgetedCategories}</p>
       ) : (
         <>
           <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-fit">
@@ -188,13 +190,13 @@ export default function Burndown() {
           <Card>
             <CardContent className="pt-4">
               {loading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <p className="text-sm text-muted-foreground">{t.common.loading}</p>
               ) : error ? (
                 <p className="text-sm text-destructive">{error}</p>
               ) : chartOption ? (
                 <EChart option={chartOption} height={320} />
               ) : (
-                <p className="text-sm text-muted-foreground">No spend recorded yet for this category.</p>
+                <p className="text-sm text-muted-foreground">{t.burndown.noSpendRecorded}</p>
               )}
             </CardContent>
           </Card>

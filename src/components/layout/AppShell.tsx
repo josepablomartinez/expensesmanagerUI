@@ -4,24 +4,26 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { useCurrency } from "@/lib/currency";
+import { useT } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { DuplicateAlertToast } from "@/components/DuplicateAlertToast";
-
-const TOP_NAV_ITEMS = [
-  { to: "/review", label: "Review", icon: ListChecks },
-  { to: "/categories", label: "Categories", icon: Tags },
-  { to: "/reports", label: "Reports", icon: BarChart3 },
-];
-
-const BOTTOM_NAV_ITEMS = [
-  { to: "/", label: "Home", icon: Home, end: true },
-  { to: "/search", label: "Search", icon: Search, end: false },
-];
 
 export function AppShell() {
   const { token, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { currency, toggleCurrency } = useCurrency();
+  const t = useT();
+
+  const TOP_NAV_ITEMS = [
+    { to: "/review", label: t.nav.review, icon: ListChecks },
+    { to: "/categories", label: t.nav.categories, icon: Tags },
+    { to: "/reports", label: t.nav.reports, icon: BarChart3 },
+  ];
+
+  const BOTTOM_NAV_ITEMS = [
+    { to: "/", label: t.nav.home, icon: Home, end: true },
+    { to: "/search", label: t.nav.search, icon: Search, end: false },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -32,7 +34,7 @@ export function AppShell() {
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-sky-400 text-primary-foreground shadow-sm">
               <Wallet className="h-4 w-4" />
             </span>
-            Expenses
+            {t.nav.brand}
           </NavLink>
           <nav className="flex items-center gap-1 rounded-full border border-border bg-secondary/40 p-1">
             {TOP_NAV_ITEMS.map((item) => (
@@ -57,7 +59,7 @@ export function AppShell() {
             <Button
               variant="ghost"
               size="sm"
-              aria-label={currency === "CRC" ? "Switch to USD" : "Switch to CRC"}
+              aria-label={currency === "CRC" ? t.nav.switchToUsd : t.nav.switchToCrc}
               onClick={toggleCurrency}
               className="font-semibold"
             >
@@ -66,14 +68,14 @@ export function AppShell() {
             <Button
               variant="ghost"
               size="icon"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={theme === "dark" ? t.nav.switchToLight : t.nav.switchToDark}
               onClick={toggleTheme}
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
             <NavLink
               to="/settings"
-              aria-label="Settings"
+              aria-label={t.nav.settings}
               className={({ isActive }) =>
                 cn(
                   "flex h-9 w-9 items-center justify-center rounded-md transition-colors",
@@ -85,7 +87,7 @@ export function AppShell() {
             </NavLink>
             {token && (
               <Button variant="ghost" size="sm" onClick={logout}>
-                Log out
+                {t.nav.logOut}
               </Button>
             )}
           </div>
@@ -116,7 +118,7 @@ export function AppShell() {
           ))}
           <NavLink
             to="/add"
-            aria-label="Add expense"
+            aria-label={t.nav.addExpense}
             className="flex flex-col items-center gap-0.5 rounded-full bg-primary p-3 text-primary-foreground shadow-md transition-transform hover:scale-105 -translate-y-3"
           >
             <Plus className="h-5 w-5" />

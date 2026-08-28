@@ -11,6 +11,7 @@ import { PeriodSelect } from "@/components/reports/PeriodSelect";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { cn } from "@/lib/utils";
 import { groupByMainCategory, splitCategoryName } from "@/lib/categoryGrouping";
+import { useT } from "@/lib/language";
 import type { EChartsOption } from "echarts";
 
 // pct_used comes back from fn_budget_vs_actual already scaled 0-100.
@@ -23,6 +24,7 @@ function severityBarClass(pct: number) {
 
 export default function BudgetVsActual() {
   const { currency } = useCurrency();
+  const t = useT();
   const now = new Date();
   const [searchParams] = useSearchParams();
   const [year, setYear] = React.useState(now.getFullYear());
@@ -43,7 +45,7 @@ export default function BudgetVsActual() {
     api.reports
       .budgetVsActual(year, month)
       .then(setRows)
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load"))
+      .catch((err) => setError(err instanceof Error ? err.message : t.budgetVsActual.failedToLoad))
       .finally(() => setLoading(false));
   }, [year, month]);
 
@@ -113,18 +115,18 @@ export default function BudgetVsActual() {
 
     const data = over
       ? [
-          { name: "Budget", value: budget, itemStyle: { color: primary } },
-          { name: "Over budget", value: actual - budget, itemStyle: { color: destructive } },
+          { name: t.budgetVsActual.budget, value: budget, itemStyle: { color: primary } },
+          { name: t.budgetVsActual.overBudget, value: actual - budget, itemStyle: { color: destructive } },
         ]
       : [
-          { name: "Spent", value: actual, itemStyle: { color: primary } },
-          { name: "Remaining", value: budget - actual, itemStyle: { color: border } },
+          { name: t.budgetVsActual.spent, value: actual, itemStyle: { color: primary } },
+          { name: t.budgetVsActual.remaining, value: budget - actual, itemStyle: { color: border } },
         ];
 
     const option: EChartsOption = {
       title: {
         text: `${Math.round(pct)}%`,
-        subtext: "used",
+        subtext: t.budgetVsActual.used,
         left: "center",
         top: "40%",
         textStyle: { fontSize: 22, fontWeight: 500, color: foreground },
@@ -150,23 +152,23 @@ export default function BudgetVsActual() {
       ],
     };
     return option;
-  }, [selectedRow, currency]);
+  }, [selectedRow, currency, t]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Budget vs actual</h1>
+        <h1 className="text-xl font-semibold">{t.budgetVsActual.title}</h1>
         <PeriodSelect year={year} month={month} onYearChange={setYear} onMonthChange={setMonth} />
       </div>
 
       {loading ? (
-        <p className="text-sm text-muted-foreground">Loading…</p>
+        <p className="text-sm text-muted-foreground">{t.common.loading}</p>
       ) : error ? (
         <p className="text-sm text-destructive">{error}</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-[1fr_320px] md:items-start">
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-medium text-muted-foreground">Highest used</p>
+            <p className="text-xs font-medium text-muted-foreground">{t.budgetVsActual.highestUsed}</p>
             <div className="flex flex-col gap-2">
               {visibleRows.map((row) => {
                 const pct = row.pct_used ?? 0;
@@ -207,7 +209,7 @@ export default function BudgetVsActual() {
             </div>
             {highestUsed.length > visibleCount && (
               <Button variant="outline" size="sm" onClick={() => setVisibleCount((c) => c + 5)}>
-                See more
+                {t.budgetVsActual.seeMore}
               </Button>
             )}
           </div>
@@ -215,10 +217,10 @@ export default function BudgetVsActual() {
           <div ref={detailRef} className="md:sticky md:top-6">
             <Card>
               <CardContent className="flex flex-col gap-3 pt-4">
-                <p className="text-xs font-medium text-muted-foreground">Detail</p>
+                <p className="text-xs font-medium text-muted-foreground">{t.budgetVsActual.detail}</p>
 
                 {groups.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No budgeted categories for this period.</p>
+                  <p className="text-sm text-muted-foreground">{t.budgetVsActual.noBudgetedCategories}</p>
                 ) : (
                   <>
                     <Select
@@ -251,7 +253,7 @@ export default function BudgetVsActual() {
                         </p>
                       </>
                     ) : (
-                      <p className="text-sm text-muted-foreground">No budget set for this category.</p>
+                      <p className="text-sm text-muted-foreground">{t.budgetVsActual.noBudgetSet}</p>
                     )}
                   </>
                 )}
