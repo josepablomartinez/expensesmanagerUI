@@ -305,6 +305,11 @@ export const api = {
         method: "PUT",
         body: JSON.stringify(body),
       }),
+    updateBudget: (id: number, budget: number) =>
+      request<{ user_id: number; category_id: number; budget: number }>(`/categories/${id}/budget`, {
+        method: "PUT",
+        body: JSON.stringify({ budget }),
+      }),
   },
   mainCategories: {
     list: () => request<MainCategory[]>("/main-categories"),

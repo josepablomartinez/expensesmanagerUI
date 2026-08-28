@@ -389,7 +389,12 @@ export default function Categories() {
   }
 
   async function handleSaveSubcategory(id: number, patch: { subcategory?: string; budget?: number }) {
-    await api.categories.update(id, patch);
+    if (patch.subcategory !== undefined) {
+      await api.categories.update(id, { subcategory: patch.subcategory });
+    }
+    if (patch.budget !== undefined) {
+      await api.categories.updateBudget(id, patch.budget);
+    }
     await load();
   }
 
