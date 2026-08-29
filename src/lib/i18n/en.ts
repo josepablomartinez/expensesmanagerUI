@@ -244,6 +244,13 @@ export const en = {
     email: "Email",
     failedToLoad: "Failed to load",
     failedToSave: "Failed to save",
+    advanced: "Advanced",
+    exchangeRateSource: "Exchange rate fallback",
+    exchangeRateSourceHelp:
+      "Used when an expense's entity has no exchange rate of its own — e.g. manual entries. Choose the average across all banks, or always use one bank's rate.",
+    exchangeRateSourceAverage: "Average of all banks",
+    exchangeRateSourceBank: "A specific bank",
+    exchangeRateBank: "Bank",
   },
   creditCards: {
     title: "Credit cards",

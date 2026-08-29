@@ -241,6 +241,13 @@ export const es: Dictionary = {
     email: "Correo electrónico",
     failedToLoad: "Error al cargar",
     failedToSave: "Error al guardar",
+    advanced: "Avanzado",
+    exchangeRateSource: "Tipo de cambio de respaldo",
+    exchangeRateSourceHelp:
+      "Se usa cuando la entidad de un gasto no tiene tipo de cambio propio — por ejemplo, gastos manuales. Elegí el promedio entre todos los bancos, o usá siempre el tipo de cambio de un banco específico.",
+    exchangeRateSourceAverage: "Promedio de todos los bancos",
+    exchangeRateSourceBank: "Un banco específico",
+    exchangeRateBank: "Banco",
   },
   creditCards: {
     title: "Tarjetas de crédito",

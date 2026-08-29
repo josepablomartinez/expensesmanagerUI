@@ -108,6 +108,8 @@ export interface Settings {
   last_name: string | null;
   email: string | null;
   language: string;
+  exchange_rate_source: string;
+  exchange_rate_bank_id: number | null;
   updated_at: string;
 }
 
@@ -119,6 +121,8 @@ export interface UpdateSettingsRequest {
   last_name?: string | null;
   email?: string | null;
   language?: string;
+  exchange_rate_source?: string;
+  exchange_rate_bank_id?: number | null;
 }
 
 export interface Bank {

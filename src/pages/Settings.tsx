@@ -68,6 +68,8 @@ export default function Settings() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [exchangeRateSource, setExchangeRateSource] = React.useState("average");
+  const [exchangeRateBankId, setExchangeRateBankId] = React.useState<number | null>(null);
   const [selectedGroupName, setSelectedGroupName] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -78,6 +80,8 @@ export default function Settings() {
         setFirstName(settings.first_name ?? "");
         setLastName(settings.last_name ?? "");
         setEmail(settings.email ?? "");
+        setExchangeRateSource(settings.exchange_rate_source);
+        setExchangeRateBankId(settings.exchange_rate_bank_id);
         setCategories(cats);
         setBanks(bankList);
       })
@@ -127,6 +131,8 @@ export default function Settings() {
         first_name: firstName.trim() === "" ? null : firstName.trim(),
         last_name: lastName.trim() === "" ? null : lastName.trim(),
         email: email.trim() === "" ? null : email.trim(),
+        exchange_rate_source: exchangeRateSource,
+        exchange_rate_bank_id: exchangeRateSource === "bank" ? exchangeRateBankId : undefined,
       });
       setSaved(true);
     } catch (err) {
@@ -280,6 +286,57 @@ export default function Settings() {
               placeholder="you@example.com"
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.settings.advanced}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3 pt-0">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground" htmlFor="exchange_rate_source">
+              {t.settings.exchangeRateSource}
+            </label>
+            <p className="text-xs text-muted-foreground">{t.settings.exchangeRateSourceHelp}</p>
+            <Select
+              id="exchange_rate_source"
+              value={exchangeRateSource}
+              onChange={(e) => {
+                setSaved(false);
+                setExchangeRateSource(e.target.value);
+              }}
+              className="w-56"
+            >
+              <option value="average">{t.settings.exchangeRateSourceAverage}</option>
+              <option value="bank">{t.settings.exchangeRateSourceBank}</option>
+            </Select>
+          </div>
+          {exchangeRateSource === "bank" && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground" htmlFor="exchange_rate_bank_id">
+                {t.settings.exchangeRateBank}
+              </label>
+              <Select
+                id="exchange_rate_bank_id"
+                value={exchangeRateBankId ?? ""}
+                onChange={(e) => {
+                  setSaved(false);
+                  setExchangeRateBankId(e.target.value === "" ? null : Number(e.target.value));
+                }}
+                className="w-56"
+              >
+                <option value="" disabled>
+                  {t.settings.exchangeRateBank}
+                </option>
+                {banks.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
         </CardContent>
       </Card>
 
