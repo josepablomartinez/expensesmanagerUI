@@ -5,8 +5,11 @@ import Home from "@/pages/Home";
 import Search from "@/pages/Search";
 import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
-import Categories from "@/pages/Categories";
-import Settings from "@/pages/Settings";
+import SettingsLayout from "@/pages/settings/SettingsLayout";
+import SettingsBasic from "@/pages/settings/Basic";
+import SettingsCreditCards from "@/pages/settings/CreditCards";
+import SettingsCategories from "@/pages/settings/Categories";
+import SettingsAdvanced from "@/pages/settings/Advanced";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
@@ -24,8 +27,13 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<SettingsLayout />}>
+          <Route index element={<Navigate to="basic" replace />} />
+          <Route path="basic" element={<SettingsBasic />} />
+          <Route path="credit-cards" element={<SettingsCreditCards />} />
+          <Route path="categories" element={<SettingsCategories />} />
+          <Route path="advanced" element={<SettingsAdvanced />} />
+        </Route>
         <Route path="/reports" element={<ReportsLayout />}>
           <Route index element={<Navigate to="budget-vs-actual" replace />} />
           <Route path="budget-vs-actual" element={<BudgetVsActual />} />

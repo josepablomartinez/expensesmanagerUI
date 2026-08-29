@@ -28,7 +28,6 @@ export const es: Dictionary = {
   nav: {
     brand: "Gastos",
     review: "Revisar",
-    categories: "Categorías",
     reports: "Reportes",
     home: "Inicio",
     search: "Buscar",
@@ -143,6 +142,14 @@ export const es: Dictionary = {
       subcategoriesByMonth: "Subcategorías x mes",
     },
   },
+  settingsLayout: {
+    tabs: {
+      basic: "Básico",
+      creditCards: "Tarjetas de crédito",
+      categories: "Categorías",
+      advanced: "Avanzado",
+    },
+  },
   budgetVsActual: {
     title: "Presupuesto vs real",
     failedToLoad: "Error al cargar",
@@ -239,7 +246,6 @@ export const es: Dictionary = {
     email: "Correo electrónico",
     failedToLoad: "Error al cargar",
     failedToSave: "Error al guardar",
-    advanced: "Avanzado",
     exchangeRateSource: "Tipo de cambio de respaldo",
     exchangeRateSourceHelp:
       "Se usa cuando la entidad de un gasto no tiene tipo de cambio propio — por ejemplo, gastos manuales. Elegí el promedio entre todos los bancos, o usá siempre el tipo de cambio de un banco específico.",

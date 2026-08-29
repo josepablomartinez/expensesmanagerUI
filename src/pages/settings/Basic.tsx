@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { CreditCardsSection } from "@/components/settings/CreditCardsSection";
 import { useCurrency } from "@/lib/currency";
 import { useLanguage } from "@/lib/language";
 
@@ -53,7 +52,7 @@ function ToggleChip({
   );
 }
 
-export default function Settings() {
+export default function Basic() {
   const { currency, setCurrency } = useCurrency();
   const { language, setLanguage, t } = useLanguage();
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -68,8 +67,6 @@ export default function Settings() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [exchangeRateSource, setExchangeRateSource] = React.useState("average");
-  const [exchangeRateBankId, setExchangeRateBankId] = React.useState<number | null>(null);
   const [selectedGroupName, setSelectedGroupName] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -80,8 +77,6 @@ export default function Settings() {
         setFirstName(settings.first_name ?? "");
         setLastName(settings.last_name ?? "");
         setEmail(settings.email ?? "");
-        setExchangeRateSource(settings.exchange_rate_source);
-        setExchangeRateBankId(settings.exchange_rate_bank_id);
         setCategories(cats);
         setBanks(bankList);
       })
@@ -131,8 +126,6 @@ export default function Settings() {
         first_name: firstName.trim() === "" ? null : firstName.trim(),
         last_name: lastName.trim() === "" ? null : lastName.trim(),
         email: email.trim() === "" ? null : email.trim(),
-        exchange_rate_source: exchangeRateSource,
-        exchange_rate_bank_id: exchangeRateSource === "bank" ? exchangeRateBankId : undefined,
       });
       setSaved(true);
     } catch (err) {
@@ -146,95 +139,7 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold">{t.settings.title}</h1>
-
       {error && <p className="text-sm text-destructive">{error}</p>}
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.currencyDisplay}</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <Select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value === "USD" ? "USD" : "CRC")}
-            className="w-40"
-          >
-            <option value="CRC">CRC (₡)</option>
-            <option value="USD">USD ($)</option>
-          </Select>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.language}</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <Select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value === "es" ? "es" : "en")}
-            className="w-40"
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </Select>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.favoriteCategories}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3 pt-0">
-          {groups.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t.settings.noCategoriesYet}</p>
-          ) : (
-            <>
-              <Select
-                value={selectedGroupName ?? ""}
-                onChange={(e) => setSelectedGroupName(e.target.value)}
-                className="w-56"
-              >
-                {groups.map((group) => (
-                  <option key={group.name} value={group.name}>
-                    {group.name}
-                    {group.items.some((c) => favoriteCategoryIds.has(c.id)) ? " ★" : ""}
-                  </option>
-                ))}
-              </Select>
-              <div className="flex flex-wrap gap-2">
-                {selectedGroup?.items.map((c) => (
-                  <ToggleChip key={c.id} active={favoriteCategoryIds.has(c.id)} onClick={() => toggleCategory(c.id)}>
-                    {c.subcategory}
-                  </ToggleChip>
-                ))}
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.favoriteBanks}</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          {banks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t.settings.noBanksYet}</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {banks.map((b) => (
-                <ToggleChip key={b.id} active={favoriteBanks.has(b.code)} onClick={() => toggleBank(b.code)}>
-                  {b.name}
-                </ToggleChip>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <CreditCardsSection banks={banks} />
 
       <Card>
         <CardHeader>
@@ -290,51 +195,85 @@ export default function Settings() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>{t.settings.advanced}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3 pt-0">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-muted-foreground" htmlFor="exchange_rate_source">
-              {t.settings.exchangeRateSource}
+        <CardContent className="flex flex-wrap gap-6 pt-4">
+          <div className="flex flex-1 flex-col gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground" htmlFor="currency_display">
+              {t.settings.currencyDisplay}
             </label>
-            <p className="text-xs text-muted-foreground">{t.settings.exchangeRateSourceHelp}</p>
             <Select
-              id="exchange_rate_source"
-              value={exchangeRateSource}
-              onChange={(e) => {
-                setSaved(false);
-                setExchangeRateSource(e.target.value);
-              }}
-              className="w-56"
+              id="currency_display"
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value === "USD" ? "USD" : "CRC")}
+              className="w-40"
             >
-              <option value="average">{t.settings.exchangeRateSourceAverage}</option>
-              <option value="bank">{t.settings.exchangeRateSourceBank}</option>
+              <option value="CRC">CRC (₡)</option>
+              <option value="USD">USD ($)</option>
             </Select>
           </div>
-          {exchangeRateSource === "bank" && (
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground" htmlFor="exchange_rate_bank_id">
-                {t.settings.exchangeRateBank}
-              </label>
+          <div className="flex flex-1 flex-col gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground" htmlFor="language">
+              {t.settings.language}
+            </label>
+            <Select
+              id="language"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value === "es" ? "es" : "en")}
+              className="w-40"
+            >
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.settings.favoriteCategories}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3 pt-0">
+          {groups.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t.settings.noCategoriesYet}</p>
+          ) : (
+            <>
               <Select
-                id="exchange_rate_bank_id"
-                value={exchangeRateBankId ?? ""}
-                onChange={(e) => {
-                  setSaved(false);
-                  setExchangeRateBankId(e.target.value === "" ? null : Number(e.target.value));
-                }}
+                value={selectedGroupName ?? ""}
+                onChange={(e) => setSelectedGroupName(e.target.value)}
                 className="w-56"
               >
-                <option value="" disabled>
-                  {t.settings.exchangeRateBank}
-                </option>
-                {banks.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
+                {groups.map((group) => (
+                  <option key={group.name} value={group.name}>
+                    {group.name}
+                    {group.items.some((c) => favoriteCategoryIds.has(c.id)) ? " ★" : ""}
                   </option>
                 ))}
               </Select>
+              <div className="flex flex-wrap gap-2">
+                {selectedGroup?.items.map((c) => (
+                  <ToggleChip key={c.id} active={favoriteCategoryIds.has(c.id)} onClick={() => toggleCategory(c.id)}>
+                    {c.subcategory}
+                  </ToggleChip>
+                ))}
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.settings.favoriteBanks}</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          {banks.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t.settings.noBanksYet}</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {banks.map((b) => (
+                <ToggleChip key={b.id} active={favoriteBanks.has(b.code)} onClick={() => toggleBank(b.code)}>
+                  {b.name}
+                </ToggleChip>
+              ))}
             </div>
           )}
         </CardContent>

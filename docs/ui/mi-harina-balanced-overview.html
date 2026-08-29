@@ -1,0 +1,2278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Mi Harina Interface Directions</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Mi Harina Interface Directions" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Mi Harina Interface Directions&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: var(--border-radius-lg, 12.5px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress {
+  display: flex;
+  height: 6px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 6px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: 16px !important;
+  height: 16px !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;mi-harina-directions&quot;&gt;
+  &lt;div class=&quot;viz-controls&quot; aria-label=&quot;Mockup controls&quot;&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn&quot; data-direction=&quot;a&quot; aria-pressed=&quot;false&quot;&gt;A · Daily stream&lt;/button&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-direction=&quot;b&quot; aria-pressed=&quot;true&quot;&gt;B · Balanced overview&lt;/button&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn&quot; data-direction=&quot;c&quot; aria-pressed=&quot;false&quot;&gt;C · Review forward&lt;/button&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Screen
+      &lt;select class=&quot;form-select&quot; id=&quot;mh-screen-select&quot;&gt;
+        &lt;option value=&quot;desktop-home&quot;&gt;Desktop Home&lt;/option&gt;
+        &lt;option value=&quot;mobile-home&quot;&gt;Mobile Home&lt;/option&gt;
+        &lt;option value=&quot;mobile-review&quot;&gt;Mobile Review&lt;/option&gt;
+        &lt;option value=&quot;alerts&quot;&gt;Alerts center&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Theme
+      &lt;select class=&quot;form-select&quot; id=&quot;mh-theme-select&quot;&gt;
+        &lt;option value=&quot;light&quot;&gt;Light&lt;/option&gt;
+        &lt;option value=&quot;dark&quot;&gt;Dark&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;mh-decision-line&quot; aria-live=&quot;polite&quot;&gt;
+    &lt;strong id=&quot;mh-direction-title&quot;&gt;B · Balanced overview&lt;/strong&gt;
+    &lt;span id=&quot;mh-direction-summary&quot;&gt;Selected baseline · expandable expenses · older activity stays on Home&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div id=&quot;mh-stage&quot; class=&quot;mh-stage&quot; data-theme=&quot;light&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  #mi-harina-directions {
+    color-scheme: light dark;
+    width: 100%;
+  }
+
+  #mi-harina-directions .viz-controls {
+    margin-bottom: 12px;
+  }
+
+  #mi-harina-directions .mh-decision-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 16px;
+    margin: 0 0 12px;
+    color: var(--foreground);
+  }
+
+  #mi-harina-directions .mh-decision-line span {
+    color: var(--muted-foreground);
+  }
+
+  #mi-harina-directions .mh-stage {
+    --mh-bg: #f7f3ea;
+    --mh-surface: #fffdf8;
+    --mh-surface-2: #f0ece3;
+    --mh-text: #153a32;
+    --mh-muted: #6c766f;
+    --mh-line: #ddd7cc;
+    --mh-green: #0f3d32;
+    --mh-green-2: #2f6b57;
+    --mh-green-soft: #dfe9e3;
+    --mh-gold: #d4a43a;
+    --mh-amber-soft: #fff1d8;
+    --mh-danger: #b64236;
+    --mh-danger-soft: #fbe6e2;
+    --mh-shadow: rgba(32, 45, 40, 0.12);
+    --mh-logo-bg: #0f3d32;
+    --mh-logo-ink: #f6f3ec;
+    --mh-logo-dot: #d4a43a;
+    width: 100%;
+    color: var(--mh-text);
+  }
+
+  #mi-harina-directions .mh-stage[data-theme=&quot;dark&quot;] {
+    --mh-bg: #101816;
+    --mh-surface: #17231f;
+    --mh-surface-2: #20302b;
+    --mh-text: #f4f0e8;
+    --mh-muted: #aab7b0;
+    --mh-line: #35453f;
+    --mh-green: #8dc4ae;
+    --mh-green-2: #6eaa91;
+    --mh-green-soft: #263d35;
+    --mh-gold: #e0b95d;
+    --mh-amber-soft: #44361f;
+    --mh-danger: #ff8f82;
+    --mh-danger-soft: #442925;
+    --mh-shadow: rgba(0, 0, 0, 0.28);
+    --mh-logo-bg: #2f6b57;
+    --mh-logo-ink: #f6f3ec;
+    --mh-logo-dot: #e0b95d;
+  }
+
+  #mi-harina-directions .mh-product {
+    overflow: hidden;
+    width: 100%;
+    background: var(--mh-bg);
+    color: var(--mh-text);
+    border: 1px solid var(--mh-line);
+    border-radius: 20px;
+    box-shadow: 0 14px 38px var(--mh-shadow);
+    font-family: Poppins, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  #mi-harina-directions .mh-desktop {
+    min-height: 620px;
+  }
+
+  #mi-harina-directions .mh-header,
+  #mi-harina-directions .mh-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--mh-surface);
+    border-bottom: 1px solid var(--mh-line);
+  }
+
+  #mi-harina-directions .mh-header {
+    gap: 18px;
+    padding: 14px 22px;
+  }
+
+  #mi-harina-directions .mh-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    background: var(--mh-logo-bg);
+    color: var(--mh-logo-ink);
+  }
+
+  #mi-harina-directions .mh-logo svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  #mi-harina-directions .mh-main-nav,
+  #mi-harina-directions .mh-tools,
+  #mi-harina-directions .mh-actions,
+  #mi-harina-directions .mh-row,
+  #mi-harina-directions .mh-section-head,
+  #mi-harina-directions .mh-expense,
+  #mi-harina-directions .mh-alert,
+  #mi-harina-directions .mh-review-card-head {
+    display: flex;
+    align-items: center;
+  }
+
+  #mi-harina-directions .mh-main-nav {
+    gap: 4px;
+  }
+
+  #mi-harina-directions .mh-nav-link,
+  #mi-harina-directions .mh-tool,
+  #mi-harina-directions .mh-action,
+  #mi-harina-directions .mh-bottom-item {
+    appearance: none;
+    border: 0;
+    font: inherit;
+    cursor: default;
+  }
+
+  #mi-harina-directions .mh-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--mh-muted);
+  }
+
+  #mi-harina-directions .mh-nav-link.is-active {
+    background: var(--mh-green);
+    color: var(--mh-surface);
+  }
+
+  #mi-harina-directions .mh-count {
+    display: inline-flex;
+    min-width: 19px;
+    height: 19px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--mh-gold);
+    color: #17231f;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-tools {
+    gap: 5px;
+  }
+
+  #mi-harina-directions .mh-tool {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--mh-text);
+  }
+
+  #mi-harina-directions .mh-tool.mh-currency {
+    width: auto;
+    min-width: 34px;
+    padding: 0 8px;
+    background: var(--mh-surface-2);
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 11px;
+    border: 1px solid var(--mh-line);
+    border-radius: 10px;
+    background: var(--mh-surface);
+    color: var(--mh-text);
+  }
+
+  #mi-harina-directions .mh-action.mh-primary {
+    border-color: var(--mh-green);
+    background: var(--mh-green);
+    color: var(--mh-surface);
+  }
+
+  #mi-harina-directions .mh-content {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 28px;
+  }
+
+  #mi-harina-directions .mh-page-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-subtitle {
+    margin: 4px 0 0;
+    color: var(--mh-muted);
+    font-size: 13px;
+  }
+
+  #mi-harina-directions .mh-grid-two {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  #mi-harina-directions .mh-grid-equal {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  #mi-harina-directions .mh-panel {
+    background: var(--mh-surface);
+    border: 1px solid var(--mh-line);
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  #mi-harina-directions .mh-panel + .mh-panel,
+  #mi-harina-directions .mh-stack &gt; * + * {
+    margin-top: 14px;
+  }
+
+  #mi-harina-directions .mh-section-head {
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  #mi-harina-directions .mh-section-head h2,
+  #mi-harina-directions .mh-section-head h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-total {
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-expense-frame {
+    border-top: 1px solid var(--mh-line);
+  }
+
+  #mi-harina-directions .mh-expense-frame:first-of-type {
+    border-top: 0;
+  }
+
+  #mi-harina-directions .mh-expense {
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 50px;
+    padding: 9px 0;
+  }
+
+  #mi-harina-directions .mh-expense-toggle {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  #mi-harina-directions .mh-expense-main {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #mi-harina-directions .mh-expense-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--mh-green-soft);
+    color: var(--mh-green);
+  }
+
+  #mi-harina-directions .mh-expense-copy {
+    min-width: 0;
+  }
+
+  #mi-harina-directions .mh-expense-name {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-meta {
+    display: block;
+    margin-top: 2px;
+    color: var(--mh-muted);
+    font-size: 12px;
+  }
+
+  #mi-harina-directions .mh-amount {
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-expense-end,
+  #mi-harina-directions .mh-expense-actions,
+  #mi-harina-directions .mh-detail-primary,
+  #mi-harina-directions .mh-card-mark {
+    display: flex;
+    align-items: center;
+  }
+
+  #mi-harina-directions .mh-expense-end {
+    gap: 10px;
+  }
+
+  #mi-harina-directions .mh-expense-actions {
+    gap: 2px;
+  }
+
+  #mi-harina-directions .mh-icon-action {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--mh-text);
+    cursor: default;
+  }
+
+  #mi-harina-directions .mh-chevron {
+    flex: 0 0 auto;
+    color: var(--mh-muted);
+  }
+
+  #mi-harina-directions .mh-expense-detail {
+    margin: 0 0 10px 44px;
+    padding: 12px;
+    border: 1px solid var(--mh-line);
+    border-radius: 12px;
+    background: var(--mh-bg);
+  }
+
+  #mi-harina-directions .mh-expense-detail[hidden],
+  #mi-harina-directions .mh-older-expenses[hidden] {
+    display: none;
+  }
+
+  #mi-harina-directions .mh-detail-primary {
+    gap: 8px;
+  }
+
+  #mi-harina-directions .mh-bank-mark,
+  #mi-harina-directions .mh-card-mark {
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--mh-surface);
+    color: var(--mh-green);
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-card-mark {
+    padding: 0 7px;
+    background: var(--mh-green-soft);
+  }
+
+  #mi-harina-directions .mh-detail-note {
+    margin: 9px 0 0;
+    color: var(--mh-muted);
+    font-size: 12px;
+  }
+
+  #mi-harina-directions .mh-day-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 14px 0 2px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--mh-line);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-day-heading:first-child {
+    margin-top: 0;
+  }
+
+  #mi-harina-directions .mh-more-link {
+    display: inline-flex;
+    margin-top: 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--mh-green-2);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  #mi-harina-directions .mh-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    color: var(--mh-danger);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-budget-row + .mh-budget-row {
+    margin-top: 14px;
+  }
+
+  #mi-harina-directions .mh-budget-copy {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  #mi-harina-directions .mh-progress {
+    overflow: hidden;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--mh-surface-2);
+  }
+
+  #mi-harina-directions .mh-progress &gt; span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--mh-green-2);
+  }
+
+  #mi-harina-directions .mh-progress.is-over &gt; span {
+    background: var(--mh-danger);
+  }
+
+  #mi-harina-directions .mh-alert {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--mh-amber-soft);
+  }
+
+  #mi-harina-directions .mh-alert.is-danger {
+    background: var(--mh-danger-soft);
+  }
+
+  #mi-harina-directions .mh-alert-copy {
+    flex: 1;
+  }
+
+  #mi-harina-directions .mh-alert-title {
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-alert-time {
+    color: var(--mh-muted);
+    font-size: 12px;
+  }
+
+  #mi-harina-directions .mh-review-callout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--mh-green);
+    color: var(--mh-surface);
+  }
+
+  #mi-harina-directions .mh-mobile-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  #mi-harina-directions .mh-mobile {
+    width: min(100%, 390px);
+    min-height: 720px;
+    position: relative;
+  }
+
+  #mi-harina-directions .mh-mobile-bar {
+    padding: 10px 12px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-tools {
+    gap: 2px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-tool {
+    width: 32px;
+    height: 32px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-content {
+    padding: 18px 14px 84px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-page-title {
+    font-size: 20px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-panel {
+    padding: 14px;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-expense {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-expense-end {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-expense-detail {
+    margin-left: 0;
+  }
+
+  #mi-harina-directions .mh-mobile .mh-grid-two,
+  #mi-harina-directions .mh-mobile .mh-grid-equal {
+    display: block;
+    margin-top: 16px;
+  }
+
+  #mi-harina-directions .mh-bottom-nav {
+    position: absolute;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--mh-surface);
+    border-top: 1px solid var(--mh-line);
+    padding: 7px 5px 9px;
+  }
+
+  #mi-harina-directions .mh-bottom-nav.has-add {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  #mi-harina-directions .mh-bottom-item {
+    display: flex;
+    min-width: 0;
+    min-height: 48px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    color: var(--mh-muted);
+    font-size: 11px;
+  }
+
+  #mi-harina-directions .mh-bottom-item.is-active {
+    color: var(--mh-green);
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-mobile-review-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  #mi-harina-directions .mh-review-card {
+    padding: 14px;
+    border: 1px solid var(--mh-line);
+    border-radius: 15px;
+    background: var(--mh-surface);
+  }
+
+  #mi-harina-directions .mh-review-card + .mh-review-card {
+    margin-top: 10px;
+  }
+
+  #mi-harina-directions .mh-review-card-head {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  #mi-harina-directions .mh-confidence {
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--mh-surface-2);
+    color: var(--mh-muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  #mi-harina-directions .mh-field {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--mh-line);
+    border-radius: 10px;
+    background: var(--mh-bg);
+    color: var(--mh-text);
+    font: inherit;
+  }
+
+  #mi-harina-directions .mh-review-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  #mi-harina-directions .mh-check {
+    color: var(--mh-muted);
+    font-size: 12px;
+  }
+
+  #mi-harina-directions .mh-alerts-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 18px;
+    min-height: 610px;
+  }
+
+  #mi-harina-directions .mh-alerts-backdrop {
+    min-height: 100%;
+    padding: 28px;
+    background: var(--mh-bg);
+  }
+
+  #mi-harina-directions .mh-alerts-panel {
+    padding: 18px;
+    background: var(--mh-surface);
+    border-left: 1px solid var(--mh-line);
+  }
+
+  #mi-harina-directions .mh-alerts-panel h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-muted-block {
+    height: 12px;
+    margin-top: 12px;
+    border-radius: 999px;
+    background: var(--mh-surface-2);
+  }
+
+  #mi-harina-directions .mh-muted-block.short {
+    width: 58%;
+  }
+
+  #mi-harina-directions .mh-section-link {
+    color: var(--mh-green-2);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 760px) {
+    #mi-harina-directions .mh-desktop .mh-header {
+      flex-wrap: wrap;
+    }
+
+    #mi-harina-directions .mh-desktop .mh-content {
+      padding: 20px;
+    }
+
+    #mi-harina-directions .mh-desktop .mh-grid-two,
+    #mi-harina-directions .mh-desktop .mh-grid-equal {
+      grid-template-columns: 1fr;
+    }
+
+    #mi-harina-directions .mh-alerts-layout {
+      grid-template-columns: 1fr;
+    }
+
+    #mi-harina-directions .mh-alerts-backdrop {
+      display: none;
+    }
+
+    #mi-harina-directions .mh-alerts-panel {
+      border-left: 0;
+      min-height: 560px;
+    }
+  }
+&lt;/style&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  const root = document.getElementById(&#x27;mi-harina-directions&#x27;);
+  const stage = document.getElementById(&#x27;mh-stage&#x27;);
+  const screenSelect = document.getElementById(&#x27;mh-screen-select&#x27;);
+  const themeSelect = document.getElementById(&#x27;mh-theme-select&#x27;);
+  const title = document.getElementById(&#x27;mh-direction-title&#x27;);
+  const summary = document.getElementById(&#x27;mh-direction-summary&#x27;);
+  let direction = &#x27;b&#x27;;
+
+  const directionInfo = {
+    a: {
+      title: &#x27;A · Daily stream&#x27;,
+      summary: &#x27;Today first · quiet budget context · Add as a secondary action&#x27;
+    },
+    b: {
+      title: &#x27;B · Balanced overview&#x27;,
+      summary: &#x27;Selected baseline · expandable expenses · older activity stays on Home&#x27;
+    },
+    c: {
+      title: &#x27;C · Review forward&#x27;,
+      summary: &#x27;Review status leads · fastest correction path · most operational&#x27;
+    }
+  };
+
+  const icon = (name) =&gt; `&lt;i data-lucide=&quot;${name}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;`;
+
+  function logoMark() {
+    return `&lt;svg viewBox=&quot;0 0 32 32&quot; role=&quot;img&quot; aria-label=&quot;MiHarina bag mark&quot;&gt;
+      &lt;path d=&quot;M11 9c1.6-3.1 3.3-3.7 5-2.1 1.7-1.6 3.4-1 5 2.1l-2.3 2.6h-5.4L11 9Z&quot; fill=&quot;none&quot; stroke=&quot;var(--mh-logo-ink)&quot; stroke-width=&quot;1.8&quot; stroke-linejoin=&quot;round&quot;/&gt;
+      &lt;path d=&quot;M12.4 11.6c-1.1 2.5-2.6 7.2-2.8 10.7-.1 2.7 2.1 4.1 6.4 4.1s6.5-1.4 6.4-4.1c-.2-3.5-1.7-8.2-2.8-10.7&quot; fill=&quot;none&quot; stroke=&quot;var(--mh-logo-ink)&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;/&gt;
+      &lt;path d=&quot;M19.3 11.8c2.2-.2 4 .4 5.2 1.7&quot; fill=&quot;none&quot; stroke=&quot;var(--mh-logo-ink)&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot;/&gt;
+      &lt;circle cx=&quot;16&quot; cy=&quot;17.2&quot; r=&quot;1.65&quot; fill=&quot;var(--mh-logo-dot)&quot;/&gt;
+      &lt;circle cx=&quot;16&quot; cy=&quot;22.3&quot; r=&quot;1.65&quot; fill=&quot;var(--mh-logo-dot)&quot;/&gt;
+    &lt;/svg&gt;`;
+  }
+
+  function toolsMarkup() {
+    return `&lt;div class=&quot;mh-tools&quot; aria-label=&quot;Global display controls&quot;&gt;
+      &lt;button class=&quot;mh-tool mh-currency&quot; aria-label=&quot;Display currency: CRC&quot;&gt;₡&lt;/button&gt;
+      &lt;button class=&quot;mh-tool&quot; aria-label=&quot;Switch theme&quot;&gt;${icon(&#x27;moon&#x27;)}&lt;/button&gt;
+      &lt;button class=&quot;mh-tool&quot; aria-label=&quot;Alerts&quot;&gt;${icon(&#x27;bell&#x27;)}&lt;span class=&quot;sr-only&quot;&gt;2 unread&lt;/span&gt;&lt;/button&gt;
+      &lt;button class=&quot;mh-tool&quot; aria-label=&quot;Settings&quot;&gt;${icon(&#x27;settings&#x27;)}&lt;/button&gt;
+    &lt;/div&gt;`;
+  }
+
+  function desktopHeader() {
+    const order = direction === &#x27;c&#x27;
+      ? `&lt;button class=&quot;mh-nav-link is-active&quot;&gt;${icon(&#x27;list-checks&#x27;)} Review &lt;span class=&quot;mh-count&quot;&gt;3&lt;/span&gt;&lt;/button&gt;&lt;button class=&quot;mh-nav-link&quot;&gt;Search&lt;/button&gt;&lt;button class=&quot;mh-nav-link&quot;&gt;Reports&lt;/button&gt;`
+      : `&lt;button class=&quot;mh-nav-link ${direction === &#x27;b&#x27; ? &#x27;is-active&#x27; : &#x27;&#x27;}&quot;&gt;${icon(&#x27;list-checks&#x27;)} Review &lt;span class=&quot;mh-count&quot;&gt;3&lt;/span&gt;&lt;/button&gt;&lt;button class=&quot;mh-nav-link&quot;&gt;Search&lt;/button&gt;&lt;button class=&quot;mh-nav-link&quot;&gt;Reports&lt;/button&gt;`;
+    return `&lt;header class=&quot;mh-header&quot;&gt;
+      &lt;div class=&quot;mh-brand&quot;&gt;&lt;span class=&quot;mh-logo&quot;&gt;${logoMark()}&lt;/span&gt;&lt;span&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
+      &lt;nav class=&quot;mh-main-nav&quot; aria-label=&quot;Primary&quot;&gt;${order}&lt;/nav&gt;
+      &lt;div class=&quot;mh-actions&quot;&gt;&lt;button class=&quot;mh-action&quot;&gt;${icon(&#x27;plus&#x27;)} Add expense&lt;/button&gt;${toolsMarkup()}&lt;/div&gt;
+    &lt;/header&gt;`;
+  }
+
+  function mobileTop() {
+    return `&lt;header class=&quot;mh-mobile-bar&quot;&gt;
+      &lt;div class=&quot;mh-brand&quot;&gt;&lt;span class=&quot;mh-logo&quot;&gt;${logoMark()}&lt;/span&gt;&lt;span&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
+      ${toolsMarkup()}
+    &lt;/header&gt;`;
+  }
+
+  function bottomNav(active) {
+    const addItem = direction === &#x27;c&#x27; ? `&lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;plus&#x27;)}&lt;span&gt;Add&lt;/span&gt;&lt;/button&gt;` : &#x27;&#x27;;
+    return `&lt;nav class=&quot;mh-bottom-nav ${direction === &#x27;c&#x27; ? &#x27;has-add&#x27; : &#x27;&#x27;}&quot; aria-label=&quot;Mobile primary&quot;&gt;
+      &lt;button class=&quot;mh-bottom-item ${active === &#x27;home&#x27; ? &#x27;is-active&#x27; : &#x27;&#x27;}&quot;&gt;${icon(&#x27;house&#x27;)}&lt;span&gt;Home&lt;/span&gt;&lt;/button&gt;
+      &lt;button class=&quot;mh-bottom-item ${active === &#x27;review&#x27; ? &#x27;is-active&#x27; : &#x27;&#x27;}&quot;&gt;${icon(&#x27;list-checks&#x27;)}&lt;span&gt;Review · 3&lt;/span&gt;&lt;/button&gt;
+      &lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;search&#x27;)}&lt;span&gt;Search&lt;/span&gt;&lt;/button&gt;
+      &lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;chart-no-axes-column&#x27;)}&lt;span&gt;Reports&lt;/span&gt;&lt;/button&gt;
+      ${addItem}
+    &lt;/nav&gt;`;
+  }
+
+  function expenseFrame({ name, category, time, amount, expenseIcon, note, flagged = false, expanded = false }) {
+    return `&lt;article class=&quot;mh-expense-frame&quot; data-expense&gt;
+      &lt;div class=&quot;mh-expense&quot;&gt;
+        &lt;button type=&quot;button&quot; class=&quot;mh-expense-toggle&quot; aria-expanded=&quot;${expanded ? &#x27;true&#x27; : &#x27;false&#x27;}&quot;&gt;
+          &lt;span class=&quot;mh-expense-icon&quot;&gt;${icon(expenseIcon)}&lt;/span&gt;
+          &lt;span class=&quot;mh-expense-copy&quot;&gt;&lt;span class=&quot;mh-expense-name&quot;&gt;${name}&lt;/span&gt;&lt;span class=&quot;mh-meta&quot;&gt;${category} · ${time}&lt;/span&gt;${flagged ? `&lt;span class=&quot;mh-flag&quot;&gt;${icon(&#x27;copy&#x27;)} Possible duplicate&lt;/span&gt;` : &#x27;&#x27;}&lt;/span&gt;
+          &lt;span class=&quot;mh-chevron&quot;&gt;${icon(expanded ? &#x27;chevron-up&#x27; : &#x27;chevron-down&#x27;)}&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class=&quot;mh-expense-end&quot;&gt;
+          &lt;span class=&quot;mh-amount&quot;&gt;${amount}&lt;/span&gt;
+          &lt;div class=&quot;mh-expense-actions&quot; aria-label=&quot;Expense actions&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Edit expense&quot; data-tooltip=&quot;Edit&quot;&gt;${icon(&#x27;pencil&#x27;)}&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Split expense&quot; data-tooltip=&quot;Split&quot;&gt;${icon(&#x27;split&#x27;)}&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Delete expense&quot; data-tooltip=&quot;Delete&quot;&gt;${icon(&#x27;trash-2&#x27;)}&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;mh-expense-detail&quot; ${expanded ? &#x27;&#x27; : &#x27;hidden&#x27;}&gt;
+        &lt;div class=&quot;mh-detail-primary&quot;&gt;&lt;span class=&quot;mh-bank-mark&quot;&gt;★&lt;/span&gt;&lt;span class=&quot;mh-card-mark&quot;&gt;VISA&lt;/span&gt;&lt;strong&gt;•••• 0828&lt;/strong&gt;&lt;/div&gt;
+        &lt;p class=&quot;mh-detail-note&quot;&gt;${note}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/article&gt;`;
+  }
+
+  function todayExpenseRows(compact = false) {
+    return `${expenseFrame({ name: &#x27;Auto Mercado Plaza&#x27;, category: &#x27;Supermercado&#x27;, time: &#x27;10:42&#x27;, amount: &#x27;₡7 360&#x27;, expenseIcon: &#x27;utensils&#x27;, note: &#x27;groceries for the week&#x27; })}
+      ${expenseFrame({ name: &#x27;Uber&#x27;, category: &#x27;Transporte&#x27;, time: &#x27;08:16&#x27;, amount: &#x27;₡4 250&#x27;, expenseIcon: &#x27;car&#x27;, note: &#x27;morning ride&#x27;, flagged: true })}
+      ${compact ? &#x27;&#x27; : expenseFrame({ name: &#x27;Farmavalue Los Yoses&#x27;, category: &#x27;Salud&#x27;, time: &#x27;07:54&#x27;, amount: &#x27;₡18 900&#x27;, expenseIcon: &#x27;shopping-bag&#x27;, note: &#x27;monthly medication&#x27; })}`;
+  }
+
+  function recentExpenseGroups() {
+    return `&lt;div class=&quot;mh-day-heading&quot;&gt;&lt;span&gt;Yesterday&lt;/span&gt;&lt;span&gt;₡34 282&lt;/span&gt;&lt;/div&gt;
+      ${expenseFrame({ name: &#x27;Condominio Residencial&#x27;, category: &#x27;Apto2 / Agua&#x27;, time: &#x27;18:20&#x27;, amount: &#x27;₡13 896&#x27;, expenseIcon: &#x27;house&#x27;, note: &#x27;monthly water payment&#x27;, flagged: true })}
+      &lt;div class=&quot;mh-older-expenses&quot; hidden&gt;
+        &lt;div class=&quot;mh-day-heading&quot;&gt;&lt;span&gt;August 24&lt;/span&gt;&lt;span&gt;₡7 750&lt;/span&gt;&lt;/div&gt;
+        ${expenseFrame({ name: &#x27;PF*Casa Granel Colones Central CR&#x27;, category: &#x27;Alimentación / Supermercado&#x27;, time: &#x27;14:08&#x27;, amount: &#x27;₡7 750&#x27;, expenseIcon: &#x27;utensils&#x27;, note: &#x27;condimentos y platanitos&#x27;, expanded: true })}
+      &lt;/div&gt;
+      &lt;button type=&quot;button&quot; class=&quot;mh-more-link&quot; data-see-more aria-expanded=&quot;false&quot;&gt;See more&lt;/button&gt;`;
+  }
+
+  function budgetRows() {
+    return `&lt;div class=&quot;mh-budget-row&quot;&gt;&lt;div class=&quot;mh-budget-copy&quot;&gt;&lt;span&gt;Restaurantes&lt;/span&gt;&lt;span&gt;₡34 025 / ₡100 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mh-progress&quot;&gt;&lt;span style=&quot;width:34%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;mh-budget-row&quot;&gt;&lt;div class=&quot;mh-budget-copy&quot;&gt;&lt;span&gt;Supermercado&lt;/span&gt;&lt;span&gt;₡261 175 / ₡215 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mh-progress is-over&quot;&gt;&lt;span style=&quot;width:96%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;span class=&quot;mh-flag&quot;&gt;${icon(&#x27;flame&#x27;)} Over budget&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mh-budget-row&quot;&gt;&lt;div class=&quot;mh-budget-copy&quot;&gt;&lt;span&gt;Regalos&lt;/span&gt;&lt;span&gt;₡0 / ₡100 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mh-progress&quot;&gt;&lt;span style=&quot;width:0%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;`;
+  }
+
+  function reviewCallout() {
+    return `&lt;div class=&quot;mh-review-callout&quot;&gt;&lt;div&gt;&lt;strong&gt;3 expenses need review&lt;/strong&gt;&lt;div class=&quot;mh-meta&quot; style=&quot;color:inherit&quot;&gt;Two categories suggested&lt;/div&gt;&lt;/div&gt;&lt;button class=&quot;mh-action&quot;&gt;Review now&lt;/button&gt;&lt;/div&gt;`;
+  }
+
+  function reminderCard() {
+    return `&lt;div class=&quot;mh-alert&quot;&gt;&lt;span&gt;${icon(&#x27;credit-card&#x27;)}&lt;/span&gt;&lt;div class=&quot;mh-alert-copy&quot;&gt;&lt;div class=&quot;mh-alert-title&quot;&gt;Card payment due soon&lt;/div&gt;&lt;div class=&quot;mh-alert-time&quot;&gt;BAC card · payment in 5 days&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
+  }
+
+  function desktopHome() {
+    let body = &#x27;&#x27;;
+    if (direction === &#x27;a&#x27;) {
+      body = `&lt;div class=&quot;mh-grid-two&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;div class=&quot;mh-actions&quot;&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;button class=&quot;mh-action&quot;&gt;${icon(&#x27;plus&#x27;)} Add expense&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;${todayExpenseRows()}&lt;/section&gt;&lt;aside class=&quot;mh-stack&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;View reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;${reminderCard()}&lt;/aside&gt;&lt;/div&gt;`;
+    } else if (direction === &#x27;b&#x27;) {
+      body = `&lt;div class=&quot;mh-grid-equal&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;&lt;/div&gt;&lt;div class=&quot;mh-grid-two&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Recent expenses&lt;/h2&gt;&lt;/div&gt;${recentExpenseGroups()}&lt;/section&gt;&lt;aside&gt;${reminderCard()}&lt;/aside&gt;&lt;/div&gt;`;
+    } else {
+      body = `${reviewCallout()}&lt;div class=&quot;mh-grid-two&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&#x27;s expenses&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows()}&lt;/section&gt;&lt;aside class=&quot;mh-stack&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;${reminderCard()}&lt;/aside&gt;&lt;/div&gt;`;
+    }
+    return `&lt;div class=&quot;mh-product mh-desktop&quot;&gt;${desktopHeader()}&lt;main class=&quot;mh-content&quot;&gt;&lt;h1 class=&quot;mh-page-title&quot;&gt;Good morning, Jose&lt;/h1&gt;&lt;p class=&quot;mh-subtitle&quot;&gt;Your expenses for Friday, August 29&lt;/p&gt;${body}&lt;/main&gt;&lt;/div&gt;`;
+  }
+
+  function mobileHome() {
+    let body = &#x27;&#x27;;
+    if (direction === &#x27;a&#x27;) {
+      body = `&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;button class=&quot;mh-action&quot; style=&quot;margin-top:10px&quot;&gt;${icon(&#x27;plus&#x27;)} Add expense&lt;/button&gt;&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;${reminderCard()}`;
+    } else if (direction === &#x27;b&#x27;) {
+      body = `&lt;div class=&quot;mh-grid-equal&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;&lt;/div&gt;${reminderCard()}&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Recent expenses&lt;/h2&gt;&lt;/div&gt;${recentExpenseGroups()}&lt;/section&gt;`;
+    } else {
+      body = `${reviewCallout()}&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;`;
+    }
+    return `&lt;div class=&quot;mh-mobile-wrap&quot;&gt;&lt;div class=&quot;mh-product mh-mobile&quot;&gt;${mobileTop()}&lt;main class=&quot;mh-content&quot;&gt;&lt;h1 class=&quot;mh-page-title&quot;&gt;Good morning, Jose&lt;/h1&gt;&lt;p class=&quot;mh-subtitle&quot;&gt;Friday, August 29&lt;/p&gt;&lt;div class=&quot;mh-stack&quot; style=&quot;margin-top:16px&quot;&gt;${body}&lt;/div&gt;&lt;/main&gt;${bottomNav(&#x27;home&#x27;)}&lt;/div&gt;&lt;/div&gt;`;
+  }
+
+  function reviewCard(name, confidence, selected, flagged = false) {
+    return `&lt;article class=&quot;mh-review-card&quot;&gt;&lt;div class=&quot;mh-review-card-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;mh-expense-name&quot;&gt;${name}&lt;/div&gt;&lt;div class=&quot;mh-meta&quot;&gt;Aug 29 · ₡${name === &#x27;Ferretería EPA&#x27; ? &#x27;3 450&#x27; : &#x27;2 417&#x27;}&lt;/div&gt;${flagged ? `&lt;span class=&quot;mh-flag&quot;&gt;${icon(&#x27;copy&#x27;)} Possible duplicate&lt;/span&gt;` : &#x27;&#x27;}&lt;/div&gt;&lt;span class=&quot;mh-confidence&quot;&gt;${confidence}% confident&lt;/span&gt;&lt;/div&gt;&lt;select class=&quot;mh-field&quot; aria-label=&quot;Category&quot;&gt;&lt;option&gt;${selected || &#x27;Choose category&#x27;}&lt;/option&gt;&lt;/select&gt;&lt;div class=&quot;mh-review-actions&quot;&gt;&lt;label class=&quot;mh-check&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt; Always&lt;/label&gt;&lt;button class=&quot;mh-action mh-primary&quot;&gt;Approve&lt;/button&gt;&lt;/div&gt;&lt;/article&gt;`;
+  }
+
+  function mobileReview() {
+    const intro = direction === &#x27;c&#x27;
+      ? `&lt;div class=&quot;mh-alert&quot;&gt;&lt;span&gt;${icon(&#x27;sparkles&#x27;)}&lt;/span&gt;&lt;div class=&quot;mh-alert-copy&quot;&gt;&lt;div class=&quot;mh-alert-title&quot;&gt;Two suggestions are ready&lt;/div&gt;&lt;div class=&quot;mh-alert-time&quot;&gt;Confirm or change each category&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`
+      : &#x27;&#x27;;
+    return `&lt;div class=&quot;mh-mobile-wrap&quot;&gt;&lt;div class=&quot;mh-product mh-mobile&quot;&gt;${mobileTop()}&lt;main class=&quot;mh-content&quot;&gt;&lt;div class=&quot;mh-mobile-review-head&quot;&gt;&lt;div&gt;&lt;h1 class=&quot;mh-page-title&quot;&gt;Review queue&lt;/h1&gt;&lt;p class=&quot;mh-subtitle&quot;&gt;3 pending&lt;/p&gt;&lt;/div&gt;&lt;button class=&quot;mh-action&quot;&gt;Approve all&lt;/button&gt;&lt;/div&gt;&lt;div class=&quot;mh-stack&quot;&gt;${intro}${reviewCard(&#x27;Ferretería EPA&#x27;, 32, &#x27;Otros / Donaciones&#x27;)}${reviewCard(&#x27;Cobro administración&#x27;, 15, &#x27;Apto2 / Mantenimiento&#x27;, true)}${reviewCard(&#x27;Cobro administración&#x27;, 0, &#x27;&#x27;)}&lt;/div&gt;&lt;/main&gt;${bottomNav(&#x27;review&#x27;)}&lt;/div&gt;&lt;/div&gt;`;
+  }
+
+  function alertsView() {
+    const directionNote = direction === &#x27;a&#x27; ? &#x27;Compact drawer&#x27; : direction === &#x27;b&#x27; ? &#x27;Context-rich panel&#x27; : &#x27;Action-oriented center&#x27;;
+    return `&lt;div class=&quot;mh-product&quot;&gt;&lt;div class=&quot;mh-alerts-layout&quot;&gt;&lt;div class=&quot;mh-alerts-backdrop&quot;&gt;${desktopHeader()}&lt;div style=&quot;padding:30px&quot;&gt;&lt;h1 class=&quot;mh-page-title&quot;&gt;Home&lt;/h1&gt;&lt;div class=&quot;mh-muted-block&quot;&gt;&lt;/div&gt;&lt;div class=&quot;mh-muted-block short&quot;&gt;&lt;/div&gt;&lt;div class=&quot;mh-grid-equal&quot;&gt;&lt;div class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-muted-block&quot;&gt;&lt;/div&gt;&lt;div class=&quot;mh-muted-block short&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-muted-block&quot;&gt;&lt;/div&gt;&lt;div class=&quot;mh-muted-block short&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;aside class=&quot;mh-alerts-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Alerts&lt;/h2&gt;&lt;span class=&quot;mh-count&quot;&gt;2&lt;/span&gt;&lt;/div&gt;&lt;p class=&quot;mh-subtitle&quot; style=&quot;margin-bottom:16px&quot;&gt;${directionNote}&lt;/p&gt;&lt;div class=&quot;mh-stack&quot;&gt;${reminderCard()}&lt;div class=&quot;mh-alert is-danger&quot;&gt;&lt;span&gt;${icon(&#x27;copy&#x27;)}&lt;/span&gt;&lt;div class=&quot;mh-alert-copy&quot;&gt;&lt;div class=&quot;mh-alert-title&quot;&gt;Possible duplicate&lt;/div&gt;&lt;div class=&quot;mh-alert-time&quot;&gt;Uber · ₡4 250 · today&lt;/div&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Open expense&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;mh-alert&quot;&gt;&lt;span&gt;${icon(&#x27;gauge&#x27;)}&lt;/span&gt;&lt;div class=&quot;mh-alert-copy&quot;&gt;&lt;div class=&quot;mh-alert-title&quot;&gt;Supermercado is over budget&lt;/div&gt;&lt;div class=&quot;mh-alert-time&quot;&gt;₡46 175 above this month&#x27;s budget&lt;/div&gt;&lt;span class=&quot;mh-section-link&quot;&gt;View report&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/aside&gt;&lt;/div&gt;&lt;/div&gt;`;
+  }
+
+  function render() {
+    const screen = screenSelect.value;
+    title.textContent = directionInfo[direction].title;
+    summary.textContent = directionInfo[direction].summary;
+    stage.dataset.theme = themeSelect.value;
+    if (screen === &#x27;desktop-home&#x27;) stage.innerHTML = desktopHome();
+    if (screen === &#x27;mobile-home&#x27;) stage.innerHTML = mobileHome();
+    if (screen === &#x27;mobile-review&#x27;) stage.innerHTML = mobileReview();
+    if (screen === &#x27;alerts&#x27;) stage.innerHTML = alertsView();
+    if (window.lucide) window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+  }
+
+  root.querySelectorAll(&#x27;[data-direction]&#x27;).forEach((button) =&gt; {
+    button.addEventListener(&#x27;click&#x27;, () =&gt; {
+      direction = button.dataset.direction;
+      root.querySelectorAll(&#x27;[data-direction]&#x27;).forEach((item) =&gt; {
+        const active = item === button;
+        item.setAttribute(&#x27;aria-pressed&#x27;, active ? &#x27;true&#x27; : &#x27;false&#x27;);
+        item.classList.toggle(&#x27;btn-primary&#x27;, active);
+      });
+      render();
+    });
+  });
+  stage.addEventListener(&#x27;click&#x27;, (event) =&gt; {
+    const toggle = event.target.closest(&#x27;.mh-expense-toggle&#x27;);
+    if (toggle) {
+      const frame = toggle.closest(&#x27;[data-expense]&#x27;);
+      const detail = frame.querySelector(&#x27;.mh-expense-detail&#x27;);
+      const expanded = toggle.getAttribute(&#x27;aria-expanded&#x27;) === &#x27;true&#x27;;
+      toggle.setAttribute(&#x27;aria-expanded&#x27;, expanded ? &#x27;false&#x27; : &#x27;true&#x27;);
+      detail.hidden = expanded;
+      toggle.querySelector(&#x27;.mh-chevron&#x27;).innerHTML = icon(expanded ? &#x27;chevron-down&#x27; : &#x27;chevron-up&#x27;);
+      if (window.lucide) window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+      return;
+    }
+
+    const more = event.target.closest(&#x27;[data-see-more]&#x27;);
+    if (more) {
+      const panel = more.closest(&#x27;.mh-panel&#x27;);
+      const older = panel.querySelector(&#x27;.mh-older-expenses&#x27;);
+      const expanded = more.getAttribute(&#x27;aria-expanded&#x27;) === &#x27;true&#x27;;
+      more.setAttribute(&#x27;aria-expanded&#x27;, expanded ? &#x27;false&#x27; : &#x27;true&#x27;);
+      older.hidden = expanded;
+      more.textContent = expanded ? &#x27;See more&#x27; : &#x27;See less&#x27;;
+    }
+  });
+  screenSelect.addEventListener(&#x27;change&#x27;, render);
+  themeSelect.addEventListener(&#x27;change&#x27;, render);
+  render();
+})();
+&lt;/script&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

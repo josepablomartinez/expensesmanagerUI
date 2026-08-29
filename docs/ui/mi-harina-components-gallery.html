@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>MiHarina Components Gallery</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="MiHarina Components Gallery" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;MiHarina Components Gallery&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: var(--border-radius-lg, 12.5px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress {
+  display: flex;
+  height: 6px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 6px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: 16px !important;
+  height: 16px !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;mi-harina-components&quot;&gt;
+  &lt;div class=&quot;viz-controls&quot; aria-label=&quot;Component preview controls&quot;&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Theme
+      &lt;select class=&quot;form-select&quot; id=&quot;mhc-theme&quot;&gt;&lt;option value=&quot;light&quot;&gt;Light&lt;/option&gt;&lt;option value=&quot;dark&quot;&gt;Dark&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Preview
+      &lt;select class=&quot;form-select&quot; id=&quot;mhc-viewport&quot;&gt;&lt;option value=&quot;desktop&quot;&gt;Desktop&lt;/option&gt;&lt;option value=&quot;mobile&quot;&gt;Mobile&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Language
+      &lt;select class=&quot;form-select&quot; id=&quot;mhc-language&quot;&gt;&lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;&lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;section id=&quot;mhc-canvas&quot; class=&quot;mhc-canvas&quot; data-theme=&quot;light&quot; data-viewport=&quot;desktop&quot; data-language=&quot;en&quot;&gt;
+    &lt;header class=&quot;mhc-header&quot;&gt;
+      &lt;div class=&quot;mhc-brand&quot;&gt;&lt;span class=&quot;mhc-logo&quot; aria-hidden=&quot;true&quot;&gt;&lt;svg viewBox=&quot;0 0 32 32&quot;&gt;&lt;path d=&quot;M11 9c1.6-3.1 3.3-3.7 5-2.1 1.7-1.6 3.4-1 5 2.1l-2.3 2.6h-5.4L11 9Z&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linejoin=&quot;round&quot;/&gt;&lt;path d=&quot;M12.4 11.6c-1.1 2.5-2.6 7.2-2.8 10.7-.1 2.7 2.1 4.1 6.4 4.1s6.5-1.4 6.4-4.1c-.2-3.5-1.7-8.2-2.8-10.7&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;path d=&quot;M19.3 11.8c2.2-.2 4 .4 5.2 1.7&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;circle cx=&quot;16&quot; cy=&quot;17.2&quot; r=&quot;1.65&quot; class=&quot;mhc-logo-dot&quot;/&gt;&lt;circle cx=&quot;16&quot; cy=&quot;22.3&quot; r=&quot;1.65&quot; class=&quot;mhc-logo-dot&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
+      &lt;nav class=&quot;mhc-nav&quot;&gt;&lt;span class=&quot;mhc-nav-active&quot;&gt;&lt;i data-lucide=&quot;list-checks&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt; &lt;span data-copy=&quot;review&quot;&gt;Review&lt;/span&gt; &lt;b&gt;3&lt;/b&gt;&lt;/span&gt;&lt;span data-copy=&quot;search&quot;&gt;Search&lt;/span&gt;&lt;span data-copy=&quot;reports&quot;&gt;Reports&lt;/span&gt;&lt;/nav&gt;
+      &lt;div class=&quot;mhc-global&quot;&gt;&lt;button class=&quot;mhc-button mhc-secondary mhc-add&quot;&gt;&lt;i data-lucide=&quot;plus&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;add&quot;&gt;Add expense&lt;/span&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button mhc-currency&quot; aria-label=&quot;Currency&quot;&gt;₡&lt;/button&gt;&lt;button class=&quot;mhc-icon-button&quot; aria-label=&quot;Theme&quot;&gt;&lt;i data-lucide=&quot;moon&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button&quot; aria-label=&quot;Alerts&quot;&gt;&lt;i data-lucide=&quot;bell&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button&quot; aria-label=&quot;Settings&quot;&gt;&lt;i data-lucide=&quot;settings&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;main class=&quot;mhc-main&quot;&gt;
+      &lt;div class=&quot;mhc-title&quot;&gt;&lt;div&gt;&lt;p&gt;COMPONENTS REVIEW&lt;/p&gt;&lt;h1 data-copy=&quot;title&quot;&gt;MiHarina components&lt;/h1&gt;&lt;/div&gt;&lt;span&gt;Higher contrast · Inter · Comfortable · Compact&lt;/span&gt;&lt;/div&gt;
+
+      &lt;section class=&quot;mhc-panel&quot;&gt;
+        &lt;h2 data-copy=&quot;homeHeader&quot;&gt;Home greeting and favorite-bank rate&lt;/h2&gt;
+        &lt;div class=&quot;mhc-home-intro&quot;&gt;
+          &lt;div class=&quot;mhc-greeting&quot;&gt;&lt;span class=&quot;mhc-greeting-icon&quot;&gt;&lt;i data-lucide=&quot;sun&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;strong data-copy=&quot;greeting&quot;&gt;Good morning, Jose&lt;/strong&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-bank-rates&quot;&gt;
+            &lt;div class=&quot;mhc-bank-rate&quot;&gt;&lt;span class=&quot;mhc-bank-mark mhc-bank-mark-bac&quot; aria-hidden=&quot;true&quot;&gt;BAC&lt;/span&gt;&lt;span&gt;&lt;small&gt;BAC San José&lt;/small&gt;&lt;strong&gt;₡443,00&lt;/strong&gt;&lt;/span&gt;&lt;button class=&quot;mhc-bank-toggle&quot; type=&quot;button&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Show more favorite banks&quot;&gt;&lt;i data-lucide=&quot;chevron-down&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhc-bank-more&quot; hidden&gt;&lt;div class=&quot;mhc-bank-rate&quot;&gt;&lt;span class=&quot;mhc-bank-mark&quot; aria-hidden=&quot;true&quot;&gt;BN&lt;/span&gt;&lt;span&gt;&lt;small&gt;Banco Nacional&lt;/small&gt;&lt;strong&gt;₡442,50&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhc-grid-two&quot;&gt;
+        &lt;div class=&quot;mhc-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;actions&quot;&gt;Actions&lt;/h2&gt;
+          &lt;div class=&quot;mhc-component-row&quot;&gt;&lt;button class=&quot;mhc-button mhc-primary&quot; data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;button class=&quot;mhc-button mhc-secondary&quot; data-copy=&quot;add&quot;&gt;Add expense&lt;/button&gt;&lt;button class=&quot;mhc-button mhc-ghost&quot; data-copy=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;&lt;button class=&quot;mhc-button mhc-danger&quot; data-copy=&quot;delete&quot;&gt;Delete&lt;/button&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-component-row mhc-icon-row&quot;&gt;&lt;button class=&quot;mhc-icon-button&quot; aria-label=&quot;Edit&quot;&gt;&lt;i data-lucide=&quot;pencil&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button&quot; aria-label=&quot;Split&quot;&gt;&lt;i data-lucide=&quot;split&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button mhc-icon-danger&quot; aria-label=&quot;Delete&quot;&gt;&lt;i data-lucide=&quot;trash-2&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhc-icon-button&quot; disabled aria-label=&quot;Disabled&quot;&gt;&lt;i data-lucide=&quot;check&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mhc-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;fields&quot;&gt;Fields&lt;/h2&gt;
+          &lt;div class=&quot;mhc-fields&quot;&gt;&lt;label&gt;&lt;span data-copy=&quot;merchant&quot;&gt;Merchant&lt;/span&gt;&lt;input value=&quot;Auto Mercado Plaza&quot; aria-label=&quot;Merchant&quot;&gt;&lt;/label&gt;&lt;label&gt;&lt;span data-copy=&quot;amount&quot;&gt;Amount&lt;/span&gt;&lt;input value=&quot;₡7 360,00&quot; aria-label=&quot;Amount&quot;&gt;&lt;/label&gt;&lt;label&gt;&lt;span data-copy=&quot;category&quot;&gt;Category&lt;/span&gt;&lt;select aria-label=&quot;Category&quot;&gt;&lt;option data-copy=&quot;supermarket&quot;&gt;Alimentación / Supermercado&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;&lt;span data-copy=&quot;date&quot;&gt;Date&lt;/span&gt;&lt;input type=&quot;date&quot; value=&quot;2026-08-29&quot; aria-label=&quot;Date&quot;&gt;&lt;/label&gt;&lt;/div&gt;
+          &lt;label class=&quot;mhc-check&quot;&gt;&lt;input type=&quot;checkbox&quot; checked&gt;&lt;span data-copy=&quot;always&quot;&gt;Always categorize this merchant this way&lt;/span&gt;&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhc-grid-two&quot;&gt;
+        &lt;div class=&quot;mhc-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;status&quot;&gt;Badges and flags&lt;/h2&gt;
+          &lt;div class=&quot;mhc-component-row&quot;&gt;&lt;span class=&quot;mhc-badge mhc-count&quot;&gt;3 &lt;span data-copy=&quot;pending&quot;&gt;pending&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhc-badge&quot;&gt;32% &lt;span data-copy=&quot;confident&quot;&gt;confident&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhc-badge mhc-success&quot;&gt;&lt;i data-lucide=&quot;check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;reviewed&quot;&gt;Reviewed&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhc-badge mhc-category&quot; data-copy=&quot;supermarketShort&quot;&gt;Supermercado&lt;/span&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-flag-list&quot;&gt;&lt;span class=&quot;mhc-flag mhc-flag-danger&quot;&gt;&lt;i data-lucide=&quot;copy&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;duplicate&quot;&gt;Possible duplicate&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhc-flag mhc-flag-danger&quot;&gt;&lt;i data-lucide=&quot;shield-alert&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;suspicious&quot;&gt;Suspicious expense&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhc-flag mhc-flag-warning&quot;&gt;&lt;i data-lucide=&quot;flame&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;overBudget&quot;&gt;Over budget&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mhc-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;budgets&quot;&gt;Budget progress&lt;/h2&gt;
+          &lt;div class=&quot;mhc-budget&quot;&gt;&lt;div&gt;&lt;span data-copy=&quot;restaurants&quot;&gt;Restaurants&lt;/span&gt;&lt;span&gt;₡34 025 / ₡100 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mhc-track&quot;&gt;&lt;span style=&quot;width:34%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-budget&quot;&gt;&lt;div&gt;&lt;span data-copy=&quot;personal&quot;&gt;Personal&lt;/span&gt;&lt;span&gt;₡82 000 / ₡100 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mhc-track mhc-track-warning&quot;&gt;&lt;span style=&quot;width:82%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;em&gt;&lt;i data-lucide=&quot;triangle-alert&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;82%&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-budget&quot;&gt;&lt;div&gt;&lt;span data-copy=&quot;supermarketShort&quot;&gt;Supermercado&lt;/span&gt;&lt;span&gt;₡261 175 / ₡215 000&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;mhc-track mhc-track-danger&quot;&gt;&lt;span style=&quot;width:96%&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;em&gt;&lt;i data-lucide=&quot;flame&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;overBudget&quot;&gt;Over budget&lt;/span&gt;&lt;/em&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhc-panel&quot;&gt;
+        &lt;h2 data-copy=&quot;alerts&quot;&gt;Informative alerts&lt;/h2&gt;
+        &lt;div class=&quot;mhc-alert-grid&quot;&gt;&lt;article class=&quot;mhc-alert mhc-alert-info&quot;&gt;&lt;i data-lucide=&quot;credit-card&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;div&gt;&lt;strong data-copy=&quot;paymentDue&quot;&gt;Card payment due soon&lt;/strong&gt;&lt;span data-copy=&quot;paymentDetail&quot;&gt;BAC card · payment in 5 days&lt;/span&gt;&lt;/div&gt;&lt;button aria-label=&quot;Dismiss&quot;&gt;&lt;i data-lucide=&quot;x&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/article&gt;&lt;article class=&quot;mhc-alert mhc-alert-warning&quot;&gt;&lt;i data-lucide=&quot;gauge&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;div&gt;&lt;strong data-copy=&quot;budgetNear&quot;&gt;Budget limit approaching&lt;/strong&gt;&lt;span data-copy=&quot;budgetDetail&quot;&gt;Personal has used 82% this month&lt;/span&gt;&lt;/div&gt;&lt;button aria-label=&quot;Dismiss&quot;&gt;&lt;i data-lucide=&quot;x&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/article&gt;&lt;article class=&quot;mhc-alert mhc-alert-danger&quot;&gt;&lt;i data-lucide=&quot;copy&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;div&gt;&lt;strong data-copy=&quot;duplicate&quot;&gt;Possible duplicate&lt;/strong&gt;&lt;span&gt;Uber · ₡4 250 · &lt;span data-copy=&quot;today&quot;&gt;today&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;button aria-label=&quot;Dismiss&quot;&gt;&lt;i data-lucide=&quot;x&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/article&gt;&lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhc-panel&quot;&gt;
+        &lt;div class=&quot;mhc-section-head&quot;&gt;&lt;h2 data-copy=&quot;expenseFrames&quot;&gt;Expense frames&lt;/h2&gt;&lt;span data-copy=&quot;expandHint&quot;&gt;Each expense opens its own detail frame below&lt;/span&gt;&lt;/div&gt;
+        &lt;article class=&quot;mhc-expense-frame&quot; data-expense&gt;
+          &lt;div class=&quot;mhc-expense-row&quot;&gt;&lt;button class=&quot;mhc-expense-toggle&quot; aria-expanded=&quot;false&quot;&gt;&lt;span class=&quot;mhc-category-icon&quot;&gt;&lt;i data-lucide=&quot;utensils&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span class=&quot;mhc-expense-copy&quot;&gt;&lt;strong&gt;PF*Casa Granel Colones Central CR&lt;/strong&gt;&lt;span data-copy=&quot;supermarket&quot;&gt;Alimentación / Supermercado&lt;/span&gt;&lt;/span&gt;&lt;i data-lucide=&quot;chevron-down&quot; class=&quot;mhc-chevron&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;span class=&quot;mhc-state-label&quot; data-copy=&quot;collapsed&quot;&gt;Collapsed&lt;/span&gt;&lt;strong class=&quot;mhc-expense-amount&quot;&gt;₡7 750&lt;/strong&gt;&lt;div class=&quot;mhc-expense-actions&quot;&gt;&lt;button aria-label=&quot;Edit&quot;&gt;&lt;i data-lucide=&quot;pencil&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button aria-label=&quot;Split&quot;&gt;&lt;i data-lucide=&quot;split&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button aria-label=&quot;Delete&quot;&gt;&lt;i data-lucide=&quot;trash-2&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-expense-detail&quot; hidden&gt;&lt;div&gt;&lt;span class=&quot;mhc-bank&quot;&gt;★&lt;/span&gt;&lt;span class=&quot;mhc-visa&quot;&gt;VISA&lt;/span&gt;&lt;strong&gt;•••• 0828&lt;/strong&gt;&lt;/div&gt;&lt;p data-copy=&quot;expenseNote&quot;&gt;condiments and plantain chips&lt;/p&gt;&lt;/div&gt;
+        &lt;/article&gt;
+        &lt;article class=&quot;mhc-expense-frame&quot; data-expense&gt;
+          &lt;div class=&quot;mhc-expense-row&quot;&gt;&lt;button class=&quot;mhc-expense-toggle&quot; aria-expanded=&quot;true&quot;&gt;&lt;span class=&quot;mhc-category-icon&quot;&gt;&lt;i data-lucide=&quot;car&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span class=&quot;mhc-expense-copy&quot;&gt;&lt;strong&gt;Uber&lt;/strong&gt;&lt;span data-copy=&quot;transport&quot;&gt;Transporte · 08:16&lt;/span&gt;&lt;em&gt;&lt;i data-lucide=&quot;copy&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;duplicate&quot;&gt;Possible duplicate&lt;/span&gt;&lt;/em&gt;&lt;/span&gt;&lt;i data-lucide=&quot;chevron-up&quot; class=&quot;mhc-chevron&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;span class=&quot;mhc-state-label&quot; data-copy=&quot;expanded&quot;&gt;Expanded&lt;/span&gt;&lt;strong class=&quot;mhc-expense-amount&quot;&gt;₡4 250&lt;/strong&gt;&lt;div class=&quot;mhc-expense-actions&quot;&gt;&lt;button aria-label=&quot;Edit&quot;&gt;&lt;i data-lucide=&quot;pencil&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button aria-label=&quot;Split&quot;&gt;&lt;i data-lucide=&quot;split&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button aria-label=&quot;Delete&quot;&gt;&lt;i data-lucide=&quot;trash-2&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhc-expense-detail&quot;&gt;&lt;div&gt;&lt;span class=&quot;mhc-bank&quot;&gt;★&lt;/span&gt;&lt;span class=&quot;mhc-visa&quot;&gt;VISA&lt;/span&gt;&lt;strong&gt;•••• 0828&lt;/strong&gt;&lt;/div&gt;&lt;p data-copy=&quot;rideNote&quot;&gt;morning ride&lt;/p&gt;&lt;/div&gt;
+        &lt;/article&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhc-panel&quot;&gt;
+        &lt;h2 data-copy=&quot;reviewCard&quot;&gt;Review card&lt;/h2&gt;
+        &lt;article class=&quot;mhc-review-card&quot;&gt;&lt;label class=&quot;mhc-check&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt;&lt;span class=&quot;sr-only&quot;&gt;Select expense&lt;/span&gt;&lt;/label&gt;&lt;div class=&quot;mhc-review-copy&quot;&gt;&lt;strong&gt;Ferretería EPA&lt;/strong&gt;&lt;span&gt;Aug 29 · ₡3 450&lt;/span&gt;&lt;/div&gt;&lt;span class=&quot;mhc-badge&quot;&gt;32% &lt;span data-copy=&quot;confident&quot;&gt;confident&lt;/span&gt;&lt;/span&gt;&lt;select aria-label=&quot;Category&quot;&gt;&lt;option&gt;Otros / Donaciones&lt;/option&gt;&lt;/select&gt;&lt;label class=&quot;mhc-check&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt;&lt;span data-copy=&quot;alwaysShort&quot;&gt;Always&lt;/span&gt;&lt;/label&gt;&lt;button class=&quot;mhc-button mhc-primary&quot; data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;/article&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+    &lt;nav class=&quot;mhc-bottom-nav&quot;&gt;&lt;span class=&quot;mhc-bottom-active&quot;&gt;&lt;i data-lucide=&quot;house&quot;&gt;&lt;/i&gt;&lt;b data-copy=&quot;home&quot;&gt;Home&lt;/b&gt;&lt;/span&gt;&lt;span&gt;&lt;i data-lucide=&quot;list-checks&quot;&gt;&lt;/i&gt;&lt;b data-copy=&quot;review&quot;&gt;Review&lt;/b&gt;&lt;em&gt;3&lt;/em&gt;&lt;/span&gt;&lt;span&gt;&lt;i data-lucide=&quot;search&quot;&gt;&lt;/i&gt;&lt;b data-copy=&quot;search&quot;&gt;Search&lt;/b&gt;&lt;/span&gt;&lt;span&gt;&lt;i data-lucide=&quot;chart-no-axes-column&quot;&gt;&lt;/i&gt;&lt;b data-copy=&quot;reports&quot;&gt;Reports&lt;/b&gt;&lt;/span&gt;&lt;/nav&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  @import url(&#x27;https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;display=swap&#x27;);
+  #mi-harina-components .viz-controls{margin-bottom:12px}
+  #mi-harina-components .mhc-canvas{--mhc-primary:#063b30;--mhc-secondary:#14604b;--mhc-soft:#d5e8df;--mhc-page:#f4f1e9;--mhc-surface:#fffdfa;--mhc-raised:#fff;--mhc-detail:#eeebe3;--mhc-text:#092f28;--mhc-muted:#65746e;--mhc-border:#cfc8bb;--mhc-gold:#d4a43a;--mhc-warning:#c96f35;--mhc-warning-soft:#fff0da;--mhc-danger:#b64236;--mhc-danger-soft:#fbe6e2;--mhc-success:#247155;--mhc-shadow:rgba(20,45,38,.13);width:100%;overflow:hidden;border:1px solid var(--mhc-border);border-radius:12px;background:var(--mhc-page);color:var(--mhc-text);font-family:&#x27;Inter&#x27;,ui-sans-serif,system-ui,sans-serif;box-shadow:0 14px 36px var(--mhc-shadow)}
+  #mi-harina-components .mhc-canvas[data-theme=&quot;dark&quot;]{--mhc-primary:#a5ddc4;--mhc-secondary:#7bc3a3;--mhc-soft:#1f4034;--mhc-page:#081310;--mhc-surface:#101f1a;--mhc-raised:#172923;--mhc-detail:#1a2d26;--mhc-text:#fbf8f0;--mhc-muted:#aec1b9;--mhc-border:#426157;--mhc-gold:#e0b95d;--mhc-warning:#f0a061;--mhc-warning-soft:#40311d;--mhc-danger:#ff8f82;--mhc-danger-soft:#432724;--mhc-success:#82d3ad;--mhc-shadow:rgba(0,0,0,.32)}
+  #mi-harina-components .mhc-header,#mi-harina-components .mhc-brand,#mi-harina-components .mhc-nav,#mi-harina-components .mhc-global,#mi-harina-components .mhc-component-row,#mi-harina-components .mhc-alert,#mi-harina-components .mhc-section-head,#mi-harina-components .mhc-expense-row,#mi-harina-components .mhc-review-card,#mi-harina-components .mhc-bottom-nav{display:flex;align-items:center}
+  #mi-harina-components .mhc-header{justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid var(--mhc-border);background:var(--mhc-surface)}
+  #mi-harina-components .mhc-brand{gap:8px;font-weight:500;white-space:nowrap}
+  #mi-harina-components .mhc-logo{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:9px;background:#0f3d32;color:#f6f3ec}#mi-harina-components .mhc-logo svg{width:27px;height:27px}#mi-harina-components .mhc-logo-dot{fill:#d4a43a}
+  #mi-harina-components .mhc-nav{gap:6px;color:var(--mhc-muted)}#mi-harina-components .mhc-nav&gt;span{padding:8px 10px}#mi-harina-components .mhc-nav-active{border-radius:999px;background:var(--mhc-primary);color:var(--mhc-surface)}#mi-harina-components .mhc-nav b{display:inline-flex;min-width:19px;height:19px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-gold);color:#17231f;font-size:11px;font-weight:500}
+  #mi-harina-components .mhc-global{gap:6px}
+  #mi-harina-components .mhc-button,#mi-harina-components .mhc-icon-button,#mi-harina-components .mhc-alert button,#mi-harina-components .mhc-expense-actions button{border:0;font:inherit;cursor:default}
+  #mi-harina-components .mhc-button{display:inline-flex;min-height:36px;align-items:center;justify-content:center;gap:6px;padding:0 12px;border-radius:6px;font-weight:500}#mi-harina-components .mhc-primary{background:var(--mhc-primary);color:var(--mhc-surface)}#mi-harina-components .mhc-secondary{border:1px solid var(--mhc-border);background:var(--mhc-surface);color:var(--mhc-text)}#mi-harina-components .mhc-ghost{background:transparent;color:var(--mhc-secondary)}#mi-harina-components .mhc-danger{background:var(--mhc-danger);color:var(--mhc-surface)}
+  #mi-harina-components .mhc-icon-button,#mi-harina-components .mhc-expense-actions button{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:6px;background:transparent;color:var(--mhc-text)}#mi-harina-components .mhc-icon-button:disabled{opacity:.38}#mi-harina-components .mhc-icon-danger{color:var(--mhc-danger)}#mi-harina-components .mhc-currency{background:var(--mhc-detail);font-weight:500}
+  #mi-harina-components .mhc-main{padding:24px}#mi-harina-components .mhc-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px}#mi-harina-components .mhc-title p{margin:0 0 4px;color:var(--mhc-secondary);font-size:11px;font-weight:500;letter-spacing:.08em}#mi-harina-components h1{margin:0;font-size:24px;font-weight:500}#mi-harina-components h2{margin:0 0 14px;font-size:15px;font-weight:500}#mi-harina-components .mhc-title&gt;span,#mi-harina-components .mhc-section-head&gt;span{color:var(--mhc-muted);font-size:12px}
+  #mi-harina-components .mhc-grid-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}#mi-harina-components .mhc-panel{margin-bottom:16px;padding:16px;border:1px solid var(--mhc-border);border-radius:12px;background:var(--mhc-surface)}#mi-harina-components .mhc-grid-two .mhc-panel{margin-bottom:0}
+  #mi-harina-components .mhc-home-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}#mi-harina-components .mhc-greeting{display:flex;align-items:center;gap:12px;font-size:20px}#mi-harina-components .mhc-greeting-icon{display:flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-soft);color:var(--mhc-secondary)}#mi-harina-components .mhc-bank-rates{width:min(100%,330px)}#mi-harina-components .mhc-bank-rate{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--mhc-detail)}#mi-harina-components .mhc-bank-rate&gt;span:nth-child(2){display:flex;min-width:0;flex:1;flex-direction:column}#mi-harina-components .mhc-bank-rate small{color:var(--mhc-muted)}#mi-harina-components .mhc-bank-rate strong{font-size:18px}#mi-harina-components .mhc-bank-mark{display:flex;width:36px;height:36px;flex:0 0 auto;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-raised);color:var(--mhc-secondary);font-size:10px;font-weight:500}#mi-harina-components .mhc-bank-mark-bac{color:var(--mhc-danger)}#mi-harina-components .mhc-bank-toggle{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border:0;border-radius:6px;background:transparent;color:var(--mhc-text)}#mi-harina-components .mhc-bank-more{margin-top:6px}#mi-harina-components .mhc-bank-more[hidden]{display:none}
+  #mi-harina-components .mhc-component-row{flex-wrap:wrap;gap:8px}#mi-harina-components .mhc-icon-row{margin-top:12px}
+  #mi-harina-components .mhc-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#mi-harina-components .mhc-fields label{display:flex;flex-direction:column;gap:5px;color:var(--mhc-muted);font-size:12px}#mi-harina-components input,#mi-harina-components select{min-height:38px;padding:0 10px;border:1px solid var(--mhc-border);border-radius:6px;background:var(--mhc-page);color:var(--mhc-text);font:inherit}#mi-harina-components .mhc-check{display:flex;align-items:center;gap:7px;margin-top:11px;color:var(--mhc-muted);font-size:12px}#mi-harina-components .mhc-check input{min-height:auto}
+  #mi-harina-components .mhc-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:var(--mhc-detail);color:var(--mhc-muted);font-size:11px;font-weight:500}#mi-harina-components .mhc-count{background:var(--mhc-gold);color:#17231f}#mi-harina-components .mhc-success{background:var(--mhc-soft);color:var(--mhc-success)}#mi-harina-components .mhc-category{color:var(--mhc-secondary)}
+  #mi-harina-components .mhc-flag-list{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px}#mi-harina-components .mhc-flag,#mi-harina-components .mhc-budget em{display:flex;align-items:center;gap:4px;font-size:11px;font-style:normal;font-weight:500}#mi-harina-components .mhc-flag-danger{color:var(--mhc-danger)}#mi-harina-components .mhc-flag-warning{color:var(--mhc-warning)}
+  #mi-harina-components .mhc-budget+.mhc-budget{margin-top:13px}#mi-harina-components .mhc-budget&gt;div:first-child{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:12px}#mi-harina-components .mhc-track{height:7px;overflow:hidden;border-radius:999px;background:var(--mhc-detail)}#mi-harina-components .mhc-track span{display:block;height:100%;border-radius:inherit;background:var(--mhc-secondary)}#mi-harina-components .mhc-track-warning span{background:var(--mhc-warning)}#mi-harina-components .mhc-track-danger span{background:var(--mhc-danger)}#mi-harina-components .mhc-budget em{margin-top:4px;color:var(--mhc-warning)}#mi-harina-components .mhc-track-danger+em{color:var(--mhc-danger)}
+  #mi-harina-components .mhc-alert-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}#mi-harina-components .mhc-alert{align-items:flex-start;gap:9px;padding:12px;border-radius:9px}#mi-harina-components .mhc-alert&gt;div{display:flex;min-width:0;flex:1;flex-direction:column}#mi-harina-components .mhc-alert span{color:var(--mhc-muted);font-size:12px}#mi-harina-components .mhc-alert button{padding:0;background:transparent;color:inherit}#mi-harina-components .mhc-alert-info{background:var(--mhc-soft)}#mi-harina-components .mhc-alert-warning{background:var(--mhc-warning-soft)}#mi-harina-components .mhc-alert-danger{background:var(--mhc-danger-soft)}
+  #mi-harina-components .mhc-section-head{justify-content:space-between;gap:10px}#mi-harina-components .mhc-expense-frame{margin-top:10px;padding:0 12px 12px;border:1px solid var(--mhc-border);border-radius:12px;background:var(--mhc-raised)}#mi-harina-components .mhc-expense-row{gap:10px;padding:12px 0 0}#mi-harina-components .mhc-expense-toggle{display:flex;min-width:0;flex:1;align-items:center;gap:9px;padding:0;border:0;background:transparent;color:inherit;text-align:left;font:inherit}#mi-harina-components .mhc-category-icon{display:flex;width:34px;height:34px;flex:0 0 auto;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-soft);color:var(--mhc-primary)}#mi-harina-components .mhc-expense-copy{display:flex;min-width:0;flex:1;flex-direction:column}#mi-harina-components .mhc-expense-copy strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#mi-harina-components .mhc-expense-copy&gt;span{color:var(--mhc-muted);font-size:12px}#mi-harina-components .mhc-expense-copy em{display:flex;align-items:center;gap:4px;color:var(--mhc-danger);font-size:11px;font-style:normal}#mi-harina-components .mhc-chevron{color:var(--mhc-muted)}#mi-harina-components .mhc-state-label{color:var(--mhc-muted);font-size:11px}#mi-harina-components .mhc-expense-amount{white-space:nowrap}#mi-harina-components .mhc-expense-actions{display:flex;gap:2px}#mi-harina-components .mhc-expense-detail{margin:10px 0 0 43px;padding:12px;border:1px solid var(--mhc-border);border-radius:9px;background:var(--mhc-detail)}#mi-harina-components .mhc-expense-detail[hidden]{display:none}#mi-harina-components .mhc-expense-detail&gt;div{display:flex;align-items:center;gap:7px}#mi-harina-components .mhc-bank,#mi-harina-components .mhc-visa{display:flex;min-width:28px;height:28px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-raised);color:var(--mhc-primary);font-size:10px;font-weight:500}#mi-harina-components .mhc-visa{padding:0 7px;background:var(--mhc-soft)}#mi-harina-components .mhc-expense-detail p{margin:8px 0 0;color:var(--mhc-muted);font-size:12px}
+  #mi-harina-components .mhc-review-card{gap:10px}#mi-harina-components .mhc-review-card .mhc-check{margin:0}#mi-harina-components .mhc-review-copy{display:flex;min-width:160px;flex:1;flex-direction:column}#mi-harina-components .mhc-review-copy span{color:var(--mhc-muted);font-size:12px}#mi-harina-components .mhc-review-card select{min-width:190px}
+  #mi-harina-components .mhc-bottom-nav{display:none}
+  #mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;]{max-width:390px;margin:0 auto}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-header{padding:10px}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-brand&gt;span:last-child,#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-nav,#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-add{display:none}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-main{padding:14px 14px 76px}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-title{align-items:flex-start;flex-direction:column}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-home-intro{flex-direction:column;gap:14px}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-bank-rates{width:100%}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-greeting{font-size:17px}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-grid-two,#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-alert-grid,#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-fields{grid-template-columns:1fr}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-expense-row{align-items:flex-start;flex-wrap:wrap}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-state-label{display:none}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-expense-amount{margin-left:43px}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-expense-actions{margin-left:auto}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-expense-detail{margin-left:0}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-review-card{align-items:stretch;flex-direction:column}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-review-card select{min-width:0}#mi-harina-components .mhc-canvas[data-viewport=&quot;mobile&quot;] .mhc-bottom-nav{display:grid;grid-template-columns:repeat(4,1fr);padding:8px 4px;border-top:1px solid var(--mhc-border);background:var(--mhc-surface)}#mi-harina-components .mhc-bottom-nav&gt;span{position:relative;display:flex;min-height:46px;align-items:center;justify-content:center;flex-direction:column;gap:3px;color:var(--mhc-muted);font-size:11px}#mi-harina-components .mhc-bottom-nav b{font-weight:400}#mi-harina-components .mhc-bottom-active{color:var(--mhc-primary)!important}#mi-harina-components .mhc-bottom-nav em{position:absolute;top:0;right:20%;display:flex;min-width:17px;height:17px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhc-gold);color:#17231f;font-size:10px;font-style:normal}
+  @media(max-width:760px){#mi-harina-components .mhc-header{flex-wrap:wrap}#mi-harina-components .mhc-nav{order:3;width:100%;justify-content:center}#mi-harina-components .mhc-grid-two,#mi-harina-components .mhc-alert-grid{grid-template-columns:1fr}}
+&lt;/style&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  const root=document.getElementById(&#x27;mi-harina-components&#x27;);
+  const canvas=document.getElementById(&#x27;mhc-canvas&#x27;);
+  const theme=document.getElementById(&#x27;mhc-theme&#x27;);
+  const viewport=document.getElementById(&#x27;mhc-viewport&#x27;);
+  const language=document.getElementById(&#x27;mhc-language&#x27;);
+  const copy={
+    en:{review:&#x27;Review&#x27;,search:&#x27;Search&#x27;,reports:&#x27;Reports&#x27;,add:&#x27;Add expense&#x27;,title:&#x27;MiHarina components&#x27;,homeHeader:&#x27;Home greeting and favorite-bank rate&#x27;,greeting:&#x27;Good morning, Jose&#x27;,showBanks:&#x27;Show more favorite banks&#x27;,hideBanks:&#x27;Show fewer favorite banks&#x27;,actions:&#x27;Actions&#x27;,approve:&#x27;Approve&#x27;,cancel:&#x27;Cancel&#x27;,delete:&#x27;Delete&#x27;,fields:&#x27;Fields&#x27;,merchant:&#x27;Merchant&#x27;,amount:&#x27;Amount&#x27;,category:&#x27;Category&#x27;,date:&#x27;Date&#x27;,supermarket:&#x27;Alimentación / Supermercado&#x27;,always:&#x27;Always categorize this merchant this way&#x27;,status:&#x27;Badges and flags&#x27;,pending:&#x27;pending&#x27;,confident:&#x27;confident&#x27;,reviewed:&#x27;Reviewed&#x27;,supermarketShort:&#x27;Supermercado&#x27;,duplicate:&#x27;Possible duplicate&#x27;,suspicious:&#x27;Suspicious expense&#x27;,overBudget:&#x27;Over budget&#x27;,budgets:&#x27;Budget progress&#x27;,restaurants:&#x27;Restaurants&#x27;,personal:&#x27;Personal&#x27;,alerts:&#x27;Informative alerts&#x27;,paymentDue:&#x27;Card payment due soon&#x27;,paymentDetail:&#x27;BAC card · payment in 5 days&#x27;,budgetNear:&#x27;Budget limit approaching&#x27;,budgetDetail:&#x27;Personal has used 82% this month&#x27;,today:&#x27;today&#x27;,expenseFrames:&#x27;Expense frames&#x27;,expandHint:&#x27;Each expense opens its own detail frame below&#x27;,collapsed:&#x27;Collapsed&#x27;,expanded:&#x27;Expanded&#x27;,expenseNote:&#x27;condiments and plantain chips&#x27;,transport:&#x27;Transporte · 08:16&#x27;,rideNote:&#x27;morning ride&#x27;,reviewCard:&#x27;Review card&#x27;,alwaysShort:&#x27;Always&#x27;,home:&#x27;Home&#x27;},
+    es:{review:&#x27;Revisar&#x27;,search:&#x27;Buscar&#x27;,reports:&#x27;Reportes&#x27;,add:&#x27;Agregar gasto&#x27;,title:&#x27;Componentes de MiHarina&#x27;,homeHeader:&#x27;Saludo y tipo de cambio del banco favorito&#x27;,greeting:&#x27;Buenos días, Jose&#x27;,showBanks:&#x27;Mostrar más bancos favoritos&#x27;,hideBanks:&#x27;Mostrar menos bancos favoritos&#x27;,actions:&#x27;Acciones&#x27;,approve:&#x27;Aprobar&#x27;,cancel:&#x27;Cancelar&#x27;,delete:&#x27;Eliminar&#x27;,fields:&#x27;Campos&#x27;,merchant:&#x27;Comercio&#x27;,amount:&#x27;Monto&#x27;,category:&#x27;Categoría&#x27;,date:&#x27;Fecha&#x27;,supermarket:&#x27;Alimentación / Supermercado&#x27;,always:&#x27;Categorizar siempre este comercio así&#x27;,status:&#x27;Insignias y alertas&#x27;,pending:&#x27;pendientes&#x27;,confident:&#x27;de confianza&#x27;,reviewed:&#x27;Revisado&#x27;,supermarketShort:&#x27;Supermercado&#x27;,duplicate:&#x27;Posible duplicado&#x27;,suspicious:&#x27;Gasto sospechoso&#x27;,overBudget:&#x27;Sobre presupuesto&#x27;,budgets:&#x27;Progreso del presupuesto&#x27;,restaurants:&#x27;Restaurantes&#x27;,personal:&#x27;Personal&#x27;,alerts:&#x27;Alertas informativas&#x27;,paymentDue:&#x27;Pago de tarjeta próximo&#x27;,paymentDetail:&#x27;Tarjeta BAC · pago en 5 días&#x27;,budgetNear:&#x27;Límite de presupuesto cercano&#x27;,budgetDetail:&#x27;Personal ha usado 82% este mes&#x27;,today:&#x27;hoy&#x27;,expenseFrames:&#x27;Gastos y detalles&#x27;,expandHint:&#x27;Cada gasto abre su propio marco de detalles debajo&#x27;,collapsed:&#x27;Contraído&#x27;,expanded:&#x27;Expandido&#x27;,expenseNote:&#x27;condimentos y platanitos&#x27;,transport:&#x27;Transporte · 08:16&#x27;,rideNote:&#x27;viaje de la mañana&#x27;,reviewCard:&#x27;Tarjeta de revisión&#x27;,alwaysShort:&#x27;Siempre&#x27;,home:&#x27;Inicio&#x27;}
+  };
+  function update(){canvas.dataset.theme=theme.value;canvas.dataset.viewport=viewport.value;canvas.dataset.language=language.value;root.querySelectorAll(&#x27;[data-copy]&#x27;).forEach((node)=&gt;{node.textContent=copy[language.value][node.dataset.copy]});const bankToggle=root.querySelector(&#x27;.mhc-bank-toggle&#x27;);bankToggle.setAttribute(&#x27;aria-label&#x27;,copy[language.value][bankToggle.getAttribute(&#x27;aria-expanded&#x27;)===&#x27;true&#x27;?&#x27;hideBanks&#x27;:&#x27;showBanks&#x27;]);}
+  [theme,viewport,language].forEach((control)=&gt;control.addEventListener(&#x27;change&#x27;,update));
+  canvas.addEventListener(&#x27;click&#x27;,(event)=&gt;{const toggle=event.target.closest(&#x27;.mhc-bank-toggle&#x27;);if(!toggle)return;const more=toggle.closest(&#x27;.mhc-bank-rates&#x27;).querySelector(&#x27;.mhc-bank-more&#x27;);const expanded=toggle.getAttribute(&#x27;aria-expanded&#x27;)===&#x27;true&#x27;;toggle.setAttribute(&#x27;aria-expanded&#x27;,expanded?&#x27;false&#x27;:&#x27;true&#x27;);toggle.setAttribute(&#x27;aria-label&#x27;,copy[language.value][expanded?&#x27;showBanks&#x27;:&#x27;hideBanks&#x27;]);more.hidden=expanded;toggle.querySelector(&#x27;svg, i&#x27;).outerHTML=`&lt;i data-lucide=&quot;${expanded?&#x27;chevron-down&#x27;:&#x27;chevron-up&#x27;}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;`;if(window.lucide)window.lucide.createIcons({attrs:{width:16,height:16}});});
+  canvas.addEventListener(&#x27;click&#x27;,(event)=&gt;{const toggle=event.target.closest(&#x27;.mhc-expense-toggle&#x27;);if(!toggle)return;const frame=toggle.closest(&#x27;[data-expense]&#x27;);const detail=frame.querySelector(&#x27;.mhc-expense-detail&#x27;);const state=frame.querySelector(&#x27;.mhc-state-label&#x27;);const expanded=toggle.getAttribute(&#x27;aria-expanded&#x27;)===&#x27;true&#x27;;toggle.setAttribute(&#x27;aria-expanded&#x27;,expanded?&#x27;false&#x27;:&#x27;true&#x27;);detail.hidden=expanded;state.dataset.copy=expanded?&#x27;collapsed&#x27;:&#x27;expanded&#x27;;state.textContent=copy[language.value][state.dataset.copy];toggle.querySelector(&#x27;.mhc-chevron&#x27;).outerHTML=`&lt;i data-lucide=&quot;${expanded?&#x27;chevron-down&#x27;:&#x27;chevron-up&#x27;}&quot; class=&quot;mhc-chevron&quot;&gt;&lt;/i&gt;`;if(window.lucide)window.lucide.createIcons({attrs:{width:16,height:16}});});
+  update();
+})();
+&lt;/script&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

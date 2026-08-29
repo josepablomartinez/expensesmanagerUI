@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ListChecks, Tags, BarChart3, Home, Search, Plus, Wallet, Settings, Sun, Moon } from "lucide-react";
+import { ListChecks, BarChart3, Home, Search, Plus, Wallet, Settings, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
@@ -16,7 +16,6 @@ export function AppShell() {
 
   const TOP_NAV_ITEMS = [
     { to: "/review", label: t.nav.review, icon: ListChecks },
-    { to: "/categories", label: t.nav.categories, icon: Tags },
     { to: "/reports", label: t.nav.reports, icon: BarChart3 },
   ];
 

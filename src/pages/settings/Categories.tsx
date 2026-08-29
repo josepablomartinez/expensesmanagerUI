@@ -418,10 +418,6 @@ export default function Categories() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t.categories.title}</h1>
-      </div>
-
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

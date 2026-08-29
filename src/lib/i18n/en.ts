@@ -31,7 +31,6 @@ export const en = {
   nav: {
     brand: "Expenses",
     review: "Review",
-    categories: "Categories",
     reports: "Reports",
     home: "Home",
     search: "Search",
@@ -146,6 +145,14 @@ export const en = {
       subcategoriesByMonth: "Subcategories by month",
     },
   },
+  settingsLayout: {
+    tabs: {
+      basic: "Basic",
+      creditCards: "Credit cards",
+      categories: "Categories",
+      advanced: "Advanced",
+    },
+  },
   budgetVsActual: {
     title: "Budget vs actual",
     failedToLoad: "Failed to load",
@@ -242,7 +249,6 @@ export const en = {
     email: "Email",
     failedToLoad: "Failed to load",
     failedToSave: "Failed to save",
-    advanced: "Advanced",
     exchangeRateSource: "Exchange rate fallback",
     exchangeRateSourceHelp:
       "Used when an expense's entity has no exchange rate of its own — e.g. manual entries. Choose the average across all banks, or always use one bank's rate.",
