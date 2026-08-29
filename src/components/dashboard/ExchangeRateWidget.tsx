@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Landmark } from "lucide-react";
 import { api, type ExchangeRateLatest } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { BankBadge } from "@/lib/brandIcons";
 import { useT } from "@/lib/language";
 
 export function ExchangeRateWidget({ favoriteBanks }: { favoriteBanks: string[] }) {
@@ -28,10 +28,7 @@ export function ExchangeRateWidget({ favoriteBanks }: { favoriteBanks: string[] 
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{t.dashboard.exchangeRate.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-4">
         {loading ? (
           <p className="text-sm text-muted-foreground">{t.common.loading}</p>
         ) : rows.length === 0 ? (
@@ -39,12 +36,12 @@ export function ExchangeRateWidget({ favoriteBanks }: { favoriteBanks: string[] 
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {rows.map((r) => (
-              <div key={r.bank_id} className="flex flex-col gap-1 rounded-md bg-secondary/40 px-3 py-2">
-                <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                  <Landmark className="h-3.5 w-3.5" />
-                  {r.name}
-                </span>
-                <span className="text-lg font-semibold">{formatMoney(r.buy_price, "CRC")}</span>
+              <div key={r.bank_id} className="flex items-center gap-2 rounded-md bg-secondary/40 px-3 py-2">
+                <BankBadge codeOrName={r.code} />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-medium text-muted-foreground">{r.name}</span>
+                  <span className="text-lg font-semibold">{formatMoney(r.buy_price, "CRC")}</span>
+                </div>
               </div>
             ))}
           </div>

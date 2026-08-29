@@ -116,7 +116,6 @@ export const en = {
     amountPlaceholder: "Amount",
     amountInColonesPlaceholder: "Amount in colones",
     notePlaceholder: "Note (optional)",
-    cardOption: "Card",
     cashOption: "Cash",
     sinpeOption: "Sinpe",
     enterValidAmount: "Enter a valid amount",
@@ -193,7 +192,6 @@ export const en = {
       night: "Good night",
     },
     exchangeRate: {
-      title: "Exchange rate",
       noRateData: "No rate data for your favorite banks yet.",
     },
     favoriteCategories: {

@@ -113,7 +113,6 @@ export const es: Dictionary = {
     amountPlaceholder: "Monto",
     amountInColonesPlaceholder: "Monto en colones",
     notePlaceholder: "Nota (opcional)",
-    cardOption: "Tarjeta",
     cashOption: "Efectivo",
     sinpeOption: "Sinpe",
     enterValidAmount: "Ingresa un monto válido",
@@ -190,7 +189,6 @@ export const es: Dictionary = {
       night: "Buenas noches",
     },
     exchangeRate: {
-      title: "Tipo de cambio",
       noRateData: "Aún no hay tipo de cambio para tus bancos favoritos.",
     },
     favoriteCategories: {

@@ -40,7 +40,7 @@ export default function AddExpense() {
   const [amountColones, setAmountColones] = React.useState("");
   const [date, setDate] = React.useState(today());
   const [hour, setHour] = React.useState(nowHour());
-  const [type, setType] = React.useState("CARD");
+  const [type, setType] = React.useState("CASH");
   const entity = "MANUAL";
   const country = "CRC";
   const city = "SJO";
@@ -138,7 +138,6 @@ export default function AddExpense() {
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="flex-1" />
               <Input type="time" value={hour} onChange={(e) => setHour(e.target.value)} className="flex-1" />
               <Select value={type} onChange={(e) => setType(e.target.value)} className="w-28">
-                <option value="CARD">{t.addExpense.cardOption}</option>
                 <option value="CASH">{t.addExpense.cashOption}</option>
                 <option value="SINPE">{t.addExpense.sinpeOption}</option>
               </Select>
