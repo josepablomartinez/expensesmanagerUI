@@ -1,7 +1,7 @@
 # MiHarina UI Design Context
 
 Last updated: 2026-08-29  
-Status: Balanced overview structure approved; visual refinement and implementation still require human approval
+Status: Balanced overview, visual foundations, component set, and interaction states approved; key-screen refinement under review
 
 ## Purpose of this document
 
@@ -76,11 +76,11 @@ Dark foundation:
 
 Palette alternatives remain visible in the gallery for historical comparison, but Higher contrast is the default and approved selection.
 
-## Components review in progress
+## Approved components
 
-The interactive [`docs/ui/mi-harina-components-gallery.html`](ui/mi-harina-components-gallery.html) is the current component-review gallery. It applies the approved foundations and lets reviewers switch between light and dark themes, desktop and mobile previews, and English and Spanish labels.
+The interactive [`docs/ui/mi-harina-components-gallery.html`](ui/mi-harina-components-gallery.html) preserves the approved component review. It applies the approved foundations and lets reviewers switch between light and dark themes, desktop and mobile previews, and English and Spanish labels.
 
-The following component groups are presented for review and are **not yet approved**:
+The following component groups are approved as the basis for interaction-state refinement:
 
 - Primary, secondary, quiet, destructive, icon-only, and disabled actions
 - Text, amount, category, date, and checkbox fields
@@ -93,7 +93,31 @@ The following component groups are presented for review and are **not yet approv
 - Review-queue card treatment
 - Desktop header utilities and mobile bottom navigation in component context
 
-The gallery uses the approved MiHarina bag isotype. Component feedback should be recorded before these patterns are treated as production specifications.
+The gallery uses the approved MiHarina bag isotype. Interaction behavior and final production implementation still require their own review.
+
+## Approved interaction states
+
+The interactive [`docs/ui/mi-harina-interaction-states.html`](ui/mi-harina-interaction-states.html) preserves the approved reference for hover, keyboard focus, pressed or selected, expanded, disabled, loading, validation, flagged, and destructive-confirmation states.
+
+Approved behavior:
+
+- Hover and pressed feedback remain subtle and do not shift surrounding layout.
+- Keyboard focus is clearly visible in both themes.
+- Loading and disabled states remain distinguishable.
+- Validation messages identify the problem in text as well as color.
+- Expense flags remain visible when an expense expands.
+- Selection is distinct from warning or flagged states.
+- Destructive actions require an explicit confirmation step and provide a safe Cancel path.
+
+## Key-screen refinement in progress
+
+The interactive [`docs/ui/mi-harina-key-screens.html`](ui/mi-harina-key-screens.html) applies the approved structure, foundations, components, and interaction states to the three implementation-priority views:
+
+1. Desktop Home
+2. Mobile Home
+3. Mobile Review
+
+The reference includes light and dark themes, English and Spanish labels, persistent global utilities, the favorite-bank exchange-rate header, expandable expense details, persistent flags and expense actions, in-place older activity, informative alerts, and a mobile-safe Review workflow. This screen-level composition is **not yet approved**.
 
 ## Product context
 
@@ -388,27 +412,23 @@ These observations inform the proposal but do not authorize implementation chang
 
 ## Open decisions requiring human approval
 
-- Final color palette beyond the locked logo
-- Final typography
 - Exact icon style and mappings beyond the existing base iconography
-- Final desktop navigation styling
-- Final mobile bottom-navigation composition
-- Mobile placement and visual weight of Add expense
-- Final visual styling of the selected Balanced overview layout in light and dark themes
+- Final screen-level composition of Desktop Home, Mobile Home, and Mobile Review
+- Mobile header placement and visual weight of Add expense
 - Alerts panel versus dedicated alerts page behavior
 - Alert dismissal, resolution, and retention rules
 - Exact chart treatments in both themes
 - Whether Categories remains within Settings or needs another access path
 
-## Recommended next design step
+## Current design step
 
-Refine the selected Balanced overview direction across:
+Review the refined Balanced overview direction across:
 
 1. Desktop Home
 2. Mobile Home
 3. Mobile Review
 
-Each view should show both light and dark themes and include the persistent Currency, Theme, Alerts, and Settings utilities. Home must demonstrate expandable expenses, direct expense actions, and in-place progressive disclosure of older expenses. The refined wireframes should be reviewed before implementation.
+Each view shows both light and dark themes and includes the persistent Currency, Theme, Alerts, and Settings utilities. Home demonstrates expandable expenses, direct expense actions, and in-place progressive disclosure of older expenses. Human approval is required before implementation planning begins.
 
 ## Decision log
 
@@ -444,3 +464,5 @@ Each view should show both light and dark themes and include the persistent Curr
 - Approved Compact corners for controls, cards, and panels.
 - Removed the redundant "Expense details" label from expanded expense frames.
 - Added the Home salutation and favorite-bank exchange-rate pattern: one bank is shown by default and an inline control reveals a second configured favorite bank.
+- Approved the component set shown in the Components gallery.
+- Approved the Interaction States gallery, including hover, keyboard focus, pressed or selected, expanded, disabled, loading, validation, persistent flags, completion feedback, and destructive confirmation.

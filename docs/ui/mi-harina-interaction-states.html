@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>MiHarina Interaction States</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="MiHarina Interaction States" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;MiHarina Interaction States&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: var(--border-radius-lg, 12.5px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress {
+  display: flex;
+  height: 6px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 6px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: 16px !important;
+  height: 16px !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;mi-harina-states&quot;&gt;
+  &lt;div class=&quot;viz-controls&quot; aria-label=&quot;Interaction-state preview controls&quot;&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Theme
+      &lt;select class=&quot;form-select&quot; id=&quot;mhs-theme&quot;&gt;&lt;option value=&quot;light&quot;&gt;Light&lt;/option&gt;&lt;option value=&quot;dark&quot;&gt;Dark&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Preview
+      &lt;select class=&quot;form-select&quot; id=&quot;mhs-viewport&quot;&gt;&lt;option value=&quot;desktop&quot;&gt;Desktop&lt;/option&gt;&lt;option value=&quot;mobile&quot;&gt;Mobile&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;form-label&quot;&gt;Language
+      &lt;select class=&quot;form-select&quot; id=&quot;mhs-language&quot;&gt;&lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;&lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;&lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;section class=&quot;mhs-app&quot; id=&quot;mhs-app&quot; data-theme=&quot;light&quot; data-viewport=&quot;desktop&quot;&gt;
+    &lt;header class=&quot;mhs-topbar&quot;&gt;
+      &lt;div class=&quot;mhs-brand&quot;&gt;&lt;span class=&quot;mhs-logo&quot; aria-hidden=&quot;true&quot;&gt;&lt;svg viewBox=&quot;0 0 32 32&quot;&gt;&lt;path d=&quot;M11 9c1.6-3.1 3.3-3.7 5-2.1 1.7-1.6 3.4-1 5 2.1l-2.3 2.6h-5.4L11 9Z&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linejoin=&quot;round&quot;/&gt;&lt;path d=&quot;M12.4 11.6c-1.1 2.5-2.6 7.2-2.8 10.7-.1 2.7 2.1 4.1 6.4 4.1s6.5-1.4 6.4-4.1c-.2-3.5-1.7-8.2-2.8-10.7&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;path d=&quot;M19.3 11.8c2.2-.2 4 .4 5.2 1.7&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;circle cx=&quot;16&quot; cy=&quot;17.2&quot; r=&quot;1.65&quot; class=&quot;mhs-logo-dot&quot;/&gt;&lt;circle cx=&quot;16&quot; cy=&quot;22.3&quot; r=&quot;1.65&quot; class=&quot;mhs-logo-dot&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mhs-utilities&quot;&gt;&lt;button type=&quot;button&quot; aria-label=&quot;Currency&quot;&gt;₡&lt;/button&gt;&lt;button type=&quot;button&quot; aria-label=&quot;Theme&quot;&gt;&lt;i data-lucide=&quot;moon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button type=&quot;button&quot; aria-label=&quot;Alerts&quot;&gt;&lt;i data-lucide=&quot;bell&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;main class=&quot;mhs-main&quot;&gt;
+      &lt;div class=&quot;mhs-heading&quot;&gt;&lt;div&gt;&lt;p&gt;INTERACTION REVIEW&lt;/p&gt;&lt;h1 data-copy=&quot;title&quot;&gt;States and feedback&lt;/h1&gt;&lt;/div&gt;&lt;span data-copy=&quot;subtitle&quot;&gt;Persistent cues, clear focus, restrained motion&lt;/span&gt;&lt;/div&gt;
+
+      &lt;section class=&quot;mhs-grid&quot;&gt;
+        &lt;article class=&quot;mhs-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;actions&quot;&gt;Action states&lt;/h2&gt;
+          &lt;div class=&quot;mhs-state-grid&quot;&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;rest&quot;&gt;Rest&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-primary&quot; type=&quot;button&quot; data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;hover&quot;&gt;Hover&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-primary mhs-demo-hover&quot; type=&quot;button&quot; data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;focus&quot;&gt;Keyboard focus&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-secondary mhs-demo-focus&quot; type=&quot;button&quot; data-copy=&quot;edit&quot;&gt;Edit&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;pressed&quot;&gt;Pressed&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-primary mhs-demo-pressed&quot; type=&quot;button&quot; data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;loading&quot;&gt;Loading&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-primary&quot; type=&quot;button&quot; disabled&gt;&lt;i class=&quot;mhs-spinner&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;saving&quot;&gt;Saving&lt;/span&gt;&lt;/button&gt;&lt;/div&gt;
+            &lt;div class=&quot;mhs-state&quot;&gt;&lt;span data-copy=&quot;disabled&quot;&gt;Disabled&lt;/span&gt;&lt;button class=&quot;mhs-button mhs-secondary&quot; type=&quot;button&quot; disabled data-copy=&quot;approve&quot;&gt;Approve&lt;/button&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+
+        &lt;article class=&quot;mhs-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;fields&quot;&gt;Field states&lt;/h2&gt;
+          &lt;div class=&quot;mhs-fields&quot;&gt;
+            &lt;label&gt;&lt;span data-copy=&quot;defaultField&quot;&gt;Default&lt;/span&gt;&lt;input value=&quot;Auto Mercado Plaza&quot;&gt;&lt;/label&gt;
+            &lt;label&gt;&lt;span data-copy=&quot;focusedField&quot;&gt;Focused&lt;/span&gt;&lt;input class=&quot;mhs-demo-input-focus&quot; value=&quot;₡7 360,00&quot;&gt;&lt;/label&gt;
+            &lt;label class=&quot;mhs-field-error&quot;&gt;&lt;span data-copy=&quot;invalidField&quot;&gt;Validation error&lt;/span&gt;&lt;input value=&quot;-250&quot;&gt;&lt;em&gt;&lt;i data-lucide=&quot;circle-alert&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;positiveAmount&quot;&gt;Enter an amount greater than zero&lt;/span&gt;&lt;/em&gt;&lt;/label&gt;
+            &lt;label&gt;&lt;span data-copy=&quot;disabledField&quot;&gt;Disabled&lt;/span&gt;&lt;input value=&quot;USD&quot; disabled&gt;&lt;/label&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhs-panel&quot;&gt;
+        &lt;div class=&quot;mhs-section-head&quot;&gt;&lt;h2 data-copy=&quot;expenseStates&quot;&gt;Expense states&lt;/h2&gt;&lt;span data-copy=&quot;expenseHint&quot;&gt;Open the expense and notice that its flag persists&lt;/span&gt;&lt;/div&gt;
+        &lt;article class=&quot;mhs-expense&quot; data-expense&gt;
+          &lt;div class=&quot;mhs-expense-row&quot;&gt;
+            &lt;button class=&quot;mhs-expense-toggle&quot; type=&quot;button&quot; aria-expanded=&quot;false&quot;&gt;&lt;span class=&quot;mhs-category&quot;&gt;&lt;i data-lucide=&quot;car&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span class=&quot;mhs-expense-copy&quot;&gt;&lt;strong&gt;Uber&lt;/strong&gt;&lt;span data-copy=&quot;transport&quot;&gt;Transport · 08:16&lt;/span&gt;&lt;em&gt;&lt;i data-lucide=&quot;copy&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;duplicate&quot;&gt;Possible duplicate&lt;/span&gt;&lt;/em&gt;&lt;/span&gt;&lt;i class=&quot;mhs-chevron&quot; data-lucide=&quot;chevron-down&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;strong class=&quot;mhs-amount&quot;&gt;₡4 250&lt;/strong&gt;
+            &lt;div class=&quot;mhs-row-actions&quot;&gt;&lt;button type=&quot;button&quot; aria-label=&quot;Edit&quot;&gt;&lt;i data-lucide=&quot;pencil&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button type=&quot;button&quot; aria-label=&quot;Split&quot;&gt;&lt;i data-lucide=&quot;split&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;button class=&quot;mhs-delete-trigger&quot; type=&quot;button&quot; aria-label=&quot;Delete&quot;&gt;&lt;i data-lucide=&quot;trash-2&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;mhs-expense-details&quot; hidden&gt;&lt;div&gt;&lt;span class=&quot;mhs-bank&quot;&gt;★&lt;/span&gt;&lt;span class=&quot;mhs-visa&quot;&gt;VISA&lt;/span&gt;&lt;strong&gt;•••• 0828&lt;/strong&gt;&lt;/div&gt;&lt;p data-copy=&quot;note&quot;&gt;morning ride&lt;/p&gt;&lt;/div&gt;
+        &lt;/article&gt;
+        &lt;article class=&quot;mhs-expense mhs-expense-selected&quot;&gt;
+          &lt;div class=&quot;mhs-expense-row&quot;&gt;&lt;span class=&quot;mhs-category&quot;&gt;&lt;i data-lucide=&quot;utensils&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span class=&quot;mhs-expense-copy&quot;&gt;&lt;strong&gt;PF*Casa Granel Colones Central CR&lt;/strong&gt;&lt;span data-copy=&quot;supermarket&quot;&gt;Food / Supermarket&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mhs-selected-label&quot;&gt;&lt;i data-lucide=&quot;check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;selected&quot;&gt;Selected&lt;/span&gt;&lt;/span&gt;&lt;strong class=&quot;mhs-amount&quot;&gt;₡7 750&lt;/strong&gt;&lt;/div&gt;
+        &lt;/article&gt;
+      &lt;/section&gt;
+
+      &lt;section class=&quot;mhs-grid&quot;&gt;
+        &lt;article class=&quot;mhs-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;feedback&quot;&gt;Completion feedback&lt;/h2&gt;
+          &lt;div class=&quot;mhs-feedback&quot;&gt;&lt;span class=&quot;mhs-success-icon&quot;&gt;&lt;i data-lucide=&quot;check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;div&gt;&lt;strong data-copy=&quot;saved&quot;&gt;Expense saved&lt;/strong&gt;&lt;span data-copy=&quot;savedDetail&quot;&gt;The expense is available on Home and Search.&lt;/span&gt;&lt;/div&gt;&lt;button type=&quot;button&quot; data-copy=&quot;undo&quot;&gt;Undo&lt;/button&gt;&lt;/div&gt;
+          &lt;div class=&quot;mhs-inline-loading&quot;&gt;&lt;i class=&quot;mhs-spinner&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;refreshing&quot;&gt;Refreshing exchange rates…&lt;/span&gt;&lt;/div&gt;
+        &lt;/article&gt;
+
+        &lt;article class=&quot;mhs-panel&quot;&gt;
+          &lt;h2 data-copy=&quot;destructive&quot;&gt;Destructive action&lt;/h2&gt;
+          &lt;div class=&quot;mhs-delete-demo&quot; id=&quot;mhs-delete-demo&quot;&gt;
+            &lt;button class=&quot;mhs-button mhs-danger mhs-open-delete&quot; type=&quot;button&quot;&gt;&lt;i data-lucide=&quot;trash-2&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span data-copy=&quot;deleteExpense&quot;&gt;Delete expense&lt;/span&gt;&lt;/button&gt;
+            &lt;div class=&quot;mhs-confirm&quot; hidden&gt;
+              &lt;div&gt;&lt;strong data-copy=&quot;deleteQuestion&quot;&gt;Delete this expense?&lt;/strong&gt;&lt;span data-copy=&quot;deleteDetail&quot;&gt;This removes it from Home, Search, and reports.&lt;/span&gt;&lt;/div&gt;
+              &lt;div&gt;&lt;button class=&quot;mhs-button mhs-secondary mhs-cancel-delete&quot; type=&quot;button&quot; data-copy=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;&lt;button class=&quot;mhs-button mhs-danger&quot; type=&quot;button&quot; data-copy=&quot;delete&quot;&gt;Delete&lt;/button&gt;&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  @import url(&#x27;https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;display=swap&#x27;);
+  #mi-harina-states .viz-controls{margin-bottom:12px}
+  #mi-harina-states .mhs-app{--mhs-primary:#063b30;--mhs-secondary:#14604b;--mhs-soft:#d5e8df;--mhs-page:#f4f1e9;--mhs-surface:#fffdfa;--mhs-raised:#fff;--mhs-detail:#eeebe3;--mhs-text:#092f28;--mhs-muted:#65746e;--mhs-border:#cfc8bb;--mhs-gold:#d4a43a;--mhs-danger:#b64236;--mhs-danger-soft:#fbe6e2;--mhs-success:#247155;--mhs-focus:#1677c8;--mhs-shadow:rgba(20,45,38,.13);width:100%;overflow:hidden;border:1px solid var(--mhs-border);border-radius:12px;background:var(--mhs-page);color:var(--mhs-text);font-family:&#x27;Inter&#x27;,ui-sans-serif,system-ui,sans-serif;box-shadow:0 14px 36px var(--mhs-shadow)}
+  #mi-harina-states .mhs-app[data-theme=&quot;dark&quot;]{--mhs-primary:#a5ddc4;--mhs-secondary:#7bc3a3;--mhs-soft:#1f4034;--mhs-page:#081310;--mhs-surface:#101f1a;--mhs-raised:#172923;--mhs-detail:#1a2d26;--mhs-text:#fbf8f0;--mhs-muted:#aec1b9;--mhs-border:#426157;--mhs-gold:#e0b95d;--mhs-danger:#ff8f82;--mhs-danger-soft:#432724;--mhs-success:#82d3ad;--mhs-focus:#6db7ff;--mhs-shadow:rgba(0,0,0,.32)}
+  #mi-harina-states button,#mi-harina-states input{font:inherit}#mi-harina-states button{cursor:pointer}#mi-harina-states button:disabled,#mi-harina-states input:disabled{cursor:not-allowed}
+  #mi-harina-states .mhs-topbar,#mi-harina-states .mhs-brand,#mi-harina-states .mhs-utilities,#mi-harina-states .mhs-heading,#mi-harina-states .mhs-section-head,#mi-harina-states .mhs-expense-row,#mi-harina-states .mhs-feedback,#mi-harina-states .mhs-inline-loading{display:flex;align-items:center}
+  #mi-harina-states .mhs-topbar{justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--mhs-border);background:var(--mhs-surface)}#mi-harina-states .mhs-brand{gap:8px;font-weight:500}#mi-harina-states .mhs-logo{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:9px;background:#0f3d32;color:#f6f3ec}#mi-harina-states .mhs-logo svg{width:27px;height:27px}#mi-harina-states .mhs-logo-dot{fill:#d4a43a}#mi-harina-states .mhs-utilities{gap:4px}#mi-harina-states .mhs-utilities button,#mi-harina-states .mhs-row-actions button{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border:0;border-radius:6px;background:transparent;color:var(--mhs-text)}#mi-harina-states .mhs-utilities button:first-child{background:var(--mhs-detail);font-weight:500}
+  #mi-harina-states .mhs-main{padding:24px}#mi-harina-states .mhs-heading{align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}#mi-harina-states .mhs-heading p{margin:0 0 4px;color:var(--mhs-secondary);font-size:11px;font-weight:500;letter-spacing:.08em}#mi-harina-states h1{margin:0;font-size:24px;font-weight:500}#mi-harina-states h2{margin:0 0 14px;font-size:15px;font-weight:500}#mi-harina-states .mhs-heading&gt;span,#mi-harina-states .mhs-section-head&gt;span{color:var(--mhs-muted);font-size:12px}
+  #mi-harina-states .mhs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}#mi-harina-states .mhs-panel{margin-bottom:16px;padding:16px;border:1px solid var(--mhs-border);border-radius:12px;background:var(--mhs-surface)}#mi-harina-states .mhs-grid .mhs-panel{margin-bottom:0}
+  #mi-harina-states .mhs-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#mi-harina-states .mhs-state{display:flex;align-items:flex-start;flex-direction:column;gap:6px}#mi-harina-states .mhs-state&gt;span,#mi-harina-states .mhs-fields label&gt;span{color:var(--mhs-muted);font-size:11px}
+  #mi-harina-states .mhs-button{display:inline-flex;min-height:36px;align-items:center;justify-content:center;gap:6px;padding:0 12px;border-radius:6px;font-weight:500}#mi-harina-states .mhs-primary{border:1px solid var(--mhs-primary);background:var(--mhs-primary);color:var(--mhs-surface)}#mi-harina-states .mhs-secondary{border:1px solid var(--mhs-border);background:var(--mhs-surface);color:var(--mhs-text)}#mi-harina-states .mhs-danger{border:1px solid var(--mhs-danger);background:var(--mhs-danger);color:var(--mhs-surface)}#mi-harina-states .mhs-demo-hover{filter:brightness(1.16);box-shadow:0 3px 8px var(--mhs-shadow)}#mi-harina-states .mhs-demo-focus{outline:3px solid color-mix(in srgb,var(--mhs-focus) 38%,transparent);outline-offset:2px;border-color:var(--mhs-focus)}#mi-harina-states .mhs-demo-pressed{filter:brightness(.84);transform:translateY(1px)}#mi-harina-states .mhs-button:disabled{opacity:.42}
+  #mi-harina-states .mhs-spinner{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:999px;animation:mhs-spin .9s linear infinite}@keyframes mhs-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#mi-harina-states .mhs-spinner{animation:none;border-right-color:currentColor}}
+  #mi-harina-states .mhs-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#mi-harina-states .mhs-fields label{display:flex;flex-direction:column;gap:5px}#mi-harina-states .mhs-fields input{min-width:0;min-height:38px;padding:0 10px;border:1px solid var(--mhs-border);border-radius:6px;background:var(--mhs-page);color:var(--mhs-text)}#mi-harina-states .mhs-fields input:disabled{opacity:.52}#mi-harina-states .mhs-demo-input-focus{outline:3px solid color-mix(in srgb,var(--mhs-focus) 32%,transparent);outline-offset:1px;border-color:var(--mhs-focus)!important}#mi-harina-states .mhs-field-error input{border-color:var(--mhs-danger)}#mi-harina-states .mhs-field-error em{display:flex;align-items:center;gap:4px;color:var(--mhs-danger);font-size:11px;font-style:normal}
+  #mi-harina-states .mhs-section-head{justify-content:space-between;gap:12px}#mi-harina-states .mhs-expense{padding:0 12px 12px;border:1px solid var(--mhs-border);border-radius:12px;background:var(--mhs-raised)}#mi-harina-states .mhs-expense+.mhs-expense{margin-top:10px}#mi-harina-states .mhs-expense-row{gap:10px;padding-top:12px}#mi-harina-states .mhs-expense-toggle{display:flex;min-width:0;flex:1;align-items:center;gap:9px;padding:0;border:0;background:transparent;color:inherit;text-align:left}#mi-harina-states .mhs-category{display:flex;width:34px;height:34px;flex:0 0 auto;align-items:center;justify-content:center;border-radius:999px;background:var(--mhs-soft);color:var(--mhs-primary)}#mi-harina-states .mhs-expense-copy{display:flex;min-width:0;flex:1;flex-direction:column}#mi-harina-states .mhs-expense-copy strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#mi-harina-states .mhs-expense-copy&gt;span{color:var(--mhs-muted);font-size:12px}#mi-harina-states .mhs-expense-copy em{display:flex;align-items:center;gap:4px;color:var(--mhs-danger);font-size:11px;font-style:normal}#mi-harina-states .mhs-chevron{color:var(--mhs-muted)}#mi-harina-states .mhs-amount{white-space:nowrap}#mi-harina-states .mhs-row-actions{display:flex;gap:2px}#mi-harina-states .mhs-delete-trigger{color:var(--mhs-danger)!important}#mi-harina-states .mhs-expense-details{margin:10px 0 0 43px;padding:12px;border:1px solid var(--mhs-border);border-radius:9px;background:var(--mhs-detail)}#mi-harina-states .mhs-expense-details[hidden]{display:none}#mi-harina-states .mhs-expense-details&gt;div{display:flex;align-items:center;gap:7px}#mi-harina-states .mhs-expense-details p{margin:8px 0 0;color:var(--mhs-muted);font-size:12px}#mi-harina-states .mhs-bank,#mi-harina-states .mhs-visa{display:flex;min-width:28px;height:28px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhs-raised);color:var(--mhs-primary);font-size:10px;font-weight:500}#mi-harina-states .mhs-visa{padding:0 7px;background:var(--mhs-soft)}#mi-harina-states .mhs-expense-selected{border-color:var(--mhs-secondary);background:var(--mhs-soft)}#mi-harina-states .mhs-selected-label{display:flex;align-items:center;gap:4px;color:var(--mhs-secondary);font-size:11px}
+  #mi-harina-states .mhs-feedback{align-items:flex-start;gap:10px;padding:12px;border-radius:9px;background:var(--mhs-soft)}#mi-harina-states .mhs-feedback&gt;div{display:flex;min-width:0;flex:1;flex-direction:column}#mi-harina-states .mhs-feedback span{color:var(--mhs-muted);font-size:12px}#mi-harina-states .mhs-feedback button{border:0;background:transparent;color:var(--mhs-secondary);font-weight:500}#mi-harina-states .mhs-success-icon{display:flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:999px;background:var(--mhs-secondary);color:var(--mhs-surface)!important}#mi-harina-states .mhs-inline-loading{gap:7px;margin-top:12px;color:var(--mhs-muted);font-size:12px}
+  #mi-harina-states .mhs-confirm{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px;border:1px solid var(--mhs-danger);border-radius:9px;background:var(--mhs-danger-soft)}#mi-harina-states .mhs-confirm[hidden]{display:none}#mi-harina-states .mhs-confirm&gt;div:first-child{display:flex;flex:1;flex-direction:column}#mi-harina-states .mhs-confirm span{color:var(--mhs-muted);font-size:12px}#mi-harina-states .mhs-confirm&gt;div:last-child{display:flex;gap:8px}
+  #mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;]{max-width:390px;margin:0 auto}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-main{padding:14px}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-heading{align-items:flex-start;flex-direction:column}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-grid,#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-state-grid,#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-fields{grid-template-columns:1fr}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-state{align-items:center;justify-content:space-between;flex-direction:row}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-section-head{align-items:flex-start;flex-direction:column}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-expense-row{align-items:flex-start;flex-wrap:wrap}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-amount{margin-left:43px}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-row-actions{margin-left:auto}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-expense-details{margin-left:0}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-selected-label{order:4;margin-left:43px}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-confirm{align-items:stretch;flex-direction:column}#mi-harina-states .mhs-app[data-viewport=&quot;mobile&quot;] .mhs-confirm&gt;div:last-child{justify-content:flex-end}
+  @media(max-width:760px){#mi-harina-states .mhs-grid{grid-template-columns:1fr}#mi-harina-states .mhs-state-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(pointer:coarse){#mi-harina-states .mhs-button{min-height:44px}#mi-harina-states .mhs-utilities button,#mi-harina-states .mhs-row-actions button{width:44px;height:44px}}
+&lt;/style&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  const root=document.getElementById(&#x27;mi-harina-states&#x27;);
+  const app=document.getElementById(&#x27;mhs-app&#x27;);
+  const theme=document.getElementById(&#x27;mhs-theme&#x27;);
+  const viewport=document.getElementById(&#x27;mhs-viewport&#x27;);
+  const language=document.getElementById(&#x27;mhs-language&#x27;);
+  const copy={
+    en:{title:&#x27;States and feedback&#x27;,subtitle:&#x27;Persistent cues, clear focus, restrained motion&#x27;,actions:&#x27;Action states&#x27;,rest:&#x27;Rest&#x27;,hover:&#x27;Hover&#x27;,focus:&#x27;Keyboard focus&#x27;,pressed:&#x27;Pressed&#x27;,loading:&#x27;Loading&#x27;,saving:&#x27;Saving&#x27;,disabled:&#x27;Disabled&#x27;,approve:&#x27;Approve&#x27;,edit:&#x27;Edit&#x27;,fields:&#x27;Field states&#x27;,defaultField:&#x27;Default&#x27;,focusedField:&#x27;Focused&#x27;,invalidField:&#x27;Validation error&#x27;,positiveAmount:&#x27;Enter an amount greater than zero&#x27;,disabledField:&#x27;Disabled&#x27;,expenseStates:&#x27;Expense states&#x27;,expenseHint:&#x27;Open the expense and notice that its flag persists&#x27;,transport:&#x27;Transport · 08:16&#x27;,duplicate:&#x27;Possible duplicate&#x27;,note:&#x27;morning ride&#x27;,supermarket:&#x27;Food / Supermarket&#x27;,selected:&#x27;Selected&#x27;,feedback:&#x27;Completion feedback&#x27;,saved:&#x27;Expense saved&#x27;,savedDetail:&#x27;The expense is available on Home and Search.&#x27;,undo:&#x27;Undo&#x27;,refreshing:&#x27;Refreshing exchange rates…&#x27;,destructive:&#x27;Destructive action&#x27;,deleteExpense:&#x27;Delete expense&#x27;,deleteQuestion:&#x27;Delete this expense?&#x27;,deleteDetail:&#x27;This removes it from Home, Search, and reports.&#x27;,cancel:&#x27;Cancel&#x27;,delete:&#x27;Delete&#x27;},
+    es:{title:&#x27;Estados y respuesta&#x27;,subtitle:&#x27;Señales persistentes, foco claro y movimiento moderado&#x27;,actions:&#x27;Estados de acciones&#x27;,rest:&#x27;Reposo&#x27;,hover:&#x27;Puntero encima&#x27;,focus:&#x27;Foco del teclado&#x27;,pressed:&#x27;Presionado&#x27;,loading:&#x27;Cargando&#x27;,saving:&#x27;Guardando&#x27;,disabled:&#x27;Deshabilitado&#x27;,approve:&#x27;Aprobar&#x27;,edit:&#x27;Editar&#x27;,fields:&#x27;Estados de campos&#x27;,defaultField:&#x27;Predeterminado&#x27;,focusedField:&#x27;Enfocado&#x27;,invalidField:&#x27;Error de validación&#x27;,positiveAmount:&#x27;Ingresá un monto mayor que cero&#x27;,disabledField:&#x27;Deshabilitado&#x27;,expenseStates:&#x27;Estados de gastos&#x27;,expenseHint:&#x27;Abrí el gasto y observá que la alerta permanece&#x27;,transport:&#x27;Transporte · 08:16&#x27;,duplicate:&#x27;Posible duplicado&#x27;,note:&#x27;viaje de la mañana&#x27;,supermarket:&#x27;Alimentación / Supermercado&#x27;,selected:&#x27;Seleccionado&#x27;,feedback:&#x27;Respuesta al completar&#x27;,saved:&#x27;Gasto guardado&#x27;,savedDetail:&#x27;El gasto está disponible en Inicio y Buscar.&#x27;,undo:&#x27;Deshacer&#x27;,refreshing:&#x27;Actualizando tipos de cambio…&#x27;,destructive:&#x27;Acción destructiva&#x27;,deleteExpense:&#x27;Eliminar gasto&#x27;,deleteQuestion:&#x27;¿Eliminar este gasto?&#x27;,deleteDetail:&#x27;Esto lo elimina de Inicio, Buscar y reportes.&#x27;,cancel:&#x27;Cancelar&#x27;,delete:&#x27;Eliminar&#x27;}
+  };
+  function update(){app.dataset.theme=theme.value;app.dataset.viewport=viewport.value;root.querySelectorAll(&#x27;[data-copy]&#x27;).forEach(node=&gt;{node.textContent=copy[language.value][node.dataset.copy]});}
+  [theme,viewport,language].forEach(control=&gt;control.addEventListener(&#x27;change&#x27;,update));
+  app.addEventListener(&#x27;click&#x27;,event=&gt;{
+    const expenseToggle=event.target.closest(&#x27;.mhs-expense-toggle&#x27;);
+    if(expenseToggle){const frame=expenseToggle.closest(&#x27;[data-expense]&#x27;);const detail=frame.querySelector(&#x27;.mhs-expense-details&#x27;);const expanded=expenseToggle.getAttribute(&#x27;aria-expanded&#x27;)===&#x27;true&#x27;;expenseToggle.setAttribute(&#x27;aria-expanded&#x27;,expanded?&#x27;false&#x27;:&#x27;true&#x27;);detail.hidden=expanded;expenseToggle.querySelector(&#x27;.mhs-chevron&#x27;).outerHTML=`&lt;i class=&quot;mhs-chevron&quot; data-lucide=&quot;${expanded?&#x27;chevron-down&#x27;:&#x27;chevron-up&#x27;}&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;`;if(window.lucide)window.lucide.createIcons({attrs:{width:16,height:16}});return;}
+    if(event.target.closest(&#x27;.mhs-open-delete,.mhs-delete-trigger&#x27;)){root.querySelector(&#x27;.mhs-open-delete&#x27;).hidden=true;root.querySelector(&#x27;.mhs-confirm&#x27;).hidden=false;root.querySelector(&#x27;.mhs-confirm&#x27;).scrollIntoView({block:&#x27;nearest&#x27;});return;}
+    if(event.target.closest(&#x27;.mhs-cancel-delete&#x27;)){root.querySelector(&#x27;.mhs-open-delete&#x27;).hidden=false;root.querySelector(&#x27;.mhs-confirm&#x27;).hidden=true;}
+  });
+  update();
+})();
+&lt;/script&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>
