@@ -1,5 +1,5 @@
 import * as React from "react";
-import { api, type BudgetBurndownRow } from "@/lib/api";
+import { api, type BudgetBurndownRow, type BudgetBurndownBySubcategoryRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +28,10 @@ export default function Burndown() {
   const [rows, setRows] = React.useState<BudgetBurndownRow[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  const [subRows, setSubRows] = React.useState<BudgetBurndownBySubcategoryRow[]>([]);
+  const [subLoading, setSubLoading] = React.useState(true);
+  const [subError, setSubError] = React.useState<string | null>(null);
 
   // fn_budget_burndown groups at the main-category level; budget-vs-actual
   // already exposes main_category_id + names, so reuse it here instead of
@@ -60,6 +64,83 @@ export default function Burndown() {
       .catch((err) => setError(err instanceof Error ? err.message : t.burndown.failedToLoad))
       .finally(() => setLoading(false));
   }, [year, month, categoryId]);
+
+  React.useEffect(() => {
+    if (categoryId == null) {
+      setSubRows([]);
+      setSubLoading(false);
+      return;
+    }
+    setSubLoading(true);
+    setSubError(null);
+    api.reports
+      .burndownBySubcategory(year, month, categoryId)
+      .then(setSubRows)
+      .catch((err) => setSubError(err instanceof Error ? err.message : t.burndown.failedToLoad))
+      .finally(() => setSubLoading(false));
+  }, [year, month, categoryId]);
+
+  const subChartOption = React.useMemo(() => {
+    if (subRows.length === 0) return null;
+    const muted = chartColors.mutedForeground();
+    const border = chartColors.border();
+
+    const cumulativeOf = (r: BudgetBurndownBySubcategoryRow) => (currency === "USD" ? r.cumulative_usd : r.cumulative_crc);
+
+    const days = Array.from(new Set(subRows.map((r) => r.date))).sort().map(dayOfMonth);
+    const bySubcategory = new Map<number, { name: string; totals: (number | null)[] }>();
+    for (const row of subRows) {
+      const existing = bySubcategory.get(row.subcategory_id);
+      const dayIndex = days.indexOf(dayOfMonth(row.date));
+      if (existing) {
+        existing.totals[dayIndex] = cumulativeOf(row);
+      } else {
+        const totals: (number | null)[] = new Array(days.length).fill(null);
+        totals[dayIndex] = cumulativeOf(row);
+        bySubcategory.set(row.subcategory_id, { name: row.subcategory_name, totals });
+      }
+    }
+
+    const series = Array.from(bySubcategory.values()).map((s) => ({
+      name: s.name,
+      type: "line" as const,
+      data: s.totals,
+      showSymbol: false,
+      emphasis: { disabled: true },
+      blur: { lineStyle: { opacity: 1 } },
+      lineStyle: { width: 2 },
+    }));
+
+    const option: EChartsOption = {
+      tooltip: {
+        trigger: "axis",
+        formatter: (params) => {
+          const list = (Array.isArray(params) ? params : [params]).filter((p) => p.value != null);
+          const lines = list.map((p) => `${p.marker ?? ""}${p.seriesName}: ${formatMoney(p.value as number, currency)}`);
+          return [list[0]?.name ?? "", ...lines].join("<br/>");
+        },
+      },
+      legend: {
+        type: "scroll",
+        top: 0,
+        textStyle: { color: muted },
+      },
+      grid: { left: 56, right: 16, top: 40, bottom: 28 },
+      xAxis: {
+        type: "category",
+        data: days,
+        axisLabel: { color: muted },
+        axisLine: { lineStyle: { color: border } },
+      },
+      yAxis: {
+        type: "value",
+        axisLabel: { color: muted, formatter: (v: number) => formatMoney(v, currency) },
+        splitLine: { lineStyle: { color: border, opacity: 0.3 } },
+      },
+      series,
+    };
+    return option;
+  }, [subRows, currency]);
 
   const chartOption = React.useMemo(() => {
     if (rows.length === 0) return null;
@@ -197,6 +278,21 @@ export default function Burndown() {
                 <EChart option={chartOption} height={320} />
               ) : (
                 <p className="text-sm text-muted-foreground">{t.burndown.noSpendRecorded}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <h2 className="text-sm font-semibold text-muted-foreground">{t.burndown.bySubcategoryTitle}</h2>
+          <Card>
+            <CardContent className="pt-4">
+              {subLoading ? (
+                <p className="text-sm text-muted-foreground">{t.common.loading}</p>
+              ) : subError ? (
+                <p className="text-sm text-destructive">{subError}</p>
+              ) : subChartOption ? (
+                <EChart option={subChartOption} height={320} />
+              ) : (
+                <p className="text-sm text-muted-foreground">{t.burndown.noSubcategories}</p>
               )}
             </CardContent>
           </Card>

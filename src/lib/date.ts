@@ -7,3 +7,11 @@ export function localISODate(d: Date) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+// monthsAgo=1 -> last month, monthsAgo=2 -> the month before that, etc.
+export function monthRange(monthsAgo: number) {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() - monthsAgo, 1);
+  const end = new Date(now.getFullYear(), now.getMonth() - monthsAgo + 1, 0);
+  return { from: localISODate(start), to: localISODate(end) };
+}

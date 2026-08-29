@@ -65,6 +65,20 @@ export interface BudgetBurndownRow {
   expected_usd: number;
 }
 
+export interface BudgetBurndownBySubcategoryRow {
+  subcategory_id: number;
+  subcategory_name: string;
+  budget: number | null;
+  budget_usd: number | null;
+  date: string;
+  daily_crc: number;
+  daily_usd: number;
+  cumulative_crc: number;
+  cumulative_usd: number;
+  expected_crc: number;
+  expected_usd: number;
+}
+
 export interface CategoryMonthMatrixRow {
   subcategoria_id: number;
   subcategoria_nombre: string;
@@ -359,6 +373,10 @@ export const api = {
       if (categoryId) q.set("category_id", String(categoryId));
       return request<BudgetBurndownRow[]>(`/reports/burndown?${q}`);
     },
+    burndownBySubcategory: (year: number, month: number, categoryId: number) =>
+      request<BudgetBurndownBySubcategoryRow[]>(
+        `/reports/burndown-by-subcategory?year=${year}&month=${month}&category_id=${categoryId}`,
+      ),
     categoryMonthMatrix: (year: number, categoryId: number) =>
       request<CategoryMonthMatrixRow[]>(
         `/reports/category-month-matrix?year=${year}&category_id=${categoryId}`,

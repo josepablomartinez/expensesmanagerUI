@@ -6,7 +6,7 @@ import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useT } from "@/lib/language";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
-import { localISODate } from "@/lib/date";
+import { localISODate, monthRange } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -27,6 +27,7 @@ function today() {
 
 type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
+type QuickRange = "" | "0" | "1" | "2";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function Search() {
   const t = useT();
   const [from, setFrom] = React.useState(firstOfMonth());
   const [to, setTo] = React.useState(today());
+  const [quickRange, setQuickRange] = React.useState<QuickRange>("");
   const [categoryId, setCategoryId] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<SortBy>("date");
@@ -99,9 +101,43 @@ export default function Search() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="w-40" />
+          <Input
+            type="date"
+            value={from}
+            onChange={(e) => {
+              setFrom(e.target.value);
+              setQuickRange("");
+            }}
+            className="w-40"
+          />
           <span className="text-muted-foreground">{t.search.to}</span>
-          <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="w-40" />
+          <Input
+            type="date"
+            value={to}
+            onChange={(e) => {
+              setTo(e.target.value);
+              setQuickRange("");
+            }}
+            className="w-40"
+          />
+
+          <Select
+            value={quickRange}
+            onChange={(e) => {
+              const v = e.target.value as QuickRange;
+              setQuickRange(v);
+              if (v === "") return;
+              const r = monthRange(Number(v));
+              setFrom(r.from);
+              setTo(r.to);
+            }}
+            className="w-40"
+          >
+            <option value="">{t.search.quickRange}</option>
+            <option value="0">{t.search.thisMonth}</option>
+            <option value="1">{t.search.lastMonth}</option>
+            <option value="2">{t.search.secondLastMonth}</option>
+          </Select>
 
           <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-48">
             <option value="">{t.search.allCategories}</option>
