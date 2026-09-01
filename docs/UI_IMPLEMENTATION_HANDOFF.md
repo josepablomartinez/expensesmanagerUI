@@ -97,6 +97,7 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 - The note or comment always occupies its own detail row.
 - Detail rows use spacing, not internal separator lines.
 - Available future metadata is appended as another `ExpenseDetailRow` without changing the main row.
+- Credit-card expenses add a localized `Pays on [date]` detail row when a calculated payment due date is available.
 - Direct actions do not depend on the details being expanded.
 - Destructive actions require explicit confirmation and retain a safe Cancel path.
 
@@ -150,6 +151,8 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 - Mobile opens a Settings index, then a framed section detail screen.
 - Existing routes remain stable.
 - Category management and favorite selection remain Settings-only.
+- Advanced preserves the existing `credit_card_expense_date` preference, with transaction-day and card-due-date choices, as its own Credit card reporting section.
+- The selected reporting-date rule must be applied consistently to monthly budgets, Home favorite-category status, and every affected report without rewriting the original expense timestamp.
 - New technical preferences extend Advanced unless separately approved.
 
 ### Reports
@@ -197,10 +200,12 @@ The current generic wallet brand icon and generic Lucide category fallbacks are 
 | Favorite categories and saved currency | Available | Reuse Settings data. |
 | Favorite-bank rates | Available | Reuse banks, favorite-bank settings, and exchange-rate calls. |
 | Expense actions and flags | Mostly available | Preserve current duplicate flag. Suspicious-expense behavior remains future work. |
+| Card payment date in expense details | Needs a consistent source | Prefer a calculated payment-due date in each applicable expense response, or reuse one shared calculation based on the card due day; Home/Activity and Search must not calculate it differently. |
 | Review queue and approvals | Available | Existing endpoints support current workflow. |
 | Search | Available | Existing list parameters support present filters and pagination. |
 | Add Expense | Available | Create already accepts payment-related data; use current credit-card list for selection. |
 | Existing reports | Available | Preserve the three audited endpoint families and current calculations. |
+| Credit-card reporting date | Available | Reuse `credit_card_expense_date`; expose it under Advanced and preserve the existing English and Spanish labels. |
 | Review pending count | Derivable | Initially derive from existing Review data; consider a compact count endpoint only if performance requires it. |
 | Alert settings | Not represented in current settings model | Backend must persist enable/disable values, lead days, and budget threshold before these controls are functional. |
 | Alerts center | Not available | Requires alert records, unread/read state, dismissal, resolution status, contextual target, de-duplication key, and timestamps. |

@@ -1438,6 +1438,15 @@ html&gt;body{padding:0}&lt;/style&gt;
     font-size: 12px;
   }
 
+  #mi-harina-directions .mh-detail-due {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 9px 0 0;
+    color: var(--mh-muted);
+    font-size: 12px;
+  }
+
   #mi-harina-directions .mh-day-heading {
     display: flex;
     align-items: center;
@@ -1870,6 +1879,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;/div&gt;
       &lt;div class=&quot;mh-expense-detail&quot; ${expanded ? &#x27;&#x27; : &#x27;hidden&#x27;}&gt;
         &lt;div class=&quot;mh-detail-primary&quot;&gt;&lt;span class=&quot;mh-bank-mark&quot;&gt;★&lt;/span&gt;&lt;span class=&quot;mh-card-mark&quot;&gt;VISA&lt;/span&gt;&lt;strong&gt;•••• 0828&lt;/strong&gt;&lt;/div&gt;
+        &lt;p class=&quot;mh-detail-due&quot;&gt;${icon(&#x27;calendar-days&#x27;)} Pays on September 17, 2026&lt;/p&gt;
         &lt;p class=&quot;mh-detail-note&quot;&gt;${note}&lt;/p&gt;
       &lt;/div&gt;
     &lt;/article&gt;`;

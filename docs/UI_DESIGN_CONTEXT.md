@@ -470,7 +470,7 @@ The current application exposes four peer Settings sections in a top submenu:
 1. **Basic:** personal information, saved currency, language, favorite categories, and favorite banks.
 2. **Credit cards:** active-card list, deactivation, card limits, cutoff and payment dates, and Add credit card.
 3. **Categories:** categories, subcategories, and Add category.
-4. **Advanced:** exchange-rate fallback selection.
+4. **Advanced:** exchange-rate fallback selection and credit-card reporting date behavior.
 
 The interactive [`docs/ui/mi-harina-settings-navigation.html`](ui/mi-harina-settings-navigation.html) compares three responsive treatments while preserving those four sections and their current behaviors:
 
@@ -487,9 +487,17 @@ The interactive [`docs/ui/mi-harina-settings-screens.html`](ui/mi-harina-setting
 1. **Basic:** grouped form sections for personal information, saved display/language preferences, favorite categories, and favorite banks.
 2. **Credit cards:** a management list with card context, direct Edit and Deactivate actions, and Add card.
 3. **Categories:** a management list with direct category editing, Add subcategory, and Add category actions.
-4. **Advanced:** grouped technical-preference forms, currently including exchange-rate fallback. Additional advanced preferences extend this page as form sections without changing Settings navigation.
+4. **Advanced:** grouped technical-preference forms, currently including exchange-rate fallback and credit-card reporting date behavior. Additional advanced preferences extend this page as form sections without changing Settings navigation.
 
 The Settings content layouts are approved.
+
+### Credit-card reporting date
+
+- **Settings → Advanced** includes a Credit card reporting section.
+- The setting determines whether a credit-card expense counts toward the month in which the expense happened or the month in which the card payment is due.
+- The two existing choices are preserved through the application language resources: **The day it happened** and **The card's due date**, with their approved Spanish equivalents.
+- This is a reporting and budgeting rule; it does not alter the expense's original transaction timestamp.
+- The setting applies consistently anywhere expenses are grouped or calculated by reporting month, including favorite-category budgets and Reports.
 
 The interactive [`docs/ui/mi-harina-search-screens.html`](ui/mi-harina-search-screens.html) records the approved Search treatment across desktop and mobile. It preserves every existing Search capability: merchant or note query, date range and quick range, category filter, date or amount sorting, direction, result count and total, unreviewed links to Review, persistent flags, inline details, and direct Edit, Split, and Delete actions. Desktop keeps filters directly below the heading; mobile collapses them behind an explicit Filters control while keeping summary and results visible.
 
@@ -499,6 +507,7 @@ The interactive [`docs/ui/mi-harina-search-screens.html`](ui/mi-harina-search-sc
 - Each available detail occupies its own full-width, icon-and-value row; the comment or note is therefore always its own row.
 - Detail rows use spacing rather than internal separator lines, keeping the frame clean on both desktop and mobile.
 - The pattern can grow without changing the expense-row layout: future metadata such as payment source, masked card, bank, import source, or notes is appended as another detail row.
+- Credit-card expenses include a localized **Pays on [date]** row showing the calculated card-payment due date. This row is omitted when no applicable card due date exists.
 
 ### Approved Desktop Review queue
 
@@ -641,3 +650,9 @@ The **Focused entry** direction is approved. Desktop uses a focused modal. Mobil
 - Corrected the Balanced overview so Add Expense remains reachable on mobile without crowding the top bar or appearing inside Today.
 - Adopted the UICard-inspired mobile structure: compact isotype and utilities above, with a restrained centered Add action between Review and Search below. Review retains the pending count and stronger workflow priority.
 - Normalized the centered Add action to the same footprint and baseline as the other mobile bottom items; removed the raised offset and oversized circular treatment.
+
+### 2026-09-01
+
+- Added the existing Credit card reporting preference to the redesigned Advanced Settings screen.
+- Confirmed that credit-card expenses may count either in the transaction month or the card-payment due month, without changing the original transaction date.
+- Added the calculated credit-card payment date to expanded expense details as its own localized, full-width metadata row.
