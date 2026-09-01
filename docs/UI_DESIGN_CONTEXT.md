@@ -1,7 +1,7 @@
 # MiHarina UI Design Context
 
-Last updated: 2026-08-29  
-Status: Balanced overview, visual foundations, component set, and interaction states approved; key-screen refinement under review
+Last updated: 2026-08-31  
+Status: Initial UI design and interaction specification approved; implementation handoff is ready for human review
 
 ## Purpose of this document
 
@@ -28,8 +28,8 @@ This reference demonstrates:
 - Persistent Currency, Theme, Alerts, and Settings controls
 - Review receiving more navigational weight than manual expense entry
 - Today's expenses and favorite-category budgets sharing the first content tier
-- Recent expenses remaining on Home
-- In-place See more/See less behavior for older date groups
+- A stable, capped preview of today's and recent expenses on Home
+- A contextual, chronological Activity page for the complete expense history
 - Expandable expense details
 - Persistent Edit, Split, and Delete expense actions
 - Inline flags that remain visible wherever an expense appears
@@ -109,15 +109,17 @@ Approved behavior:
 - Selection is distinct from warning or flagged states.
 - Destructive actions require an explicit confirmation step and provide a safe Cancel path.
 
-## Key-screen refinement in progress
+## Approved key-screen composition
 
-The interactive [`docs/ui/mi-harina-key-screens.html`](ui/mi-harina-key-screens.html) applies the approved structure, foundations, components, and interaction states to the three implementation-priority views:
+The interactive [`docs/ui/mi-harina-key-screens.html`](ui/mi-harina-key-screens.html) applies the approved structure, foundations, components, and interaction states to five implementation-priority views:
 
 1. Desktop Home
 2. Mobile Home
-3. Mobile Review
+3. Desktop Activity
+4. Mobile Activity
+5. Mobile Review
 
-The reference includes light and dark themes, English and Spanish labels, persistent global utilities, the favorite-bank exchange-rate header, expandable expense details, persistent flags and expense actions, in-place older activity, informative alerts, and a mobile-safe Review workflow. This screen-level composition is **not yet approved**.
+The reference includes light and dark themes, English and Spanish labels, persistent global utilities, the favorite-bank exchange-rate header, expandable expense details, persistent flags and expense actions, stable Home previews, unfiltered chronological Activity views with empty date groups, informative alerts, and a mobile-safe Review workflow. This five-screen composition is approved.
 
 ## Product context
 
@@ -291,7 +293,7 @@ MiHarina | Review (count) | Search | Reports | Add expense | Currency | Theme | 
 - Currency and theme quick controls must remain visible at all times.
 - Alerts must remain globally reachable.
 
-The exact mobile placement and treatment of Add expense remains an open design decision.
+On mobile, Add Expense opens as a focused form within the recognizable MiHarina application frame; it does not compete with Review in the bottom navigation.
 
 ## Home-page content hierarchy
 
@@ -302,7 +304,7 @@ Recommended order:
 1. Compact greeting or page identity
 2. Today's expenses and today's total
 3. Favorite categories for the current month
-4. Recent expenses from earlier days
+4. A compact preview of recent expenses from earlier days
 5. Favorite-bank exchange-rate information within the Home greeting area
 
 Favorite-category items should link to the relevant report detail.
@@ -312,6 +314,7 @@ Review status should normally be communicated with a count on the Review destina
 ### Home greeting and favorite-bank rates
 
 - Home begins with a time-appropriate salutation and the user's name.
+- A time-of-day-appropriate icon accompanies the salutation: sun for daytime, sunset for the evening transition, and moon for nighttime.
 - The greeting area displays the current exchange rate from the user's favorite-bank settings.
 - One favorite bank is shown by default to keep the header compact.
 - When a second favorite bank is configured, a small expand control reveals it in place rather than navigating elsewhere.
@@ -320,14 +323,25 @@ Review status should normally be communicated with a count on the Review destina
 
 ### Expense list behavior on Home
 
-- Recent expenses older than today remain on the Home page.
-- A **See more** control progressively reveals additional older date groups in place.
-- See more must not navigate to Search.
+- Home uses stable previews so growing expense history does not continually change the dashboard layout.
+- Today's preview shows up to three expenses on desktop and up to two on mobile.
+- Recent expenses use a similarly compact preview.
+- A **View all expenses** link opens the contextual Activity page; it does not open Search.
 - Every expense frame can expand and collapse to reveal a dedicated detail frame directly beneath that expense.
 - The detail frame is hidden while collapsed and may include the bank, card network and last four digits, motive or note, and other available expense metadata.
 - Every expense frame retains direct Edit, Split, and Delete actions.
 - Flags remain visible in both collapsed and expanded states.
 - Today's expenses do not repeat an Add action; manual entry remains available through the persistent navigation action.
+
+### Contextual Activity page
+
+- Activity is reached contextually from Home and is not added to primary desktop or mobile navigation.
+- The page has no filters or tabs.
+- It presents one continuous reverse-chronological expense history: Today first, followed by Yesterday and older calendar dates.
+- Every date group remains visible even when it has no expenses, using a short empty-state message inside the group.
+- Date groups with expenses show their daily total in the date header.
+- Expense frames retain expandable detail, persistent flags, and always-visible Edit, Split, and Delete actions.
+- Desktop and mobile follow the same information order and behavior.
 
 ## Alerts and flags
 
@@ -335,12 +349,25 @@ Review status should normally be communicated with a count on the Review destina
 
 Alerts should have a persistent home in the global utility area, represented by a bell and an unread count when necessary.
 
-Proposed behavior:
+Approved behavior:
 
 - Desktop: the bell opens a compact alerts panel with a route to view all alerts if needed.
 - Mobile: the bell opens a mobile-appropriate alerts view.
 - Alerts do not use blocking dialogs.
 - Reading or dismissing an alert does not automatically resolve its underlying condition.
+
+The interactive [`docs/ui/mi-harina-alerts-behavior.html`](ui/mi-harina-alerts-behavior.html) records the approved behavior:
+
+- Desktop uses a compact bell panel containing the newest current alerts and a **View all alerts** route.
+- Mobile opens a framed Alerts center rather than a small floating popover.
+- The complete Alerts center keeps **Current** alerts first and an **Earlier** chronological section beneath them; it does not require filters.
+- Opening an individual alert marks that alert as read and follows its contextual action, such as opening the card, report, or expense.
+- **Mark all read** changes unread state only; it does not dismiss alerts or resolve conditions.
+- Dismissing removes an item from Current and moves it temporarily to Earlier.
+- Dismissing a duplicate or suspicious-expense alert never removes the persistent flag from the expense.
+- Resolving the underlying condition moves the alert to Earlier automatically.
+- Repeated checks update the existing alert for the same condition rather than creating daily duplicates.
+- Dismissed and resolved alerts remain in Earlier for 30 days.
 
 Potential alert types include:
 
@@ -351,14 +378,14 @@ Potential alert types include:
 
 ### Alert configuration
 
-Alert behavior may be controlled through Settings. Potential controls include:
+Alert behavior is controlled through **Settings → Advanced**. The approved controls are:
 
-- Enable or disable credit-card payment reminders
-- Configure how many days before payment an alert appears
-- Configure budget-warning thresholds
-- Enable or disable individual alert categories
+- Enable or disable credit-card payment reminders and choose how many days before payment the reminder appears.
+- Enable or disable favorite-category budget alerts and choose the approaching-budget threshold.
+- Enable or disable possible-duplicate notifications.
+- Future suspicious-expense notifications may extend this group when that feature exists.
 
-Exact settings require human review before implementation.
+These controls affect notification generation only. Disabling or dismissing a notification never removes an existing flag from an expense. The approved responsive reference is [`docs/ui/mi-harina-alert-settings.html`](ui/mi-harina-alert-settings.html).
 
 ### Flagged expenses
 
@@ -412,23 +439,118 @@ These observations inform the proposal but do not authorize implementation chang
 
 ## Open decisions requiring human approval
 
-- Exact icon style and mappings beyond the existing base iconography
-- Final screen-level composition of Desktop Home, Mobile Home, and Mobile Review
-- Mobile header placement and visual weight of Add expense
-- Alerts panel versus dedicated alerts page behavior
-- Alert dismissal, resolution, and retention rules
-- Exact chart treatments in both themes
-- Whether Categories remains within Settings or needs another access path
+- No remaining decision in the initial UI selection phase. Any implementation-driven change still requires human review.
+
+## Approved iconography mappings
+
+The locked visual sources remain [`docs/ui/UICard.png`](ui/UICard.png) and [`docs/ui/Iconografia.png`](ui/Iconografia.png). The custom category artwork in `Iconografia.png` must be used unchanged for the defined categories and must not be replaced with generic interface-library icons.
+
+The interactive [`docs/ui/mi-harina-icon-mappings.html`](ui/mi-harina-icon-mappings.html) records the approved semantic interface mappings across Navigation, Utilities, Expenses, and Alerts and time.
+
+Approved system rules:
+
+- Interface actions use consistent rounded line icons that visually complement the approved category artwork without imitating or replacing it.
+- Navigation uses House, List checks, Search, and Column chart for Home, Review, Search, and Reports.
+- The contextual Activity destination uses History but does not enter primary navigation.
+- Display currency uses the active currency glyph, such as ₡ or $, rather than a generic wallet or money icon.
+- Expense actions use Chevron, Pencil, Split, and Trash for Expand, Edit, Split, and Delete.
+- Possible duplicate uses Copy; the future suspicious-expense state uses Shield alert. Both retain a visible text label.
+- Alert semantics use Credit card for payment reminders, Triangle alert for approaching a budget, Circle alert for exceeding a budget, and Circle check for resolved state.
+- Salutation icons use Sun, Sunset, and Moon according to time of day.
+- Color supports meaning but never replaces the icon and label; destructive and flagged states remain explicitly labeled.
 
 ## Current design step
 
-Review the refined Balanced overview direction across:
+Review and approve the implementation handoff in [`UI_IMPLEMENTATION_HANDOFF.md`](UI_IMPLEMENTATION_HANDOFF.md). After approval, production work may begin only when the first implementation phase is separately authorized.
 
-1. Desktop Home
-2. Mobile Home
-3. Mobile Review
+The current application exposes four peer Settings sections in a top submenu:
 
-Each view shows both light and dark themes and includes the persistent Currency, Theme, Alerts, and Settings utilities. Home demonstrates expandable expenses, direct expense actions, and in-place progressive disclosure of older expenses. Human approval is required before implementation planning begins.
+1. **Basic:** personal information, saved currency, language, favorite categories, and favorite banks.
+2. **Credit cards:** active-card list, deactivation, card limits, cutoff and payment dates, and Add credit card.
+3. **Categories:** categories, subcategories, and Add category.
+4. **Advanced:** exchange-rate fallback selection.
+
+The interactive [`docs/ui/mi-harina-settings-navigation.html`](ui/mi-harina-settings-navigation.html) compares three responsive treatments while preserving those four sections and their current behaviors:
+
+1. **Adaptive navigation:** a persistent left rail on desktop and a Settings index followed by a detail screen on mobile.
+2. **Top submenu:** retains the current horizontal submenu, using compact icon treatment on mobile.
+3. **Section picker:** replaces the visible submenu with a single labeled section selector.
+
+All three preserve the persistent global Currency, Theme, Alerts, and Settings utilities, the approved MiHarina identity, light and dark themes, and English and Spanish labels.
+
+The **Adaptive navigation** treatment is approved: Settings uses a persistent left rail on desktop and a Settings index followed by a detail screen on mobile. This remains the single Settings navigation pattern as the product grows. New technical preferences belong in **Advanced** unless a future human review explicitly creates another section.
+
+The interactive [`docs/ui/mi-harina-settings-screens.html`](ui/mi-harina-settings-screens.html) now applies the approved navigation to all four Settings sections on desktop and mobile:
+
+1. **Basic:** grouped form sections for personal information, saved display/language preferences, favorite categories, and favorite banks.
+2. **Credit cards:** a management list with card context, direct Edit and Deactivate actions, and Add card.
+3. **Categories:** a management list with direct category editing, Add subcategory, and Add category actions.
+4. **Advanced:** grouped technical-preference forms, currently including exchange-rate fallback. Additional advanced preferences extend this page as form sections without changing Settings navigation.
+
+The Settings content layouts are approved.
+
+The interactive [`docs/ui/mi-harina-search-screens.html`](ui/mi-harina-search-screens.html) records the approved Search treatment across desktop and mobile. It preserves every existing Search capability: merchant or note query, date range and quick range, category filter, date or amount sorting, direction, result count and total, unreviewed links to Review, persistent flags, inline details, and direct Edit, Split, and Delete actions. Desktop keeps filters directly below the heading; mobile collapses them behind an explicit Filters control while keeping summary and results visible.
+
+### Approved expanded expense-detail pattern
+
+- Expanded expense metadata uses a dedicated detail frame below the main expense row.
+- Each available detail occupies its own full-width, icon-and-value row; the comment or note is therefore always its own row.
+- Detail rows use spacing rather than internal separator lines, keeping the frame clean on both desktop and mobile.
+- The pattern can grow without changing the expense-row layout: future metadata such as payment source, masked card, bank, import source, or notes is appended as another detail row.
+
+### Approved Desktop Review queue
+
+The interactive [`docs/ui/mi-harina-desktop-review.html`](ui/mi-harina-desktop-review.html) records the approved desktop treatment for Review. It preserves pending count, batch selection, Approve selected, Approve all, per-expense category selection, confidence, direct approval, and the learning choice. The learning choice uses the compact label **Always**; the redundant explanatory queue subtitle is omitted.
+
+### Approved Categories access
+
+Category creation, editing, archiving, subcategory management, and favorite selection are accessible only through Settings. Categories does not appear in primary navigation, Reports, Add Expense, or contextual report links.
+
+The interactive [`docs/ui/mi-harina-categories-access.html`](ui/mi-harina-categories-access.html) compares three access models on desktop and mobile:
+
+1. **Settings only:** all category creation, editing, archiving, and favorite selection remains reachable exclusively through Settings.
+2. **Contextual links:** Settings remains the single owner of category management, while Add Expense and a category report provide links into the relevant Settings context.
+3. **Reports section:** Categories becomes a secondary section inside Reports while also remaining in Settings.
+
+All models preserve the locked custom category artwork. No model adds Categories to primary desktop or mobile navigation.
+
+The **Settings only** model is approved. The other two models remain reference alternatives and are not part of the approved scope.
+
+The interactive [`docs/ui/mi-harina-report-treatments.html`](ui/mi-harina-report-treatments.html) compares three responsive directions:
+
+1. **Clear ranking:** monthly columns plus directly labeled horizontal category bars and a prominent favorite-category budget detail.
+2. **Donut composition:** the UICard-inspired category donut, a compact monthly chart, and favorite-category budget bars.
+3. **Period comparison:** paired current-versus-previous bars, period totals, and the largest category changes.
+
+All three preserve the persistent currency selector, responsive mobile stacking, light and dark themes, English and Spanish labels, and semantic budget colors. The selected direction may still borrow a focused comparison treatment from another option if the hierarchy remains restrained.
+
+The **Clear ranking** direction is approved as the report-treatment baseline. Monthly columns, directly labeled horizontal category bars, and semantic favorite-category budget detail establish the visual language for Reports on desktop and mobile.
+
+### Report migration requirements
+
+- Every report type already implemented in MiHarina must transfer to the redesigned interface; the redesign must not remove or silently consolidate existing reporting capabilities.
+- Each existing report should adopt the approved Clear ranking hierarchy where applicable while preserving its current data, calculations, controls, and language labels.
+- A complete inventory of existing report types and backend endpoints is required before implementation planning for Reports.
+- **Period comparison** is pinned as a desirable future Reports section, but it is not part of the currently approved scope.
+- Before Period comparison is scheduled, verify whether the backend already provides comparable current-versus-previous-period data. If it does not, define the required backend work separately.
+
+### Completed Reports inventory and endpoint audit
+
+The existing Reports experience has three separate report types. All must remain distinct in the redesigned Reports area:
+
+1. **Budget versus actual** (`/reports/budget-vs-actual`): month and year selection; ranked category budget consumption; progressive See more; selected main category and subcategory detail; amount, budget, and percentage-used data in CRC and USD; Home can deep-link to a category through `?category=<id>`.
+2. **Burndown** (`/reports/burndown` and `/reports/burndown-by-subcategory`): month and year selection; main-category selection; cumulative actual spend versus expected pace; subcategory cumulative-spend lines.
+3. **Subcategories by month** (`/reports/category-month-matrix`): year selection; main-category selection; twelve-month subcategory trend lines.
+
+All three report types use the selected display currency and existing English and Spanish labels. The current backend has no endpoint that returns matching current and prior period totals or category deltas; **Period comparison** therefore remains a separately scoped future backend and UI enhancement.
+
+The interactive [`docs/ui/mi-harina-add-expense-gallery.html`](ui/mi-harina-add-expense-gallery.html) compares three initial presentation directions across desktop and mobile:
+
+1. **Focused entry:** a compact desktop modal and framed mobile form, with optional information progressively disclosed.
+2. **Context panel:** a desktop side panel and mobile sheet that preserve more of the originating Home context.
+3. **Full page:** a dedicated form page on both platforms with all fields visible.
+
+The **Focused entry** direction is approved. Desktop uses a focused modal. Mobile retains the same field hierarchy inside the recognizable MiHarina application frame without showing the Home greeting behind the form. The Payment method and Note section expands inline within the current form, and the redundant explanatory subtitle beneath Add Expense is omitted.
 
 ## Decision log
 
@@ -453,7 +575,7 @@ Each view shows both light and dark themes and includes the persistent Currency,
 - Established that flagged expenses must remain marked wherever they appear.
 - Distinguished dismissing an alert from resolving an expense flag.
 - Selected the Balanced overview as the Home-page structural direction.
-- Established that older recent expenses are progressively revealed on Home through See more rather than opening Search.
+- Initially established in-place progressive disclosure for older Home expenses; this was later superseded by the contextual Activity-page decision below.
 - Established expandable expense frames with additional payment and expense details.
 - Preserved direct Edit, Split, and Delete actions on every expense frame.
 - Removed the duplicate Add action from Today's expenses; the persistent navigation action is the single entry point.
@@ -466,3 +588,51 @@ Each view shows both light and dark themes and includes the persistent Currency,
 - Added the Home salutation and favorite-bank exchange-rate pattern: one bank is shown by default and an inline control reveals a second configured favorite bank.
 - Approved the component set shown in the Components gallery.
 - Approved the Interaction States gallery, including hover, keyboard focus, pressed or selected, expanded, disabled, loading, validation, persistent flags, completion feedback, and destructive confirmation.
+- Corrected the key-screen reference so mobile expense actions remain in the always-visible expense frame, mobile bottom-navigation selection does not become a large pill, and favorite-category progress retains its green-to-warning-to-danger semantics.
+- Replaced expanding Home history with stable Today and Recent previews that link to a contextual Activity page.
+- Defined Activity as an unfiltered reverse-chronological page with Today followed by older date groups, including visible empty date groups on both desktop and mobile.
+
+### 2026-08-30
+
+- Approved the stable, capped Today and Recent expense previews on Home for desktop and mobile.
+- Approved the contextual Activity page without filters or tabs.
+- Approved the Activity ordering of Today followed by older date groups, including date groups with no expenses.
+- Approved the complete five-screen composition: Desktop Home, Mobile Home, Desktop Activity, Mobile Activity, and Mobile Review.
+- Moved the active design review to Desktop Add Expense and Mobile Add Expense.
+- Selected Focused entry for Add Expense and approved its desktop modal presentation.
+- Refined Focused entry on mobile to retain the MiHarina application frame without showing the Home greeting behind the form.
+- Approved Focused entry for Desktop and Mobile Add Expense.
+- Confirmed that Payment method and Note expand inline within the current form and removed the redundant Add Expense subtitle.
+- Added the Alerts behavior proposal covering the desktop quick panel, mobile Alerts center, lifecycle rules, contextual actions, settings, de-duplication, and proposed retention.
+- Approved the complete Alerts behavior proposal, including desktop and mobile presentation, lifecycle rules, contextual actions, de-duplication, settings structure, and 30-day Earlier retention.
+- Confirmed that the Home salutation uses a time-appropriate sun, sunset, or moon icon.
+- Added the remaining icon-mapping proposal while preserving the locked UICard identity and custom category iconography.
+- Approved the semantic icon mappings for navigation, utilities, expense actions and flags, alerts, and time-of-day salutations.
+- Added three report chart-treatment directions for desktop and mobile review: Clear ranking, Donut composition, and Period comparison.
+- Approved Clear ranking as the report-treatment baseline for desktop and mobile.
+- Required every already implemented report type to transfer into the redesigned Reports experience.
+- Pinned Period comparison as a future enhancement pending verification of backend support.
+- Added three Categories access models for desktop and mobile review: Settings only, Settings-owned contextual links, and a Reports-level secondary section.
+- Approved Settings only as the Categories access model; category management and favorite selection remain exclusively within Settings.
+- Audited the current Settings area and confirmed four peer sections: Basic, Credit cards, Categories, and Advanced.
+- Added three Settings submenu navigation treatments for responsive review: Adaptive navigation, the existing Top submenu, and a compact Section picker.
+- Approved Adaptive navigation for Settings: desktop left rail and mobile Settings index followed by detail.
+- Established the growth rule that new technical preferences extend Advanced rather than creating a new Settings navigation item.
+- Added the Settings content-layout gallery for Basic, Credit cards, Categories, and Advanced on desktop and mobile.
+- Approved the Settings content layouts for Basic, Credit cards, Categories, and Advanced.
+- Added the responsive Search-screen treatment for review, preserving all existing filters, sorting, results, flags, detail, Review links, and expense actions.
+- Approved the responsive Search treatment: full desktop filters, one explicit mobile Filters control, persistent results and actions, and unreviewed routes to Review.
+- Approved the expandable expense-detail pattern: stacked full-width icon-and-value rows, no internal dividers, and a dedicated comment row.
+- Moved the active review to the Desktop Review queue treatment.
+- Approved the Desktop Review queue, including batch actions, category selection, confidence, direct approval, and the compact Always learning control.
+- Moved the active work to Reports migration inventory and backend endpoint audit.
+
+### 2026-08-31
+
+- Completed the Reports migration and backend endpoint inventory for Budget versus actual, Burndown, and Subcategories by month.
+- Confirmed that Period comparison has no current supporting endpoint and remains future work.
+- Approved Alert settings within Advanced: credit-card reminders and lead time, favorite-category warnings and threshold, and possible-duplicate notifications.
+- Confirmed that Alert settings control notifications only and never clear persistent expense flags.
+- Corrected the Alert settings reference header to use the locked MiHarina bag icon, the active currency glyph, and the approved Theme, Alerts, and Settings line icons.
+- Completed the initial UI selection and interaction-specification phase; implementation handoff preparation is next.
+- Prepared the implementation handoff, including route mapping, reusable component boundaries, backend dependencies, phased acceptance checks, and a recommended first implementation slice. No production UI change has been authorized yet.
