@@ -656,3 +656,6 @@ The **Focused entry** direction is approved. Desktop uses a focused modal. Mobil
 - Added the existing Credit card reporting preference to the redesigned Advanced Settings screen.
 - Confirmed that credit-card expenses may count either in the transaction month or the card-payment due month, without changing the original transaction date.
 - Added the calculated credit-card payment date to expanded expense details as its own localized, full-width metadata row.
+- Recorded the revised `GET /expenses` contract: expenses are returned in date groups with CRC/USD daily totals and an expense-level `payment_date`.
+- Confirmed that this grouped endpoint supplies Home and Activity directly; the frontend adds missing empty dates within the requested window, and Search flattens the groups for its result presentation.
+- Removed the need for a separate Activity API and expense-level Activity pagination; older history can be requested in complete date windows.

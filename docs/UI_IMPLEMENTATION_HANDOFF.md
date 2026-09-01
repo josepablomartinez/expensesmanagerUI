@@ -120,7 +120,8 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 - No filter, sort, tab, or search controls.
 - Empty date groups remain visible with a short empty-state message.
 - Non-empty group headers show the daily total.
-- Uses the shared expense components and existing expense pagination.
+- Uses the grouped response from `GET /expenses` with a fixed `from`/`to` date window; no separate Activity API or expense-level pagination is required.
+- Because the backend returns groups only for dates containing expenses, the frontend synthesizes missing dates inside the requested window so approved empty date groups remain visible.
 
 ### Review
 
@@ -196,13 +197,13 @@ The current generic wallet brand icon and generic Lucide category fallbacks are 
 
 | Capability | Current support | Implementation note |
 | --- | --- | --- |
-| Home and Activity expense data | Available | Reuse expense list with date ranges, limit, and offset. Activity can paginate progressively. |
+| Home and Activity expense data | Available | `GET /expenses` now returns `{ days: [{ date, total_crc, total_usd, expenses }] }`. Reuse fixed `from`/`to` windows; no separate Activity endpoint or expense-level pagination is required. |
 | Favorite categories and saved currency | Available | Reuse Settings data. |
 | Favorite-bank rates | Available | Reuse banks, favorite-bank settings, and exchange-rate calls. |
 | Expense actions and flags | Mostly available | Preserve current duplicate flag. Suspicious-expense behavior remains future work. |
-| Card payment date in expense details | Needs a consistent source | Prefer a calculated payment-due date in each applicable expense response, or reuse one shared calculation based on the card due day; Home/Activity and Search must not calculate it differently. |
+| Card payment date in expense details | Available | Each expense now includes `payment_date`; use it for the localized payment-date detail row so Home, Activity, and Search remain consistent. |
 | Review queue and approvals | Available | Existing endpoints support current workflow. |
-| Search | Available | Existing list parameters support present filters and pagination. |
+| Search | Available with response adaptation | Existing `GET /expenses` filters remain usable, but Search must flatten the grouped `days[].expenses` response and derive its result count and displayed total from the returned groups. |
 | Add Expense | Available | Create already accepts payment-related data; use current credit-card list for selection. |
 | Existing reports | Available | Preserve the three audited endpoint families and current calculations. |
 | Credit-card reporting date | Available | Reuse `credit_card_expense_date`; expose it under Advanced and preserve the existing English and Spanish labels. |
@@ -260,7 +261,7 @@ Exit check: one shared implementation satisfies the approved desktop/mobile expe
 ### Phase 3 — Home and Activity
 
 - Apply capped previews, greeting/rates, favorite-budget status, and Home alert placement.
-- Add `/activity` and chronological grouped loading.
+- Add `/activity` using date-window requests to the grouped `GET /expenses` response; extend older history by requesting an earlier window rather than paginating individual expenses.
 - Preserve category report deep links and direct expense actions.
 
 Exit check: Home remains stable as expense volume grows; Activity provides complete contextual history without filters.
