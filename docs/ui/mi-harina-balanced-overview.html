@@ -1610,14 +1610,10 @@ html&gt;body{padding:0}&lt;/style&gt;
     position: absolute;
     inset: auto 0 0;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     background: var(--mh-surface);
     border-top: 1px solid var(--mh-line);
     padding: 7px 5px 9px;
-  }
-
-  #mi-harina-directions .mh-bottom-nav.has-add {
-    grid-template-columns: repeat(5, 1fr);
   }
 
   #mi-harina-directions .mh-bottom-item {
@@ -1636,6 +1632,20 @@ html&gt;body{padding:0}&lt;/style&gt;
   #mi-harina-directions .mh-bottom-item.is-active {
     color: var(--mh-green);
     font-weight: 500;
+  }
+
+  #mi-harina-directions .mh-bottom-add {
+    color: var(--mh-green);
+  }
+
+  #mi-harina-directions .mh-add-mark {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--mh-green-soft);
   }
 
   #mi-harina-directions .mh-mobile-review-head {
@@ -1826,19 +1836,18 @@ html&gt;body{padding:0}&lt;/style&gt;
 
   function mobileTop() {
     return `&lt;header class=&quot;mh-mobile-bar&quot;&gt;
-      &lt;div class=&quot;mh-brand&quot;&gt;&lt;span class=&quot;mh-logo&quot;&gt;${logoMark()}&lt;/span&gt;&lt;span&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;mh-brand&quot;&gt;&lt;span class=&quot;mh-logo&quot;&gt;${logoMark()}&lt;/span&gt;&lt;span class=&quot;sr-only&quot;&gt;MiHarina&lt;/span&gt;&lt;/div&gt;
       ${toolsMarkup()}
     &lt;/header&gt;`;
   }
 
   function bottomNav(active) {
-    const addItem = direction === &#x27;c&#x27; ? `&lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;plus&#x27;)}&lt;span&gt;Add&lt;/span&gt;&lt;/button&gt;` : &#x27;&#x27;;
-    return `&lt;nav class=&quot;mh-bottom-nav ${direction === &#x27;c&#x27; ? &#x27;has-add&#x27; : &#x27;&#x27;}&quot; aria-label=&quot;Mobile primary&quot;&gt;
+    return `&lt;nav class=&quot;mh-bottom-nav&quot; aria-label=&quot;Mobile primary&quot;&gt;
       &lt;button class=&quot;mh-bottom-item ${active === &#x27;home&#x27; ? &#x27;is-active&#x27; : &#x27;&#x27;}&quot;&gt;${icon(&#x27;house&#x27;)}&lt;span&gt;Home&lt;/span&gt;&lt;/button&gt;
       &lt;button class=&quot;mh-bottom-item ${active === &#x27;review&#x27; ? &#x27;is-active&#x27; : &#x27;&#x27;}&quot;&gt;${icon(&#x27;list-checks&#x27;)}&lt;span&gt;Review · 3&lt;/span&gt;&lt;/button&gt;
+      &lt;button class=&quot;mh-bottom-item mh-bottom-add&quot; aria-label=&quot;Add expense&quot;&gt;&lt;span class=&quot;mh-add-mark&quot;&gt;${icon(&#x27;plus&#x27;)}&lt;/span&gt;&lt;span&gt;Add&lt;/span&gt;&lt;/button&gt;
       &lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;search&#x27;)}&lt;span&gt;Search&lt;/span&gt;&lt;/button&gt;
       &lt;button class=&quot;mh-bottom-item&quot;&gt;${icon(&#x27;chart-no-axes-column&#x27;)}&lt;span&gt;Reports&lt;/span&gt;&lt;/button&gt;
-      ${addItem}
     &lt;/nav&gt;`;
   }
 
@@ -1911,7 +1920,7 @@ html&gt;body{padding:0}&lt;/style&gt;
   function mobileHome() {
     let body = &#x27;&#x27;;
     if (direction === &#x27;a&#x27;) {
-      body = `&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;button class=&quot;mh-action&quot; style=&quot;margin-top:10px&quot;&gt;${icon(&#x27;plus&#x27;)} Add expense&lt;/button&gt;&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;${reminderCard()}`;
+      body = `&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;${reminderCard()}`;
     } else if (direction === &#x27;b&#x27;) {
       body = `&lt;div class=&quot;mh-grid-equal&quot;&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Today&lt;/h2&gt;&lt;span class=&quot;mh-total&quot;&gt;₡30 510&lt;/span&gt;&lt;/div&gt;${todayExpenseRows(true)}&lt;/section&gt;&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Favorite categories&lt;/h2&gt;&lt;span class=&quot;mh-section-link&quot;&gt;Reports&lt;/span&gt;&lt;/div&gt;${budgetRows()}&lt;/section&gt;&lt;/div&gt;${reminderCard()}&lt;section class=&quot;mh-panel&quot;&gt;&lt;div class=&quot;mh-section-head&quot;&gt;&lt;h2&gt;Recent expenses&lt;/h2&gt;&lt;/div&gt;${recentExpenseGroups()}&lt;/section&gt;`;
     } else {

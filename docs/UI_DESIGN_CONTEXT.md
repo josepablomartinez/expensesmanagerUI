@@ -287,7 +287,9 @@ MiHarina | Review (count) | Search | Reports | Add expense | Currency | Theme | 
 ### Mobile web and future Android
 
 - A compact top bar contains the MiHarina identity and global utilities.
-- The bottom navigation contains Home, Review, Search, and Reports.
+- The mobile top bar uses the compact MiHarina isotype and global utilities without an Add action.
+- The bottom bar contains Home, Review, a restrained centered Add Expense action, Search, and Reports.
+- Add Expense uses the same footprint and vertical alignment as the other bottom items, with a small soft-green plus marker and visible label rather than a raised floating-action treatment. Review retains greater workflow weight through its pending count and selected state.
 - Review displays a pending count when applicable.
 - Add expense remains easy to reach but should not receive more visual weight than Review.
 - Currency and theme quick controls must remain visible at all times.
@@ -636,3 +638,6 @@ The **Focused entry** direction is approved. Desktop uses a focused modal. Mobil
 - Corrected the Alert settings reference header to use the locked MiHarina bag icon, the active currency glyph, and the approved Theme, Alerts, and Settings line icons.
 - Completed the initial UI selection and interaction-specification phase; implementation handoff preparation is next.
 - Prepared the implementation handoff, including route mapping, reusable component boundaries, backend dependencies, phased acceptance checks, and a recommended first implementation slice. No production UI change has been authorized yet.
+- Corrected the Balanced overview so Add Expense remains reachable on mobile without crowding the top bar or appearing inside Today.
+- Adopted the UICard-inspired mobile structure: compact isotype and utilities above, with a restrained centered Add action between Review and Search below. Review retains the pending count and stronger workflow priority.
+- Normalized the centered Add action to the same footprint and baseline as the other mobile bottom items; removed the raised offset and oversized circular treatment.
