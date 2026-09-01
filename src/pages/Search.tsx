@@ -61,7 +61,7 @@ export default function Search() {
     setError(null);
     return api.expenses
       .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: 500 })
-      .then(setExpenses)
+      .then((res) => setExpenses(res.days.flatMap((d) => d.expenses)))
       .catch((err) => setError(err instanceof Error ? err.message : t.search.failedToLoad))
       .finally(() => setLoading(false));
   }, [from, to, categoryId]);

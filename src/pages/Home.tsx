@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
-import { api, type Category, type CreditCard, type Expense, type Settings } from "@/lib/api";
+import { api, type Category, type CreditCard, type DayExpenses, type Expense, type Settings } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
+import { formatMoney, formatExpenseAmount } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useLanguage } from "@/lib/language";
 import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
@@ -36,6 +36,8 @@ function formatDayLabel(iso: string, todayLabel: string, yesterdayLabel: string,
 interface DayGroup {
   iso: string;
   items: Expense[];
+  totalCrc: number;
+  totalUsd: number;
 }
 
 export default function Home() {
@@ -43,7 +45,7 @@ export default function Home() {
   const { language, t } = useLanguage();
   const locale = language === "es" ? "es-CR" : "en-US";
   const [daysBack, setDaysBack] = React.useState(PAGE_DAYS);
-  const [expenses, setExpenses] = React.useState<Expense[]>([]);
+  const [days, setDays] = React.useState<DayExpenses[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([]);
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
@@ -67,7 +69,7 @@ export default function Home() {
     const from = isoDate(addDays(new Date(), -(daysBack - 1)));
     return api.expenses
       .list({ from, to, limit: 500 })
-      .then(setExpenses)
+      .then((res) => setDays(res.days))
       .catch((err) => setError(err instanceof Error ? err.message : t.home.failedToLoad))
       .finally(() => setLoading(false));
   }, [daysBack]);
@@ -82,21 +84,17 @@ export default function Home() {
   useExpenseEvents(load);
 
   const groups = React.useMemo<DayGroup[]>(() => {
-    const byDate = new Map<string, Expense[]>();
-    for (const e of expenses) {
-      const day = e.date.slice(0, 10);
-      if (!byDate.has(day)) byDate.set(day, []);
-      byDate.get(day)!.push(e);
-    }
-    const days: DayGroup[] = [];
+    const byDate = new Map(days.map((d) => [d.date, d]));
+    const result: DayGroup[] = [];
     for (let i = 0; i < daysBack; i++) {
       const iso = isoDate(addDays(new Date(), -i));
-      days.push({ iso, items: byDate.get(iso) ?? [] });
+      const day = byDate.get(iso);
+      result.push({ iso, items: day?.expenses ?? [], totalCrc: day?.total_crc ?? 0, totalUsd: day?.total_usd ?? 0 });
     }
-    return days;
-  }, [expenses, daysBack]);
+    return result;
+  }, [days, daysBack]);
 
-  if (loading && expenses.length === 0) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
+  if (loading && days.length === 0) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
   if (error) return <p className="text-sm text-destructive">{error}</p>;
 
   return (
@@ -110,7 +108,7 @@ export default function Home() {
 
       {groups.map((group) => {
         const isToday = group.iso === isoDate(new Date());
-        const dayTotal = group.items.reduce((sum, e) => sum + expenseValue(e, currency), 0);
+        const dayTotal = currency === "USD" ? group.totalUsd : group.totalCrc;
 
         return (
           <Card key={group.iso} className="border-border/80 shadow-sm">

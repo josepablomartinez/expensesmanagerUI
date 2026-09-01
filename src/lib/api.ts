@@ -28,6 +28,13 @@ export interface Expense {
   payment_date: string;
 }
 
+export interface DayExpenses {
+  date: string;
+  total_crc: number;
+  total_usd: number;
+  expenses: Expense[];
+}
+
 export interface Category {
   id: number;
   category: string;
@@ -264,7 +271,7 @@ export const api = {
       if (params.entity) q.set("entity", params.entity);
       if (params.limit) q.set("limit", String(params.limit));
       if (params.offset) q.set("offset", String(params.offset));
-      return request<Expense[]>(`/expenses?${q}`);
+      return request<{ days: DayExpenses[] }>(`/expenses?${q}`);
     },
     updateCategory: (id: number, categoryId: number) =>
       request<{ id: number; category_id: number; reviewed: boolean }>(`/expenses/${id}`, {
