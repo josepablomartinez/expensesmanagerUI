@@ -70,6 +70,7 @@ export default function Settings() {
   const [email, setEmail] = React.useState("");
   const [exchangeRateSource, setExchangeRateSource] = React.useState("average");
   const [exchangeRateBankId, setExchangeRateBankId] = React.useState<number | null>(null);
+  const [creditCardExpenseDate, setCreditCardExpenseDate] = React.useState("event");
   const [selectedGroupName, setSelectedGroupName] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -82,6 +83,7 @@ export default function Settings() {
         setEmail(settings.email ?? "");
         setExchangeRateSource(settings.exchange_rate_source);
         setExchangeRateBankId(settings.exchange_rate_bank_id);
+        setCreditCardExpenseDate(settings.credit_card_expense_date);
         setCategories(cats);
         setBanks(bankList);
       })
@@ -133,6 +135,7 @@ export default function Settings() {
         email: email.trim() === "" ? null : email.trim(),
         exchange_rate_source: exchangeRateSource,
         exchange_rate_bank_id: exchangeRateSource === "bank" ? exchangeRateBankId : undefined,
+        credit_card_expense_date: creditCardExpenseDate,
       });
       setSaved(true);
     } catch (err) {
@@ -337,6 +340,24 @@ export default function Settings() {
               </Select>
             </div>
           )}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground" htmlFor="credit_card_expense_date">
+              {t.settings.creditCardExpenseDate}
+            </label>
+            <p className="text-xs text-muted-foreground">{t.settings.creditCardExpenseDateHelp}</p>
+            <Select
+              id="credit_card_expense_date"
+              value={creditCardExpenseDate}
+              onChange={(e) => {
+                setSaved(false);
+                setCreditCardExpenseDate(e.target.value);
+              }}
+              className="w-56"
+            >
+              <option value="event">{t.settings.creditCardExpenseDateEvent}</option>
+              <option value="due">{t.settings.creditCardExpenseDateDue}</option>
+            </Select>
+          </div>
         </CardContent>
       </Card>
 

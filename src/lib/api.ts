@@ -25,6 +25,7 @@ export interface Expense {
   card_last4?: string | null;
   flag_type: string | null;
   flag_reason: string | null;
+  payment_date: string;
 }
 
 export interface Category {
@@ -110,6 +111,7 @@ export interface Settings {
   language: string;
   exchange_rate_source: string;
   exchange_rate_bank_id: number | null;
+  credit_card_expense_date: string;
   updated_at: string;
 }
 
@@ -123,6 +125,7 @@ export interface UpdateSettingsRequest {
   language?: string;
   exchange_rate_source?: string;
   exchange_rate_bank_id?: number | null;
+  credit_card_expense_date?: string;
 }
 
 export interface Bank {

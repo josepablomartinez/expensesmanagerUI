@@ -181,6 +181,7 @@ export const es: Dictionary = {
       SINPE: "SINPE",
     },
     noAdditionalDetails: "Sin detalles adicionales.",
+    paymentDateLabel: "Se paga el",
   },
   dashboard: {
     greeting: {
@@ -246,6 +247,11 @@ export const es: Dictionary = {
     exchangeRateSourceAverage: "Promedio de todos los bancos",
     exchangeRateSourceBank: "Un banco específico",
     exchangeRateBank: "Banco",
+    creditCardExpenseDate: "Reporte de tarjetas de crédito",
+    creditCardExpenseDateHelp:
+      "Elegí si un gasto con tarjeta cuenta para el mes en que ocurrió, o para el mes en que realmente vence su pago.",
+    creditCardExpenseDateEvent: "El día en que ocurrió",
+    creditCardExpenseDateDue: "La fecha de vencimiento de la tarjeta",
   },
   creditCards: {
     title: "Tarjetas de crédito",
