@@ -63,9 +63,8 @@ The application shell is shared by every signed-in product route.
 
 ### Mobile
 
-- Compact top bar contains the locked isotype plus persistent Currency, Theme, Alerts, and Settings utilities.
-- The bottom bar contains Home, Review, a restrained centered Add Expense action, Search, and Reports.
-- Add is an accessible action rather than a destination. It uses the same footprint and baseline as the other bottom items, with a small soft-green plus marker and visible label; it must not visually outrank Review. Review retains its pending count and stronger selected treatment.
+- Compact top bar contains the locked identity plus persistent Currency, Theme, and Alerts utilities.
+- Bottom navigation contains Home, Review, Search, and Reports.
 - The selected Home item remains an ordinary selected navigation item, not a large pill or blob.
 - Add Expense remains reachable without outranking Review.
 
