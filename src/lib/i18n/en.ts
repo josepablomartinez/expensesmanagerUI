@@ -191,6 +191,7 @@ export const en = {
       SINPE: "SINPE",
     } as Record<string, string>,
     noAdditionalDetails: "No additional details.",
+    paymentDateLabel: "Pays on",
   },
   dashboard: {
     greeting: {
@@ -255,6 +256,11 @@ export const en = {
     exchangeRateSourceAverage: "Average of all banks",
     exchangeRateSourceBank: "A specific bank",
     exchangeRateBank: "Bank",
+    creditCardExpenseDate: "Credit card reporting",
+    creditCardExpenseDateHelp:
+      "Choose whether a card expense counts toward the month it happened in, or the month its payment is actually due.",
+    creditCardExpenseDateEvent: "The day it happened",
+    creditCardExpenseDateDue: "The card's due date",
   },
   creditCards: {
     title: "Credit cards",
