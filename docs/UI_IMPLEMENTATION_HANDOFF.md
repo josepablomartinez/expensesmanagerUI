@@ -1,6 +1,6 @@
 # MiHarina UI Implementation Handoff
 
-Last updated: 2026-08-31  
+Last updated: 2026-09-02  
 Status: Ready for human review and approval  
 Authority: Planning only; this document does not authorize production UI changes
 
@@ -16,6 +16,7 @@ The governing design decisions remain in [`UI_DESIGN_CONTEXT.md`](UI_DESIGN_CONT
 | --- | --- |
 | Identity and original component language | [`ui/UICard.png`](ui/UICard.png) |
 | Custom category iconography | [`ui/Iconografia.png`](ui/Iconografia.png) |
+| Bank-badge treatment exploration | [`ui/bank-badge-treatment-exploration.png`](ui/bank-badge-treatment-exploration.png) |
 | Balanced Home baseline | [`ui/mi-harina-balanced-overview.html`](ui/mi-harina-balanced-overview.html) |
 | Visual foundations | [`ui/mi-harina-foundations-gallery.html`](ui/mi-harina-foundations-gallery.html) |
 | Components | [`ui/mi-harina-components-gallery.html`](ui/mi-harina-components-gallery.html) |
@@ -34,20 +35,24 @@ The governing design decisions remain in [`UI_DESIGN_CONTEXT.md`](UI_DESIGN_CONT
 
 These files are the approved design artifacts. Their sample data is illustrative and is not a replacement for application data or existing calculations.
 
+The bank-badge exploration is a treatment reference rather than a source of official logo artwork. Its third-row solid circular badges define the preferred compact composition; the generated bank marks themselves must not be shipped as official assets.
+
 ## Route and screen map
 
-| Product area | Current route | Target route and treatment | Change |
-| --- | --- | --- | --- |
-| Home | `/` | `/` | Redesign with capped Today and Recent previews, favorite budgets, greeting, time icon, favorite-bank rate, and informative alerts. |
-| Activity | None | `/activity` | New contextual route from Home. Reverse chronological date groups; no filters or tabs. |
-| Review | `/review` | `/review` | Preserve queue behavior; apply approved desktop and mobile treatments. |
-| Search | `/search` | `/search` | Preserve all filters, sorting, totals, Review links, flags, details, and actions; adapt filters on mobile. |
-| Add Expense | `/add` | `/add` | Preserve route for direct access. Present as a focused modal on desktop and a framed focused screen on mobile. |
-| Reports | `/reports/*` | Existing report routes | Preserve all three existing reports and apply the Clear ranking hierarchy where appropriate. |
-| Alerts | None | `/alerts` | New full Alerts center. Desktop bell also opens a compact panel; mobile bell opens this route/view. |
-| Settings | `/settings/*` | Existing settings routes | Replace top submenu with desktop rail and mobile Settings index-to-detail navigation. |
+| Product area | Current UI route | Target UI route | Current data source | Change |
+| --- | --- | --- | --- | --- |
+| Home | `/` | `/` | Grouped `GET /expenses` plus existing supporting endpoints | Redesign with capped Today and Recent previews, favorite budgets, greeting, time icon, favorite-bank rate, and informative alerts. |
+| Activity | Not implemented | `/activity` | Grouped `GET /expenses` with a fixed `from`/`to` window | Add a contextual route from Home with reverse-chronological date groups and no filters or tabs. No separate Activity endpoint is needed. |
+| Review | `/review` | `/review` | Existing Review endpoints | Preserve queue behavior; apply approved desktop and mobile treatments. |
+| Search | `/search` | `/search` | Grouped `GET /expenses` with existing filters | Preserve all filters, sorting, totals, Review links, flags, details, and actions; flatten the grouped response and adapt filters on mobile. |
+| Add Expense | `/add` | `/add` | Existing expense-creation and supporting-list endpoints | Preserve route for direct access. Present as a focused modal on desktop and a framed focused screen on mobile. |
+| Reports | `/reports/*` | Existing report routes | Existing report endpoints | Preserve all three existing reports and apply the Clear ranking hierarchy where appropriate. |
+| Alerts | Not implemented | `/alerts` | Existing `/alerts` lifecycle endpoints plus `/events/anomaly` | Add a full Alerts center for duplicate-expense alerts. Desktop bell also opens a compact panel; mobile bell opens this route/view. Suspicious-expense alerts remain a future extension. |
+| Settings | `/settings/*` | Existing settings routes | Existing Settings endpoints, including anomaly-alert preferences | Replace top submenu with desktop rail and mobile Settings index-to-detail navigation. |
 
 Activity and Alerts are contextual destinations, not new primary navigation items. Categories remain accessible only through Settings.
+
+“Not implemented” in the current UI route column refers only to route availability. Activity already has its required backend data source in the grouped `GET /expenses` response.
 
 ## Global shell
 
@@ -85,10 +90,12 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 
 - `ExpenseList`: date grouping, empty groups, daily totals, and loading/empty/error states.
 - `ExpenseFrame`: merchant, category, time, amount, expand control, flag region, and actions.
-- `ExpenseActions`: Edit, Split, and Delete; always visible in the main frame on desktop and mobile.
+- `ExpenseActions`: Edit, Split, and Delete are always visible in the main frame on desktop and mobile. A conditional crossed-flag action is added when the expense is flagged.
 - `ExpenseFlag`: possible duplicate now and suspicious expense when available; persistent in collapsed and expanded states.
 - `ExpenseDetails`: an unlabeled frame directly below the corresponding expense.
 - `ExpenseDetailRow`: one full-width icon-and-value row per metadata item.
+- `BankBadge`: official locally stored bank artwork when available, otherwise the existing approved generic approximation; never a bank-code text badge. Compact contexts prefer the third-row solid circular treatment from the approved exploration.
+- `CardNetworkBadge`: official Visa, Mastercard, or American Express network artwork in the shared badge container.
 - `ExpenseDialogs`: reuse the current edit, split, delete, and destructive-confirmation behavior.
 
 ### Required behavior
@@ -98,6 +105,11 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 - Detail rows use spacing, not internal separator lines.
 - Available future metadata is appended as another `ExpenseDetailRow` without changing the main row.
 - Credit-card expenses add a localized `Pays on [date]` detail row when a calculated payment due date is available.
+- Payment identity follows the stable order **bank badge → card-network badge → masked last four digits**.
+- Bank artwork is resolved from the stable backend bank code, with legacy entity aliases normalized to that code. Official artwork takes precedence; the existing generic pictogram approximation is the fallback. Do not generate a bank short-code badge.
+- Every bank badge exposes the full bank name to assistive technology. Management and selection views also show the bank name visibly; compact expense details may use the accessible label and tooltip while retaining the icon-only layout.
+- Compact bank badges prefer a consistent circular brand-color field with an approved reversed/white official mark. When the official artwork is intended for a light background or does not pass contrast on the brand field, use the exploration's light neutral circular treatment instead.
+- Official bank and card-network artwork keeps its approved proportions and colors; it must not be stretched, arbitrarily recolored, or fetched remotely at runtime.
 - Direct actions do not depend on the details being expanded.
 - Destructive actions require explicit confirmation and retain a safe Cancel path.
 
@@ -188,7 +200,7 @@ Color must not be the only carrier of status. Warning and flag treatments also r
 - Current edit, split, and delete dialogs, subject to approved visual-state updates.
 - Current currency and theme state behavior.
 - Current ECharts integration and report calculations.
-- Current bank/card badge resolution, after visual review against the approved component treatment.
+- Current bank/card badge resolution, upgraded to prefer locally stored official bank artwork while retaining the existing generic approximation as fallback. Short-code badges are not used.
 - Existing language infrastructure; every changed or added label must be supplied in English and Spanish.
 
 The current generic wallet brand icon and generic Lucide category fallbacks are not approved substitutes for the locked MiHarina mark and custom category artwork.
@@ -200,7 +212,7 @@ The current generic wallet brand icon and generic Lucide category fallbacks are 
 | Home and Activity expense data | Available | `GET /expenses` now returns `{ days: [{ date, total_crc, total_usd, expenses }] }`. Reuse fixed `from`/`to` windows; no separate Activity endpoint or expense-level pagination is required. |
 | Favorite categories and saved currency | Available | Reuse Settings data. |
 | Favorite-bank rates | Available | Reuse banks, favorite-bank settings, and exchange-rate calls. |
-| Expense actions and flags | Mostly available | Preserve current duplicate flag. Suspicious-expense behavior remains future work. |
+| Expense actions and flags | Available for current scope | Preserve the current duplicate flag. `GET /events/anomaly` lists flagged expenses and `DELETE /events/anomaly/{id}` explicitly clears one expense's flag. Suspicious-expense behavior remains future work. The conditional crossed-flag action invokes this DELETE route after confirmation. |
 | Card payment date in expense details | Available | Each expense now includes `payment_date`; use it for the localized payment-date detail row so Home, Activity, and Search remain consistent. |
 | Review queue and approvals | Available | Existing endpoints support current workflow. |
 | Search | Available with response adaptation | Existing `GET /expenses` filters remain usable, but Search must flatten the grouped `days[].expenses` response and derive its result count and displayed total from the returned groups. |
@@ -208,26 +220,36 @@ The current generic wallet brand icon and generic Lucide category fallbacks are 
 | Existing reports | Available | Preserve the three audited endpoint families and current calculations. |
 | Credit-card reporting date | Available | Reuse `credit_card_expense_date`; expose it under Advanced and preserve the existing English and Spanish labels. |
 | Review pending count | Derivable | Initially derive from existing Review data; consider a compact count endpoint only if performance requires it. |
-| Alert settings | Not represented in current settings model | Backend must persist enable/disable values, lead days, and budget threshold before these controls are functional. |
-| Alerts center | Not available | Requires alert records, unread/read state, dismissal, resolution status, contextual target, de-duplication key, and timestamps. |
+| Alert settings | Available for current anomaly scope | `GET`/`PUT /settings` provide `alerts_enabled`, `duplicate_alerts_enabled`, and reserved `suspicious_alerts_enabled`. Only duplicate alerts are active in this release. |
+| Alerts center | Available for duplicate alerts | Use `GET /alerts`, `GET /alerts/unread-count`, `PATCH /alerts/{id}/read`, `POST /alerts/mark-all-read`, and `PATCH /alerts/{id}/dismiss`. The payload already provides type, severity, expense destination, localized template data, and lifecycle timestamps. |
 | Thirty-day Earlier retention | Not available | Requires backend lifecycle/retention behavior or an explicitly agreed client-storage alternative. Backend ownership is preferred. |
 | Period comparison | Not available | Deferred; requires separately scoped comparable-period data. |
 
-### Proposed alert contract for backend review
+### Audited alert contract
 
-This is an implementation requirement, not a final API specification:
+The current backend supports this release's duplicate-expense alert flow:
 
-- Alert identity and type.
-- Created/updated timestamps.
-- Read timestamp or unread state.
-- Dismissed and resolved timestamps or state.
-- Contextual destination and related entity identifier.
-- Condition/de-duplication key so repeated checks update one alert.
-- Current versus Earlier lifecycle.
-- Automatic deletion or exclusion after 30 days in Earlier.
-- Settings for card lead days, favorite-category threshold, duplicate notifications, and future suspicious notifications.
+- `GET /alerts?limit=50&offset=0` returns `{ current, earlier }`, ordered most-recent-first within each group.
+- `GET /alerts/unread-count` supplies the global bell count.
+- `PATCH /alerts/{id}/read` marks one alert read without changing its expense flag.
+- `POST /alerts/mark-all-read` marks all unread alerts read.
+- `PATCH /alerts/{id}/dismiss` moves an alert out of Current without changing its expense flag.
+- `GET /events/anomaly` returns the caller's currently flagged expenses for backfill and direct anomaly views.
+- `DELETE /events/anomaly/{id}` explicitly clears `flag_type` and `flag_reason` on that one expense and sets `resolved_at` on its related alert records. It does not clear the other expense in a duplicate pair.
+- `GET`/`PUT /settings` support global alerts, duplicate alerts, and a reserved suspicious-alert preference.
 
-Persistent expense flags remain owned by the expense/flag model; alert read or dismissal operations must never clear them.
+Current production alert type: `duplicate_expense`. The contract reserves `suspicious_expense`, but its detector and UI treatment are future work. Credit-card reminders and favorite-category budget alerts are outside this release's alert scope even where earlier visual references used them as examples.
+
+Persistent expense flags remain owned by the expense/anomaly model. Alert read or dismissal operations never clear them; only the explicit anomaly DELETE route unflags an expense. Thirty-day Earlier retention is not yet enforced by the backend.
+
+### Expense unflag action
+
+- Show a `flag-off` icon action only when an expense has `flag_type`.
+- Place it with the direct expense actions in the main expense frame so it remains reachable whether details are collapsed or expanded, on desktop and mobile.
+- Use localized accessible labels: **Clear expense flag** / **Quitar marca del gasto**. Do not use a bell icon because this action does not read, dismiss, or otherwise manage an alert.
+- Ask for confirmation that names the current flag before calling `DELETE /events/anomaly/{id}`; explain that only this expense is being unflagged and its related alert will be resolved.
+- On success, remove the flag treatment and action everywhere that expense is currently rendered, move/update its related alert state, and refresh the unread count if required by the returned state. On failure, retain the flag and show a non-blocking error.
+- The action must never call an alert read or dismiss route, and alert controls must never call the anomaly DELETE route.
 
 ## Implementation sequence
 
@@ -253,6 +275,7 @@ Exit check: every existing route remains reachable in both themes and at desktop
 ### Phase 2 — Shared expense components
 
 - Build `ExpenseFrame`, `ExpenseActions`, `ExpenseFlag`, `ExpenseDetails`, and `ExpenseDetailRow`.
+- Consolidate `BankBadge` and `CardNetworkBadge` into the shared expense/payment-detail system, including official-art priority, approximation fallback, and accessible bank names.
 - Adapt current dialogs and destructive confirmation.
 - Verify collapsed, expanded, flagged, loading, empty, and error states.
 
@@ -285,18 +308,18 @@ Exit check: keyboard, touch, validation, success, and cancellation flows work wi
 
 - Implement desktop rail and mobile index-to-detail navigation.
 - Migrate all four current sections without changing their ownership.
-- Add Alert settings presentation only when persistence is available, or clearly keep it behind a non-production feature boundary.
+- Add the persisted global and possible-duplicate alert controls. Keep the reserved suspicious-alert control out of the production UI until its detector is implemented.
 
 Exit check: every current setting remains reachable and save behavior is unchanged.
 
 ### Phase 7 — Alerts
 
 - Implement bell count, desktop panel, mobile/full Alerts center, Current/Earlier sections, contextual navigation, and lifecycle actions.
-- Integrate the approved alert settings.
+- Integrate the supported global and possible-duplicate alert settings.
 
-Dependency: backend alert storage and lifecycle contract must be approved and implemented first.
+Dependency status: satisfied for duplicate-expense alerts. Suspicious alerts and automatic thirty-day Earlier retention remain future backend work.
 
-Exit check: read, dismiss, resolve, de-duplicate, and retention behavior matches the approved model without altering expense flags.
+Exit check: list, unread count, read, mark-all-read, dismiss, contextual navigation, and explicit unflag/resolve behavior match the audited contract. Alert lifecycle actions must not alter expense flags except when the user explicitly invokes `DELETE /events/anomaly/{id}`. Automatic Earlier retention is deferred.
 
 ### Phase 8 — Reports
 

@@ -1,6 +1,6 @@
 # MiHarina UI Design Context
 
-Last updated: 2026-08-31  
+Last updated: 2026-09-02  
 Status: Initial UI design and interaction specification approved; implementation handoff is ready for human review
 
 ## Purpose of this document
@@ -335,6 +335,19 @@ Review status should normally be communicated with a count on the Review destina
 - Flags remain visible in both collapsed and expanded states.
 - Today's expenses do not repeat an Add action; manual entry remains available through the persistent navigation action.
 
+### Bank and card identity
+
+- The supplemental [`docs/ui/bank-badge-treatment-exploration.png`](ui/bank-badge-treatment-exploration.png) is retained as a composition and treatment reference, not as a source of production logo artwork.
+- Payment identity is presented consistently as **bank/issuer artwork → card-network artwork → masked last four digits**.
+- Visa, Mastercard, and American Express use their recognizable official network artwork.
+- Banks use official locally stored artwork whenever a suitable approved asset is available.
+- When official bank artwork is unavailable, retain the existing generic pictogram approximation as the fallback. Do not replace it with a bank short-code badge.
+- Resolve artwork primarily from the stable backend bank code; normalize legacy expense entity aliases to the same registry.
+- The preferred compact bank treatment is the exploration's third row: a consistent solid circular badge using the bank's brand-color field and an approved reversed/white mark.
+- If the official bank artwork is intended for a light background, lacks an approved reversed form, or does not meet contrast requirements on the brand field, use the exploration's light neutral circular treatment instead.
+- Preserve official proportions and approved colors. Artwork is not stretched, arbitrarily recolored, or loaded from a remote URL at runtime.
+- Every bank mark requires the full bank name as accessible text. Settings, selectors, and management lists show that name visibly; compact expense details may keep the icon-only composition only when the full name remains available through an accessible label and tooltip.
+
 ### Contextual Activity page
 
 - Activity is reached contextually from Home and is not added to primary desktop or mobile navigation.
@@ -369,23 +382,18 @@ The interactive [`docs/ui/mi-harina-alerts-behavior.html`](ui/mi-harina-alerts-b
 - Dismissing a duplicate or suspicious-expense alert never removes the persistent flag from the expense.
 - Resolving the underlying condition moves the alert to Earlier automatically.
 - Repeated checks update the existing alert for the same condition rather than creating daily duplicates.
-- Dismissed and resolved alerts remain in Earlier for 30 days.
+- The approved design target retains dismissed and resolved alerts in Earlier for 30 days. The current backend does not yet enforce this retention, so automatic expiry is deferred from the first Alerts implementation.
 
-Potential alert types include:
+Alert scope for the current implementation:
 
-- Credit-card payment date approaching
-- Favorite category approaching or exceeding its budget
 - Possible duplicate expense
 - Suspicious expense in a future version
 
+Credit-card payment reminders and favorite-category budget alerts appeared in earlier exploratory references but are outside this release's alert scope.
+
 ### Alert configuration
 
-Alert behavior is controlled through **Settings → Advanced**. The approved controls are:
-
-- Enable or disable credit-card payment reminders and choose how many days before payment the reminder appears.
-- Enable or disable favorite-category budget alerts and choose the approaching-budget threshold.
-- Enable or disable possible-duplicate notifications.
-- Future suspicious-expense notifications may extend this group when that feature exists.
+Alert behavior is controlled through **Settings → Advanced**. For this release, expose the global alerts preference and possible-duplicate notifications supported by the backend. The backend also reserves a suspicious-expense preference for the future detector. Credit-card reminder and favorite-category budget-warning controls are deferred with their corresponding alert types.
 
 These controls affect notification generation only. Disabling or dismissing a notification never removes an existing flag from an expense. The approved responsive reference is [`docs/ui/mi-harina-alert-settings.html`](ui/mi-harina-alert-settings.html).
 
@@ -402,6 +410,8 @@ A flagged expense must be visibly marked wherever it appears, including:
 - Review, when action is required
 
 Reading or dismissing an alert must not clear the corresponding expense flag. The flag remains until its underlying state is resolved or explicitly cleared.
+
+When an expense is flagged, its normal action group includes a conditional crossed-flag (`flag-off`) control for explicitly clearing that expense's flag. The control remains in the main expense frame with Edit, Split, and Delete on desktop and mobile; it is not hidden inside expanded details. It uses **Clear expense flag** / **Quitar marca del gasto**, requires confirmation, and calls `DELETE /events/anomaly/{id}`. A bell is not used because alert lifecycle and expense flagging are separate concerns.
 
 Suggested semantic treatments:
 
@@ -455,7 +465,7 @@ Approved system rules:
 - Navigation uses House, List checks, Search, and Column chart for Home, Review, Search, and Reports.
 - The contextual Activity destination uses History but does not enter primary navigation.
 - Display currency uses the active currency glyph, such as ₡ or $, rather than a generic wallet or money icon.
-- Expense actions use Chevron, Pencil, Split, and Trash for Expand, Edit, Split, and Delete.
+- Expense actions use Chevron, Pencil, Split, Trash, and conditional Flag off for Expand, Edit, Split, Delete, and explicit unflagging.
 - Possible duplicate uses Copy; the future suspicious-expense state uses Shield alert. Both retain a visible text label.
 - Alert semantics use Credit card for payment reminders, Triangle alert for approaching a budget, Circle alert for exceeding a budget, and Circle check for resolved state.
 - Salutation icons use Sun, Sunset, and Moon according to time of day.
@@ -659,3 +669,13 @@ The **Focused entry** direction is approved. Desktop uses a focused modal. Mobil
 - Recorded the revised `GET /expenses` contract: expenses are returned in date groups with CRC/USD daily totals and an expense-level `payment_date`.
 - Confirmed that this grouped endpoint supplies Home and Activity directly; the frontend adds missing empty dates within the requested window, and Search flattens the groups for its result presentation.
 - Removed the need for a separate Activity API and expense-level Activity pagination; older history can be requested in complete date windows.
+
+### 2026-09-02
+
+- Clarified the implementation handoff route map: Activity is a new UI route backed by the existing grouped `GET /expenses` endpoint, not a feature with a missing backend route.
+- Audited the local backend Alerts implementation and recorded the available list, unread-count, read, mark-all-read, dismiss, anomaly-list, and anomaly-unflag routes.
+- Narrowed the current Alerts release to possible-duplicate expenses; suspicious expenses remain the planned extension, while card-payment and favorite-category alert examples are deferred.
+- Confirmed that `DELETE /events/anomaly/{id}` clears the flag only on the selected expense and resolves its related alerts; reading or dismissing an alert never clears the expense flag.
+- Added a conditional crossed-flag action to every flagged expense frame. It explicitly unflags the selected expense after confirmation and remains semantically separate from alert read and dismiss controls.
+- Approved the payment-identity art direction: official local bank artwork when available, the current generic bank approximation as fallback, official card-network marks, and mandatory accessible bank names. Bank short-code badges are not used.
+- Added the generated bank-art exploration to the repository as non-production reference material and approved its third-row solid circular treatment for compact bank badges, with the light neutral circle retained when official artwork or contrast requires it.

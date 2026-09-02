@@ -1342,6 +1342,17 @@ if (window.lucide) window.lucide.createIcons({attrs:{width:16,height:16}});
   window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
 })();
 &lt;/script&gt;
+&lt;script&gt;
+document.querySelectorAll(&#x27;.mhk-exp&#x27;).forEach((expense) =&gt; {
+  if (!expense.querySelector(&#x27;em&#x27;)) return;
+  const actions = expense.querySelector(&#x27;.mhk-actions&#x27;);
+  if (!actions || actions.querySelector(&#x27;[data-lucide=&quot;flag-off&quot;]&#x27;)) return;
+  const clearFlag = document.createElement(&#x27;i&#x27;);
+  clearFlag.setAttribute(&#x27;data-lucide&#x27;, &#x27;flag-off&#x27;);
+  clearFlag.setAttribute(&#x27;aria-label&#x27;, &#x27;Clear expense flag&#x27;);
+  actions.insertBefore(clearFlag, actions.lastElementChild);
+});
+&lt;/script&gt;
 &lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 (() =&gt; {

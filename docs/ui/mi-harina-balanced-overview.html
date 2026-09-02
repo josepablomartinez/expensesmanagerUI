@@ -1873,6 +1873,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;div class=&quot;mh-expense-actions&quot; aria-label=&quot;Expense actions&quot;&gt;
             &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Edit expense&quot; data-tooltip=&quot;Edit&quot;&gt;${icon(&#x27;pencil&#x27;)}&lt;/button&gt;
             &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Split expense&quot; data-tooltip=&quot;Split&quot;&gt;${icon(&#x27;split&#x27;)}&lt;/button&gt;
+            ${flagged ? `&lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Clear expense flag&quot; data-tooltip=&quot;Clear flag&quot;&gt;${icon(&#x27;flag-off&#x27;)}&lt;/button&gt;` : &#x27;&#x27;}
             &lt;button type=&quot;button&quot; class=&quot;mh-icon-action&quot; aria-label=&quot;Delete expense&quot; data-tooltip=&quot;Delete&quot;&gt;${icon(&#x27;trash-2&#x27;)}&lt;/button&gt;
           &lt;/div&gt;
         &lt;/div&gt;
