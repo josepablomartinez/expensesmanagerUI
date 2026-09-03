@@ -1,6 +1,6 @@
 # MiHarina UI Implementation Handoff
 
-Last updated: 2026-09-02  
+Last updated: 2026-09-03
 Status: Ready for human review and approval  
 Authority: Planning only; this document does not authorize production UI changes
 
@@ -137,7 +137,7 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 
 ### Review
 
-- Preserve pending count, batch selection, Approve selected, Approve all, category selection, confidence, direct approval, and deep links.
+- Preserve pending count, the Bulk review button and workflow, batch selection, Approve selected, Approve all, category selection, confidence, direct approval, and deep links.
 - The learning option label is exactly `Always` in English, with the approved Spanish resource reviewed alongside it.
 - Do not restore the removed explanatory queue subtitle.
 - Mobile layout must not clip or require horizontal scrolling.
@@ -156,7 +156,8 @@ Home, Activity, Search, and relevant Review contexts must share one expense pres
 - Mobile uses the same focused hierarchy inside a framed MiHarina application screen.
 - Omit the redundant `Record new expense` subtitle.
 - Payment method and Note expand inline without opening a second screen.
-- Preserve current submission and validation behavior while exposing existing credit-card support through the approved optional section.
+- Manual entry supports Cash and SINPE only. Do not expose credit-card selection in Add Expense.
+- Preserve current submission and validation behavior.
 
 ### Settings
 
@@ -216,7 +217,7 @@ The current generic wallet brand icon and generic Lucide category fallbacks are 
 | Card payment date in expense details | Available | Each expense now includes `payment_date`; use it for the localized payment-date detail row so Home, Activity, and Search remain consistent. |
 | Review queue and approvals | Available | Existing endpoints support current workflow. |
 | Search | Available with response adaptation | Existing `GET /expenses` filters remain usable, but Search must flatten the grouped `days[].expenses` response and derive its result count and displayed total from the returned groups. |
-| Add Expense | Available | Create already accepts payment-related data; use current credit-card list for selection. |
+| Add Expense | Available | Preserve the current manual Cash/SINPE creation flow. Credit cards are not selectable in manual Add Expense. |
 | Existing reports | Available | Preserve the three audited endpoint families and current calculations. |
 | Credit-card reporting date | Available | Reuse `credit_card_expense_date`; expose it under Advanced and preserve the existing English and Spanish labels. |
 | Review pending count | Derivable | Initially derive from existing Review data; consider a compact count endpoint only if performance requires it. |
@@ -293,13 +294,14 @@ Exit check: Home remains stable as expense volume grows; Activity provides compl
 
 - Migrate both screens to approved responsive compositions and shared expense primitives.
 - Preserve every audited filter, sorting, total, batch, confidence, Review-link, and approval behavior.
+- Verify the Bulk review button and workflow independently from Approve selected and Approve all.
 
 Exit check: functional parity is confirmed in English/Spanish and desktop/mobile.
 
 ### Phase 5 — Add Expense
 
 - Implement focused desktop modal and framed mobile form.
-- Add inline optional Payment method and Note disclosure.
+- Add inline optional Payment method and Note disclosure; Payment method contains Cash and SINPE only.
 - Preserve validation, submission, and existing direct-route access.
 
 Exit check: keyboard, touch, validation, success, and cancellation flows work without losing entered data unexpectedly.

@@ -521,7 +521,7 @@ The interactive [`docs/ui/mi-harina-search-screens.html`](ui/mi-harina-search-sc
 
 ### Approved Desktop Review queue
 
-The interactive [`docs/ui/mi-harina-desktop-review.html`](ui/mi-harina-desktop-review.html) records the approved desktop treatment for Review. It preserves pending count, batch selection, Approve selected, Approve all, per-expense category selection, confidence, direct approval, and the learning choice. The learning choice uses the compact label **Always**; the redundant explanatory queue subtitle is omitted.
+The interactive [`docs/ui/mi-harina-desktop-review.html`](ui/mi-harina-desktop-review.html) records the approved desktop treatment for Review. It preserves pending count, the Bulk review button and workflow, batch selection, Approve selected, Approve all, per-expense category selection, confidence, direct approval, and the learning choice. Bulk review is tested independently from Approve selected and Approve all. The learning choice uses the compact label **Always**; the redundant explanatory queue subtitle is omitted.
 
 ### Approved Categories access
 
@@ -571,7 +571,7 @@ The interactive [`docs/ui/mi-harina-add-expense-gallery.html`](ui/mi-harina-add-
 2. **Context panel:** a desktop side panel and mobile sheet that preserve more of the originating Home context.
 3. **Full page:** a dedicated form page on both platforms with all fields visible.
 
-The **Focused entry** direction is approved. Desktop uses a focused modal. Mobile retains the same field hierarchy inside the recognizable MiHarina application frame without showing the Home greeting behind the form. The Payment method and Note section expands inline within the current form, and the redundant explanatory subtitle beneath Add Expense is omitted.
+The **Focused entry** direction is approved. Desktop uses a focused modal. Mobile retains the same field hierarchy inside the recognizable MiHarina application frame without showing the Home greeting behind the form. The Payment method and Note section expands inline within the current form, and the redundant explanatory subtitle beneath Add Expense is omitted. Manual entry preserves its Cash and SINPE payment methods only; credit cards are not selectable in Add Expense.
 
 ## Decision log
 
@@ -679,3 +679,8 @@ The **Focused entry** direction is approved. Desktop uses a focused modal. Mobil
 - Added a conditional crossed-flag action to every flagged expense frame. It explicitly unflags the selected expense after confirmation and remains semantically separate from alert read and dismiss controls.
 - Approved the payment-identity art direction: official local bank artwork when available, the current generic bank approximation as fallback, official card-network marks, and mandatory accessible bank names. Bank short-code badges are not used.
 - Added the generated bank-art exploration to the repository as non-production reference material and approved its third-row solid circular treatment for compact bank badges, with the light neutral circle retained when official artwork or contrast requires it.
+
+### 2026-09-03
+
+- Clarified that manual Add Expense supports Cash and SINPE only; credit-card selection is not part of manual entry.
+- Added the existing Bulk review button and workflow as an explicit Review parity and testing requirement, separate from Approve selected and Approve all.
