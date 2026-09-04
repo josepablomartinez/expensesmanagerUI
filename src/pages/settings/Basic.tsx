@@ -67,9 +67,6 @@ export default function Basic() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [exchangeRateSource, setExchangeRateSource] = React.useState("average");
-  const [exchangeRateBankId, setExchangeRateBankId] = React.useState<number | null>(null);
-  const [creditCardExpenseDate, setCreditCardExpenseDate] = React.useState("event");
   const [selectedGroupName, setSelectedGroupName] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -80,9 +77,6 @@ export default function Basic() {
         setFirstName(settings.first_name ?? "");
         setLastName(settings.last_name ?? "");
         setEmail(settings.email ?? "");
-        setExchangeRateSource(settings.exchange_rate_source);
-        setExchangeRateBankId(settings.exchange_rate_bank_id);
-        setCreditCardExpenseDate(settings.credit_card_expense_date);
         setCategories(cats);
         setBanks(bankList);
       })
@@ -132,9 +126,8 @@ export default function Basic() {
         first_name: firstName.trim() === "" ? null : firstName.trim(),
         last_name: lastName.trim() === "" ? null : lastName.trim(),
         email: email.trim() === "" ? null : email.trim(),
-        exchange_rate_source: exchangeRateSource,
-        exchange_rate_bank_id: exchangeRateSource === "bank" ? exchangeRateBankId : undefined,
-        credit_card_expense_date: creditCardExpenseDate,
+        display_currency: currency,
+        language,
       });
       setSaved(true);
     } catch (err) {
@@ -155,7 +148,7 @@ export default function Basic() {
           <CardTitle>{t.settings.personalInfo}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 pt-0">
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <div className="flex flex-1 flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground" htmlFor="first_name">
                 {t.settings.firstName}
@@ -204,7 +197,7 @@ export default function Basic() {
       </Card>
 
       <Card>
-        <CardContent className="flex flex-wrap gap-6 pt-4">
+        <CardContent className="flex flex-col gap-4 pt-4 sm:flex-row sm:gap-6">
           <div className="flex flex-1 flex-col gap-1.5">
             <label className="text-xs font-medium text-muted-foreground" htmlFor="currency_display">
               {t.settings.currencyDisplay}
@@ -285,24 +278,6 @@ export default function Basic() {
               ))}
             </div>
           )}
-          <div className="mt-5 flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-muted-foreground" htmlFor="credit_card_expense_date">
-              {t.settings.creditCardExpenseDate}
-            </label>
-            <p className="text-xs text-muted-foreground">{t.settings.creditCardExpenseDateHelp}</p>
-            <Select
-              id="credit_card_expense_date"
-              value={creditCardExpenseDate}
-              onChange={(e) => {
-                setSaved(false);
-                setCreditCardExpenseDate(e.target.value);
-              }}
-              className="w-56"
-            >
-              <option value="event">{t.settings.creditCardExpenseDateEvent}</option>
-              <option value="due">{t.settings.creditCardExpenseDateDue}</option>
-            </Select>
-          </div>
         </CardContent>
       </Card>
 

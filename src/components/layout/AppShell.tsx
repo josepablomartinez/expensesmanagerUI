@@ -149,7 +149,7 @@ export function AppShell() {
               aria-label={t.nav.settings}
               className={({ isActive }) =>
                 cn(
-                  "hidden h-9 w-9 items-center justify-center rounded-md md:flex",
+                  "flex h-9 w-9 items-center justify-center rounded-md",
                   isActive ? "bg-secondary text-secondary-foreground" : "hover:bg-accent",
                 )
               }

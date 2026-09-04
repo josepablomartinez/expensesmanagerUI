@@ -119,6 +119,9 @@ export interface Settings {
   exchange_rate_source: string;
   exchange_rate_bank_id: number | null;
   credit_card_expense_date: string;
+  alerts_enabled: boolean;
+  duplicate_alerts_enabled: boolean;
+  suspicious_alerts_enabled: boolean;
   updated_at: string;
 }
 
@@ -133,6 +136,8 @@ export interface UpdateSettingsRequest {
   exchange_rate_source?: string;
   exchange_rate_bank_id?: number | null;
   credit_card_expense_date?: string;
+  alerts_enabled?: boolean;
+  duplicate_alerts_enabled?: boolean;
 }
 
 export interface Bank {

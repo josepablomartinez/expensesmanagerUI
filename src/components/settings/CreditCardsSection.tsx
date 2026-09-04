@@ -68,7 +68,7 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
 
   return (
     <div className="flex flex-col gap-2 border-t border-border py-3 first:border-t-0">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-1.5">
           <BankBadge codeOrName={card.bank_name} />
           <CardNetworkBadge type={card.card_type} />
@@ -79,12 +79,14 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
             {!card.active && <span className="text-xs font-normal text-muted-foreground">{t.creditCards.inactive}</span>}
           </span>
         </div>
-        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing((e) => !e)}>
-          <Pencil className="h-3.5 w-3.5" />
-        </Button>
-        <Button size="sm" variant="outline" disabled={saving} onClick={handleToggleActive}>
-          {card.active ? t.creditCards.deactivate : t.creditCards.activate}
-        </Button>
+        <div className="ml-9 flex items-center gap-2 sm:ml-0">
+          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing((e) => !e)} aria-label={t.creditCards.edit}>
+            <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+          </Button>
+          <Button size="sm" variant="outline" disabled={saving} onClick={handleToggleActive}>
+            {card.active ? t.creditCards.deactivate : t.creditCards.activate}
+          </Button>
+        </div>
       </div>
 
       {editing ? (

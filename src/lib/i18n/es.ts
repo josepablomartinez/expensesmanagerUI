@@ -195,11 +195,19 @@ export const es: Dictionary = {
     },
   },
   settingsLayout: {
+    sectionsLabel: "Secciones de ajustes",
+    backToSettings: "Volver a Ajustes",
     tabs: {
       basic: "Básico",
       creditCards: "Tarjetas de crédito",
       categories: "Categorías",
       advanced: "Avanzado",
+    },
+    descriptions: {
+      basic: "Información personal, visualización y favoritos",
+      creditCards: "Tarjetas, límites y fechas de pago",
+      categories: "Categorías y subcategorías",
+      advanced: "Tipos de cambio, reportes y alertas",
     },
   },
   budgetVsActual: {
@@ -316,13 +324,21 @@ export const es: Dictionary = {
     exchangeRateSourceBank: "Un banco específico",
     exchangeRateBank: "Banco",
     creditCardExpenseDate: "Reporte de tarjetas de crédito",
+    expenseDate: "Fecha del gasto",
     creditCardExpenseDateHelp:
       "Elegí si un gasto con tarjeta cuenta para el mes en que ocurrió, o para el mes en que realmente vence su pago.",
     creditCardExpenseDateEvent: "El día en que ocurrió",
     creditCardExpenseDateDue: "La fecha de vencimiento de la tarjeta",
+    alertSettings: "Alertas",
+    alertsEnabled: "Activar alertas",
+    alertsEnabledHelp: "Permite que MiHarina genere las notificaciones disponibles.",
+    duplicateAlerts: "Alertas de posibles duplicados",
+    duplicateAlertsHelp: "Notifica cuando un gasto podría estar duplicado.",
+    alertFlagsNote: "Cambiar esto no quita las marcas de duplicado que ya tienen los gastos.",
   },
   creditCards: {
     title: "Tarjetas de crédito",
+    edit: "Editar tarjeta",
     noCardsYet: "Aún no hay tarjetas de crédito.",
     noBanksYet:
       "Aún no hay bancos registrados — los bancos se crean automáticamente a partir del tipo de cambio, así que agrega uno primero.",

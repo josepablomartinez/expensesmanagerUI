@@ -6,7 +6,7 @@ import Activity from "@/pages/Activity";
 import Search from "@/pages/Search";
 import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
-import SettingsLayout from "@/pages/settings/SettingsLayout";
+import SettingsLayout, { SettingsIndex } from "@/pages/settings/SettingsLayout";
 import SettingsBasic from "@/pages/settings/Basic";
 import SettingsCreditCards from "@/pages/settings/CreditCards";
 import SettingsCategories from "@/pages/settings/Categories";
@@ -30,7 +30,7 @@ export default function App() {
         <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />
         <Route path="/settings" element={<SettingsLayout />}>
-          <Route index element={<Navigate to="basic" replace />} />
+          <Route index element={<SettingsIndex />} />
           <Route path="basic" element={<SettingsBasic />} />
           <Route path="credit-cards" element={<SettingsCreditCards />} />
           <Route path="categories" element={<SettingsCategories />} />

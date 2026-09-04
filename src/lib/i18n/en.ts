@@ -198,11 +198,19 @@ export const en = {
     },
   },
   settingsLayout: {
+    sectionsLabel: "Settings sections",
+    backToSettings: "Back to Settings",
     tabs: {
       basic: "Basic",
       creditCards: "Credit cards",
       categories: "Categories",
       advanced: "Advanced",
+    },
+    descriptions: {
+      basic: "Personal info, display, and favorites",
+      creditCards: "Cards, limits, and payment dates",
+      categories: "Categories and subcategories",
+      advanced: "Exchange rates, reporting, and alerts",
     },
   },
   budgetVsActual: {
@@ -319,13 +327,21 @@ export const en = {
     exchangeRateSourceBank: "A specific bank",
     exchangeRateBank: "Bank",
     creditCardExpenseDate: "Credit card reporting",
+    expenseDate: "Expense date",
     creditCardExpenseDateHelp:
       "Choose whether a card expense counts toward the month it happened in, or the month its payment is actually due.",
     creditCardExpenseDateEvent: "The day it happened",
     creditCardExpenseDateDue: "The card's due date",
+    alertSettings: "Alerts",
+    alertsEnabled: "Enable alerts",
+    alertsEnabledHelp: "Allow MiHarina to generate supported notifications.",
+    duplicateAlerts: "Possible duplicate alerts",
+    duplicateAlertsHelp: "Notify when an expense may be a duplicate.",
+    alertFlagsNote: "Changing this does not clear duplicate flags already attached to expenses.",
   },
   creditCards: {
     title: "Credit cards",
+    edit: "Edit card",
     noCardsYet: "No credit cards yet.",
     noBanksYet:
       "No banks on file yet — banks are created automatically from exchange-rate data, so add one there first.",
