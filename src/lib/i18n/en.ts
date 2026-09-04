@@ -63,8 +63,16 @@ export const en = {
     recentExpenses: "Recent expenses",
     noExpensesToday: "There are no expenses for today.",
     noExpensesThisDay: "No expenses this day.",
-    seeMore: "See more",
+    viewAllExpenses: "View all expenses",
     failedToLoad: "Failed to load",
+  },
+  activity: {
+    title: "Activity",
+    backHome: "Home",
+    noExpensesThisDay: "There are no expenses for this day.",
+    showOlder: "Show older activity",
+    loadingOlder: "Loading older activity…",
+    failedToLoad: "Failed to load activity",
   },
   login: {
     signIn: "Sign in",
@@ -206,10 +214,13 @@ export const en = {
     },
     exchangeRate: {
       noRateData: "No rate data for your favorite banks yet.",
+      showMore: "Show another favorite bank",
+      showLess: "Hide additional favorite banks",
     },
     favoriteCategories: {
       title: "Favorite categories — this month",
       noData: "No data for your favorite categories yet.",
+      reports: "Reports",
     },
   },
   dialogs: {

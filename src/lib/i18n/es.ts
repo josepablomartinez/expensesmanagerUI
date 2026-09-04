@@ -60,8 +60,16 @@ export const es: Dictionary = {
     recentExpenses: "Gastos recientes",
     noExpensesToday: "No hay gastos hoy.",
     noExpensesThisDay: "No hay gastos ese día.",
-    seeMore: "Ver más",
+    viewAllExpenses: "Ver todos los gastos",
     failedToLoad: "Error al cargar",
+  },
+  activity: {
+    title: "Actividad",
+    backHome: "Inicio",
+    noExpensesThisDay: "No hay gastos para este día.",
+    showOlder: "Mostrar actividad anterior",
+    loadingOlder: "Cargando actividad anterior…",
+    failedToLoad: "No se pudo cargar la actividad",
   },
   login: {
     signIn: "Iniciar sesión",
@@ -203,10 +211,13 @@ export const es: Dictionary = {
     },
     exchangeRate: {
       noRateData: "Aún no hay tipo de cambio para tus bancos favoritos.",
+      showMore: "Mostrar otro banco favorito",
+      showLess: "Ocultar bancos favoritos adicionales",
     },
     favoriteCategories: {
       title: "Categorías favoritas — este mes",
       noData: "Aún no hay datos para tus categorías favoritas.",
+      reports: "Reportes",
     },
   },
   dialogs: {

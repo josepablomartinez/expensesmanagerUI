@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Flame } from "lucide-react";
+import { ArrowRight, Flame } from "lucide-react";
 import { api, type BudgetVsActual } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
@@ -44,8 +44,16 @@ export function FavoriteCategoriesWidget({ favoriteCategoryIds }: { favoriteCate
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between gap-3 space-y-0">
         <CardTitle>{t.dashboard.favoriteCategories.title}</CardTitle>
+        <button
+          type="button"
+          onClick={() => navigate("/reports/budget-vs-actual")}
+          className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+        >
+          {t.dashboard.favoriteCategories.reports}
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 pt-0">
         {loading ? (

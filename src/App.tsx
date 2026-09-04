@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
+import Activity from "@/pages/Activity";
 import Search from "@/pages/Search";
 import AddExpense from "@/pages/AddExpense";
 import Review from "@/pages/Review";
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route element={<AppShell />}>
         <Route index element={<Home />} />
+        <Route path="/activity" element={<Activity />} />
         <Route path="/search" element={<Search />} />
         <Route path="/add" element={<AddExpense />} />
         <Route path="/review" element={<Review />} />

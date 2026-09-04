@@ -19,22 +19,38 @@ export interface ExpenseEvent {
   flag_type?: string | null;
 }
 
-// Subscribes to GET /events (SSE) for the component's lifetime and calls
-// onEvent for each notification. EventSource reconnects on drop natively,
-// so callers don't need their own reconnect logic.
+const listeners = new Set<(event: ExpenseEvent) => void>();
+let sharedSource: EventSource | null = null;
+
+function ensureSharedSource() {
+  if (sharedSource) return;
+  sharedSource = new EventSource(`${API_URL}/events`);
+  sharedSource.onmessage = (message) => {
+    try {
+      const event = JSON.parse(message.data) as ExpenseEvent;
+      listeners.forEach((listener) => listener(event));
+    } catch {
+      // Malformed payload -- drop it; the next event still gets through.
+    }
+  };
+}
+
+// Components in one browser tab share a single SSE connection. This avoids
+// page requests being starved by several long-lived connections to the API.
 export function useExpenseEvents(onEvent: (event: ExpenseEvent) => void) {
   const onEventRef = React.useRef(onEvent);
   onEventRef.current = onEvent;
 
   React.useEffect(() => {
-    const source = new EventSource(`${API_URL}/events`);
-    source.onmessage = (e) => {
-      try {
-        onEventRef.current(JSON.parse(e.data) as ExpenseEvent);
-      } catch {
-        // malformed payload -- drop it, next event still gets through
+    const listener = (event: ExpenseEvent) => onEventRef.current(event);
+    listeners.add(listener);
+    ensureSharedSource();
+    return () => {
+      listeners.delete(listener);
+      if (listeners.size === 0) {
+        sharedSource?.close();
+        sharedSource = null;
       }
     };
-    return () => source.close();
   }, []);
 }

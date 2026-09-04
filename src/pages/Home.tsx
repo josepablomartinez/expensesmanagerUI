@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { api, type Category, type CreditCard, type DayExpenses, type Expense, type Settings } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatMoney } from "@/lib/format";
@@ -6,7 +8,6 @@ import { useCurrency } from "@/lib/currency";
 import { useLanguage } from "@/lib/language";
 import { localISODate as isoDate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
@@ -16,7 +17,7 @@ import { ExchangeRateWidget } from "@/components/dashboard/ExchangeRateWidget";
 import { FavoriteCategoriesWidget } from "@/components/dashboard/FavoriteCategoriesWidget";
 import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
 
-const PAGE_DAYS = 7;
+const HOME_WINDOW_DAYS = 30;
 
 function addDays(d: Date, n: number) {
   const copy = new Date(d);
@@ -24,25 +25,9 @@ function addDays(d: Date, n: number) {
   return copy;
 }
 
-function formatDayLabel(iso: string, todayLabel: string, yesterdayLabel: string, locale: string) {
-  if (iso === isoDate(new Date())) return todayLabel;
-  if (iso === isoDate(addDays(new Date(), -1))) return yesterdayLabel;
-  const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(locale, { month: "long", day: "numeric" });
-}
-
-interface DayGroup {
-  iso: string;
-  items: Expense[];
-  totalCrc: number;
-  totalUsd: number;
-}
-
 export default function Home() {
   const { currency } = useCurrency();
-  const { language, t } = useLanguage();
-  const locale = language === "es" ? "es-CR" : "en-US";
-  const [daysBack, setDaysBack] = React.useState(PAGE_DAYS);
+  const { t } = useLanguage();
   const [days, setDays] = React.useState<DayExpenses[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([]);
@@ -65,13 +50,13 @@ export default function Home() {
     setLoading(true);
     setError(null);
     const to = isoDate(new Date());
-    const from = isoDate(addDays(new Date(), -(daysBack - 1)));
+    const from = isoDate(addDays(new Date(), -(HOME_WINDOW_DAYS - 1)));
     return api.expenses
       .list({ from, to, limit: 500 })
       .then((res) => setDays(res.days))
       .catch((err) => setError(err instanceof Error ? err.message : t.home.failedToLoad))
       .finally(() => setLoading(false));
-  }, [daysBack]);
+  }, [t.home.failedToLoad]);
 
   React.useEffect(() => {
     load();
@@ -82,56 +67,41 @@ export default function Home() {
   // at when a card charge comes in.
   useExpenseEvents(load);
 
-  const groups = React.useMemo<DayGroup[]>(() => {
-    const byDate = new Map(days.map((d) => [d.date, d]));
-    const result: DayGroup[] = [];
-    for (let i = 0; i < daysBack; i++) {
-      const iso = isoDate(addDays(new Date(), -i));
-      const day = byDate.get(iso);
-      result.push({ iso, items: day?.expenses ?? [], totalCrc: day?.total_crc ?? 0, totalUsd: day?.total_usd ?? 0 });
-    }
-    return result;
-  }, [days, daysBack]);
+  const todayIso = isoDate(new Date());
+  const today = days.find((day) => day.date === todayIso);
+  const todayExpenses = today?.expenses.slice(0, 3) ?? [];
+  const recentExpenses = days
+    .filter((day) => day.date !== todayIso)
+    .flatMap((day) => day.expenses)
+    .slice(0, 3);
+  const todayTotal = currency === "USD" ? (today?.total_usd ?? 0) : (today?.total_crc ?? 0);
 
   if (loading && days.length === 0) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
   if (error) return <p className="text-sm text-destructive">{error}</p>;
 
   return (
     <div className="flex flex-col gap-6">
-      <Greeting name={settings?.first_name} />
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <Greeting name={settings?.first_name} />
+        <ExchangeRateWidget favoriteBanks={settings?.favorite_banks ?? []} />
+      </div>
 
-      <ExchangeRateWidget favoriteBanks={settings?.favorite_banks ?? []} />
-      <FavoriteCategoriesWidget favoriteCategoryIds={settings?.favorite_category_ids ?? []} />
-
-      <h2 className="text-sm font-semibold text-muted-foreground">{t.home.recentExpenses}</h2>
-
-      {groups.map((group) => {
-        const isToday = group.iso === isoDate(new Date());
-        const dayTotal = currency === "USD" ? group.totalUsd : group.totalCrc;
-
-        return (
-          <Card key={group.iso} className="border-border/80 shadow-sm">
-            <CardContent className="flex flex-col gap-3 pt-4">
-              <div className="flex items-baseline justify-between border-b border-border pb-2">
-                <h2 className="text-sm font-semibold text-foreground">
-                  {formatDayLabel(group.iso, t.home.today, t.home.yesterday, locale)}
-                </h2>
-                {group.items.length > 0 && (
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {formatMoney(dayTotal, currency)}
-                  </span>
-                )}
-              </div>
-
-              {group.items.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  {isToday ? t.home.noExpensesToday : t.home.noExpensesThisDay}
-                </p>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {group.items.map((expense) => (
+      <div className="grid items-start gap-6 md:grid-cols-2">
+        <Card className="border-border/80 shadow-sm">
+          <CardContent className="flex flex-col gap-3 pt-4">
+            <div className="flex items-baseline justify-between border-b border-border pb-2">
+              <h2 className="text-sm font-semibold text-foreground">{t.home.today}</h2>
+              {todayExpenses.length > 0 && (
+                <span className="text-xs font-medium text-muted-foreground">{formatMoney(todayTotal, currency)}</span>
+              )}
+            </div>
+            {todayExpenses.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t.home.noExpensesToday}</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {todayExpenses.map((expense, index) => (
+                  <div key={expense.id} className={index === 2 ? "hidden md:block" : undefined}>
                     <ExpenseFrame
-                      key={expense.id}
                       expense={expense}
                       creditCards={creditCards}
                       expanded={expandedId === expense.id}
@@ -140,26 +110,53 @@ export default function Home() {
                       onSplit={() => setSplitTarget(expense)}
                       onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
                       onDelete={() => setDeleteTarget(expense)}
-                      status={
-                        !expense.reviewed && expense.confidence != null ? (
-                          <span className="rounded-full border border-border px-2 py-0.5 text-xs">
-                            {t.common.confidencePercent(Math.round(expense.confidence * 100))}
-                          </span>
-                        ) : undefined
-                      }
                       className="border-0 bg-secondary/40"
                     />
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
+                  </div>
+                ))}
+              </div>
+            )}
+            <Link to="/activity" className="flex items-center justify-end gap-1 text-sm font-medium text-primary hover:underline">
+              {t.home.viewAllExpenses}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </CardContent>
+        </Card>
 
-      <Button variant="outline" onClick={() => setDaysBack((d) => d + PAGE_DAYS)} disabled={loading}>
-        {loading ? t.common.loading : t.home.seeMore}
-      </Button>
+        <FavoriteCategoriesWidget favoriteCategoryIds={settings?.favorite_category_ids ?? []} />
+      </div>
+
+      <Card className="border-border/80 shadow-sm">
+        <CardContent className="flex flex-col gap-3 pt-4">
+          <h2 className="border-b border-border pb-2 text-sm font-semibold text-foreground">{t.home.recentExpenses}</h2>
+          {recentExpenses.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t.home.noExpensesThisDay}</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {recentExpenses.map((expense, index) => (
+                <div key={expense.id} className={index === 2 ? "hidden md:block" : undefined}>
+                  <ExpenseFrame
+                    expense={expense}
+                    creditCards={creditCards}
+                    expanded={expandedId === expense.id}
+                    onToggle={() => setExpandedId(expandedId === expense.id ? null : expense.id)}
+                    onEdit={() => setEditTarget(expense)}
+                    onSplit={() => setSplitTarget(expense)}
+                    onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
+                    onDelete={() => setDeleteTarget(expense)}
+                    showDate
+                    className="border-0 bg-secondary/40"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          <Link to="/activity" className="flex items-center justify-end gap-1 text-sm font-medium text-primary hover:underline">
+            {t.home.viewAllExpenses}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </CardContent>
+      </Card>
 
       {splitTarget && (
         <SplitExpenseDialog
