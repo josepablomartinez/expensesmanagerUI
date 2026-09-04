@@ -9,6 +9,7 @@ import { AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/lib/theme";
 import { CurrencyProvider } from "@/lib/currency";
 import { LanguageProvider } from "@/lib/language";
+import { AlertsProvider } from "@/lib/alerts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
         <LanguageProvider>
           <CurrencyProvider>
             <AuthProvider>
-              <App />
+              <AlertsProvider>
+                <App />
+              </AlertsProvider>
             </AuthProvider>
           </CurrencyProvider>
         </LanguageProvider>

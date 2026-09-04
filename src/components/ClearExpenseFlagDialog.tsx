@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
 import { useT } from "@/lib/language";
+import { useAlerts } from "@/lib/alerts";
 
 interface Props {
   expense: Expense;
@@ -13,6 +14,7 @@ interface Props {
 
 export function ClearExpenseFlagDialog({ expense, onClose, onCleared }: Props) {
   const t = useT();
+  const { notifyAlertsChanged } = useAlerts();
   const [error, setError] = React.useState<string | null>(null);
   const [clearing, setClearing] = React.useState(false);
 
@@ -21,6 +23,7 @@ export function ClearExpenseFlagDialog({ expense, onClose, onCleared }: Props) {
     setClearing(true);
     try {
       await api.expenses.clearFlag(expense.id);
+      await notifyAlertsChanged();
       onCleared();
     } catch (err) {
       setError(err instanceof Error ? err.message : t.dialogs.clearFlag.failedToClear);

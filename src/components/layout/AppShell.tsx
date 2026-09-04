@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   BarChart3,
   Bell,
@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import { MiHarinaLogo } from "@/components/brand/MiHarinaLogo";
 import { Button } from "@/components/ui/button";
-import { DuplicateAlertToast } from "@/components/DuplicateAlertToast";
+import { AlertsPanel } from "@/components/alerts/AlertsPanel";
 import { api } from "@/lib/api";
+import { useAlerts } from "@/lib/alerts";
 import { useAuth } from "@/lib/auth";
 import { useCurrency } from "@/lib/currency";
 import { useExpenseEvents } from "@/lib/events";
@@ -27,8 +28,11 @@ export function AppShell() {
   const { theme, toggleTheme } = useTheme();
   const { currency, toggleCurrency } = useCurrency();
   const location = useLocation();
+  const navigate = useNavigate();
   const t = useT();
+  const { unreadCount } = useAlerts();
   const [pendingCount, setPendingCount] = React.useState<number | null>(null);
+  const [alertsOpen, setAlertsOpen] = React.useState(false);
 
   const loadPendingCount = React.useCallback(() => {
     api.expenses
@@ -40,6 +44,10 @@ export function AppShell() {
   React.useEffect(() => {
     loadPendingCount();
   }, [loadPendingCount, location.pathname]);
+
+  React.useEffect(() => {
+    setAlertsOpen(false);
+  }, [location.pathname]);
 
   useExpenseEvents(loadPendingCount);
 
@@ -59,8 +67,6 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <DuplicateAlertToast />
-
       <header className="border-b border-border bg-card text-card-foreground">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-3 sm:px-4 md:px-6">
           <NavLink
@@ -134,16 +140,31 @@ export function AppShell() {
                 <Moon className="h-4 w-4" aria-hidden="true" />
               )}
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={t.nav.alerts}
-              aria-disabled="true"
-              disabled
-              className="h-9 w-9 disabled:opacity-100"
-            >
-              <Bell className="h-4 w-4" aria-hidden="true" />
-            </Button>
+            <div className="relative" data-alerts-control>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={t.nav.alerts}
+                aria-haspopup="dialog"
+                aria-expanded={alertsOpen}
+                className="relative h-9 w-9"
+                onClick={() => {
+                  if (window.matchMedia("(min-width: 768px)").matches) {
+                    setAlertsOpen((open) => !open);
+                  } else {
+                    navigate("/alerts");
+                  }
+                }}
+              >
+                <Bell className="h-4 w-4" aria-hidden="true" />
+                {unreadCount !== null && unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-warning px-1 text-[9px] font-medium leading-4 text-white">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </Button>
+              {alertsOpen && <AlertsPanel onClose={() => setAlertsOpen(false)} />}
+            </div>
             <NavLink
               to="/settings"
               aria-label={t.nav.settings}

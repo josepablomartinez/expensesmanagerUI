@@ -140,6 +140,34 @@ export interface UpdateSettingsRequest {
   duplicate_alerts_enabled?: boolean;
 }
 
+export interface AlertPayload {
+  template_key?: string;
+  params?: {
+    merchant?: string | null;
+    amount?: number | null;
+    matched_expense_id?: number;
+  };
+}
+
+export interface ExpenseAlert {
+  id: number;
+  type: string;
+  severity: string;
+  related_expense_id: number | null;
+  destination: string | null;
+  payload: AlertPayload;
+  read_at: string | null;
+  dismissed_at: string | null;
+  resolved_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+}
+
+export interface AlertList {
+  current: ExpenseAlert[];
+  earlier: ExpenseAlert[];
+}
+
 export interface Bank {
   id: number;
   name: string;
@@ -374,6 +402,13 @@ export const api = {
     get: () => request<Settings>("/settings"),
     update: (body: UpdateSettingsRequest) =>
       request<Settings>("/settings", { method: "PUT", body: JSON.stringify(body) }),
+  },
+  alerts: {
+    list: (limit = 50, offset = 0) => request<AlertList>(`/alerts?limit=${limit}&offset=${offset}`),
+    unreadCount: () => request<{ count: number }>("/alerts/unread-count"),
+    markRead: (id: number) => request<ExpenseAlert>(`/alerts/${id}/read`, { method: "PATCH" }),
+    markAllRead: () => request<{ marked_read: number }>("/alerts/mark-all-read", { method: "POST" }),
+    dismiss: (id: number) => request<ExpenseAlert>(`/alerts/${id}/dismiss`, { method: "PATCH" }),
   },
   banks: {
     list: () => request<Bank[]>("/banks"),

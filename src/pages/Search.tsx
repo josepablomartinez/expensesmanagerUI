@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { SlidersHorizontal } from "lucide-react";
 import { api, type Category, type CreditCard, type Expense } from "@/lib/api";
 import { formatMoney, expenseValue } from "@/lib/format";
@@ -27,15 +27,23 @@ function today() {
   return localISODate(new Date());
 }
 
+function ninetyDaysAgo() {
+  const d = new Date();
+  d.setDate(d.getDate() - 90);
+  return localISODate(d);
+}
+
 type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
 type QuickRange = "" | "0" | "1" | "2";
 
 export default function Search() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const focusedExpenseId = Number(searchParams.get("expense")) || null;
   const { currency } = useCurrency();
   const t = useT();
-  const [from, setFrom] = React.useState(firstOfMonth());
+  const [from, setFrom] = React.useState(focusedExpenseId ? ninetyDaysAgo() : firstOfMonth());
   const [to, setTo] = React.useState(today());
   const [quickRange, setQuickRange] = React.useState<QuickRange>("");
   const [categoryId, setCategoryId] = React.useState("");
@@ -75,6 +83,12 @@ export default function Search() {
   }, [load]);
 
   useExpenseEvents(load);
+
+  React.useEffect(() => {
+    if (!focusedExpenseId || !expenses.some((expense) => expense.id === focusedExpenseId)) return;
+    setExpandedId(focusedExpenseId);
+    requestAnimationFrame(() => document.getElementById(`expense-${focusedExpenseId}`)?.scrollIntoView({ block: "center" }));
+  }, [expenses, focusedExpenseId]);
 
   const results = React.useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -220,8 +234,8 @@ export default function Search() {
       ) : (
         <div className="flex flex-col gap-2">
           {results.map((expense) => (
+            <div key={expense.id} id={`expense-${expense.id}`} className={cn(expense.id === focusedExpenseId && "rounded-lg ring-2 ring-ring ring-offset-2 ring-offset-background")}>
             <ExpenseFrame
-              key={expense.id}
               expense={expense}
               creditCards={creditCards}
               expanded={expandedId === expense.id}
@@ -245,6 +259,7 @@ export default function Search() {
                 ) : undefined
               }
             />
+            </div>
           ))}
         </div>
       )}
