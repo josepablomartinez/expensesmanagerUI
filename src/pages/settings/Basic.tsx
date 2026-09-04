@@ -285,7 +285,7 @@ export default function Basic() {
               ))}
             </div>
           )}
-          <div className="flex flex-col gap-1.5">
+          <div className="mt-5 flex flex-col gap-1.5">
             <label className="text-xs font-medium text-muted-foreground" htmlFor="credit_card_expense_date">
               {t.settings.creditCardExpenseDate}
             </label>
