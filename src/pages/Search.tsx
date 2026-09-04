@@ -1,11 +1,13 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { SlidersHorizontal } from "lucide-react";
 import { api, type Category, type CreditCard, type Expense } from "@/lib/api";
 import { formatMoney, expenseValue } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useT } from "@/lib/language";
 import { localISODate, monthRange } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +16,8 @@ import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
 import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
 import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
+import { useExpenseEvents } from "@/lib/events";
+import { cn } from "@/lib/utils";
 
 function firstOfMonth() {
   const d = new Date();
@@ -38,6 +42,7 @@ export default function Search() {
   const [query, setQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<SortBy>("date");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
 
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -69,6 +74,8 @@ export default function Search() {
     load();
   }, [load]);
 
+  useExpenseEvents(load);
+
   const results = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     let rows = expenses;
@@ -91,75 +98,114 @@ export default function Search() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold">{t.search.title}</h1>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold">{t.search.title}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t.search.subtitle}</p>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setFiltersOpen((open) => !open)}
+          aria-expanded={filtersOpen}
+          aria-controls="search-filters"
+          className="md:hidden"
+        >
+          <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+          {t.search.filters}
+        </Button>
+      </div>
 
-      <div className="flex flex-col gap-2">
+      <div
+        id="search-filters"
+        className={cn(
+          "flex-col gap-3 rounded-lg border border-border bg-card p-3 shadow-sm",
+          filtersOpen ? "flex" : "hidden",
+          "md:flex",
+        )}
+      >
         <Input
           placeholder={t.search.searchPlaceholder}
+          aria-label={t.search.searchLabel}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <Input
-            type="date"
-            value={from}
-            onChange={(e) => {
-              setFrom(e.target.value);
-              setQuickRange("");
-            }}
-            className="w-40"
-          />
-          <span className="text-muted-foreground">{t.search.to}</span>
-          <Input
-            type="date"
-            value={to}
-            onChange={(e) => {
-              setTo(e.target.value);
-              setQuickRange("");
-            }}
-            className="w-40"
-          />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.from}
+            <Input
+              type="date"
+              value={from}
+              onChange={(e) => {
+                setFrom(e.target.value);
+                setQuickRange("");
+              }}
+              className="w-full"
+            />
+          </label>
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.to}
+            <Input
+              type="date"
+              value={to}
+              onChange={(e) => {
+                setTo(e.target.value);
+                setQuickRange("");
+              }}
+              className="w-full"
+            />
+          </label>
 
-          <Select
-            value={quickRange}
-            onChange={(e) => {
-              const v = e.target.value as QuickRange;
-              setQuickRange(v);
-              if (v === "") return;
-              const r = monthRange(Number(v));
-              setFrom(r.from);
-              setTo(r.to);
-            }}
-            className="w-40"
-          >
-            <option value="">{t.search.quickRange}</option>
-            <option value="0">{t.search.thisMonth}</option>
-            <option value="1">{t.search.lastMonth}</option>
-            <option value="2">{t.search.secondLastMonth}</option>
-          </Select>
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.quickRange}
+            <Select
+              value={quickRange}
+              onChange={(e) => {
+                const v = e.target.value as QuickRange;
+                setQuickRange(v);
+                if (v === "") return;
+                const r = monthRange(Number(v));
+                setFrom(r.from);
+                setTo(r.to);
+              }}
+              className="w-full"
+            >
+              <option value="">{t.search.customRange}</option>
+              <option value="0">{t.search.thisMonth}</option>
+              <option value="1">{t.search.lastMonth}</option>
+              <option value="2">{t.search.secondLastMonth}</option>
+            </Select>
+          </label>
 
-          <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-48">
-            <option value="">{t.search.allCategories}</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.category} / {c.subcategory}
-              </option>
-            ))}
-          </Select>
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.category}
+            <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full">
+              <option value="">{t.search.allCategories}</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>{c.category} / {c.subcategory}</option>
+              ))}
+            </Select>
+          </label>
 
-          <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortBy)} className="w-32">
-            <option value="date">{t.search.sortByDate}</option>
-            <option value="amount">{t.search.sortByAmount}</option>
-          </Select>
-          <Select value={sortDir} onChange={(e) => setSortDir(e.target.value as SortDir)} className="w-28">
-            <option value="desc">{t.search.descending}</option>
-            <option value="asc">{t.search.ascending}</option>
-          </Select>
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.sort}
+            <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortBy)} className="w-full">
+              <option value="date">{t.search.sortByDate}</option>
+              <option value="amount">{t.search.sortByAmount}</option>
+            </Select>
+          </label>
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.direction}
+            <Select value={sortDir} onChange={(e) => setSortDir(e.target.value as SortDir)} className="w-full">
+              <option value="desc">{t.search.descending}</option>
+              <option value="asc">{t.search.ascending}</option>
+            </Select>
+          </label>
         </div>
       </div>
 
-      <Card>
-        <CardContent className="flex items-center justify-between pt-4">
+      <Card className="shadow-none">
+        <CardContent className="flex items-center justify-between gap-3 pt-4">
           <span className="text-sm text-muted-foreground">{t.search.expensesCount(results.length)}</span>
           <span className="text-lg font-semibold">{formatMoney(total, currency)}</span>
         </CardContent>

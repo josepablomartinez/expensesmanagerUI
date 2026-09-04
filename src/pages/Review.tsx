@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSearchParams } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, ListChecks, Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatExpenseAmount } from "@/lib/format";
@@ -13,6 +13,8 @@ import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { InfoModal } from "@/components/InfoModal";
 import { ExpenseFlag } from "@/components/expenses/ExpenseFlag";
+import { BulkReviewDialog } from "@/components/BulkReviewDialog";
+import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 
 export default function Review() {
   const { currency } = useCurrency();
@@ -32,6 +34,8 @@ export default function Review() {
   const [error, setError] = React.useState<string | null>(null);
   const [actionError, setActionError] = React.useState<string | null>(null);
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
+  const [bulkReviewOpen, setBulkReviewOpen] = React.useState(false);
+  const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
 
   const rowRefs = React.useRef<Record<number, HTMLDivElement | null>>({});
   const hasScrolledToFocus = React.useRef(false);
@@ -148,10 +152,20 @@ export default function Review() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t.review.queueTitle}</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
+          <h1 className="text-xl font-semibold">{t.review.queueTitle}</h1>
           <Badge variant="secondary">{t.review.pendingCount(expenses.length)}</Badge>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            size="sm"
+            onClick={() => setBulkReviewOpen(true)}
+            disabled={expenses.length === 0}
+          >
+            <ListChecks className="h-4 w-4" aria-hidden="true" />
+            {t.review.bulk.button}
+          </Button>
           <Button
             size="sm"
             variant="outline"
@@ -160,12 +174,7 @@ export default function Review() {
           >
             {t.review.approveSelected(selected.size)}
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => approveIds(expenses.map((e) => e.id))}
-            disabled={expenses.length === 0}
-          >
+          <Button size="sm" variant="outline" onClick={() => approveIds(expenses.map((e) => e.id))} disabled={expenses.length === 0}>
             {t.review.approveAll}
           </Button>
         </div>
@@ -190,45 +199,46 @@ export default function Review() {
               }}
               className={cn(String(expense.id) === focusId && "ring-2 ring-primary")}
             >
-              <CardContent className="flex items-center justify-between gap-4 pt-4">
-                <div className="flex items-center gap-3">
+              <CardContent className="flex flex-col gap-4 pt-4 md:grid md:grid-cols-[minmax(12rem,1fr)_minmax(26rem,1.6fr)] md:items-center">
+                <div className="flex min-w-0 items-start gap-3">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 rounded border-border accent-primary"
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-primary"
                     checked={selected.has(expense.id)}
                     onChange={() => toggleSelected(expense.id)}
                     aria-label={t.review.selectExpense(expense.merchant ?? expense.entity)}
                   />
-                  <div className="flex flex-col">
-                    <span className="font-medium">{expense.merchant ?? expense.entity}</span>
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate font-medium">{expense.merchant ?? expense.entity}</span>
                     <span className="text-xs text-muted-foreground">
                       {expense.date.slice(0, 10)} · {formatExpenseAmount(expense, currency)}
                     </span>
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <ExpenseFlag expense={expense} className="mt-0" />
+                      {expense.confidence != null && (
+                        <Badge variant="outline">{t.common.confidencePercent(Math.round(expense.confidence * 100))}</Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ExpenseFlag expense={expense} className="mt-0" />
-                  {expense.confidence != null && (
-                    <Badge variant="outline">{t.common.confidencePercent(Math.round(expense.confidence * 100))}</Badge>
-                  )}
-                  <Select
-                    value={selections[expense.id] ?? ""}
-                    onChange={(e) =>
-                      setSelections((prev) => ({ ...prev, [expense.id]: e.target.value }))
-                    }
-                  >
-                    <option value="" disabled>
-                      {t.review.chooseCategory}
-                    </option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.category} / {c.subcategory}
-                      </option>
-                    ))}
-                  </Select>
+
+                <div className="grid gap-3 md:grid-cols-[minmax(14rem,1fr)_auto_auto_auto] md:items-end">
+                  <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+                    {t.review.category}
+                    <Select
+                      value={selections[expense.id] ?? ""}
+                      onChange={(e) => setSelections((prev) => ({ ...prev, [expense.id]: e.target.value }))}
+                      className="w-full"
+                    >
+                      <option value="" disabled>{t.review.chooseCategory}</option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>{c.category} / {c.subcategory}</option>
+                      ))}
+                    </Select>
+                  </label>
                   <label
                     className={cn(
-                      "flex items-center gap-1.5 text-xs text-muted-foreground",
+                      "flex min-h-9 items-center gap-1.5 text-sm text-foreground",
                       !expense.merchant && "opacity-50",
                     )}
                     title={
@@ -249,20 +259,52 @@ export default function Review() {
                     />
                     {t.review.always}
                   </label>
+                  <Button type="button" variant="outline" onClick={() => setSplitTarget(expense)}>
+                    <Split className="h-4 w-4" aria-hidden="true" />
+                    {t.review.split}
+                  </Button>
                   <Button
-                    size="icon"
-                    variant="outline"
+                    type="button"
                     aria-label={t.review.approve}
                     disabled={!selections[expense.id]}
                     onClick={() => confirmApprove(expense)}
                   >
-                    <Check className="h-4 w-4" />
+                    <Check className="h-4 w-4" aria-hidden="true" />
+                    {t.review.approve}
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+      )}
+
+      {bulkReviewOpen && (
+        <BulkReviewDialog
+          expenses={expenses}
+          categories={categories}
+          onClose={() => setBulkReviewOpen(false)}
+          onApproved={(count, ruleFailures) => {
+            setBulkReviewOpen(false);
+            setSelected(new Set());
+            setSuccessMessage(
+              t.review.approvedCount(count) + (ruleFailures > 0 ? t.review.bulk.rulesNotSaved(ruleFailures) : ""),
+            );
+            load();
+          }}
+        />
+      )}
+
+      {splitTarget && (
+        <SplitExpenseDialog
+          expense={splitTarget}
+          categories={categories}
+          onClose={() => setSplitTarget(null)}
+          onSplit={() => {
+            setSplitTarget(null);
+            load();
+          }}
+        />
       )}
 
       {successMessage && <InfoModal message={successMessage} onClose={() => setSuccessMessage(null)} />}

@@ -3,15 +3,17 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useT } from "@/lib/language";
+import { cn } from "@/lib/utils";
 
 interface ExpenseDialogProps {
   title: string;
   description?: React.ReactNode;
   onClose: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function ExpenseDialog({ title, description, onClose, children }: ExpenseDialogProps) {
+export function ExpenseDialog({ title, description, onClose, children, className }: ExpenseDialogProps) {
   const t = useT();
   const titleId = React.useId();
 
@@ -30,7 +32,7 @@ export function ExpenseDialog({ title, description, onClose, children }: Expense
         if (event.currentTarget === event.target) onClose();
       }}
     >
-      <Card role="dialog" aria-modal="true" aria-labelledby={titleId} className="w-full max-w-sm rounded-panel shadow-xl">
+      <Card role="dialog" aria-modal="true" aria-labelledby={titleId} className={cn("w-full max-w-sm rounded-panel shadow-xl", className)}>
         <CardHeader className="flex-row items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle id={titleId} className="text-base text-foreground">
