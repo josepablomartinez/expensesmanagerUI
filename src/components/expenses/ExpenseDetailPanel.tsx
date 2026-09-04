@@ -1,63 +1,78 @@
+import { CalendarDays, Copy, Landmark, MessageSquareText } from "lucide-react";
 import type { CreditCard, Expense } from "@/lib/api";
 import { BankBadge, CardNetworkBadge, resolveBank } from "@/lib/brandIcons";
 import { Badge } from "@/components/ui/badge";
+import { ExpenseDetailRow } from "@/components/expenses/ExpenseDetailRow";
 import { useLanguage } from "@/lib/language";
 
-// date/payment_date come back as full timestamps (e.g. "2026-08-10T00:00:00Z")
-// even though they're DATE columns -- compare/format on the YYYY-MM-DD
-// prefix only, and build the Date from local y/m/d parts (not `new
-// Date(iso)`) so it doesn't roll over a day in timezones behind UTC. See
-// src/lib/date.ts's localISODate for the same concern in the other direction.
 function formatPaymentDate(iso: string, locale: string) {
-  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
+  const [year, month, day] = iso.slice(0, 10).split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
-// The "card below the expense, open on demand" -- shows the linked credit
-// card (network, last4, its bank) when there is one, otherwise falls back to
-// `entity` (the bank/channel the expense came through, e.g. "BAC", or
-// "MANUAL" for entries with no known bank) plus the payment type. If the
-// user's credit_card_expense_date setting shifted this expense's payment
-// date away from the day it happened, that's called out next. Either way
-// the reason/motive, if any, is shown last.
-export function ExpenseDetailPanel({ expense, creditCards }: { expense: Expense; creditCards: CreditCard[] }) {
+export function ExpenseDetails({ expense, creditCards }: { expense: Expense; creditCards: CreditCard[] }) {
   const { t, language } = useLanguage();
   const locale = language === "es" ? "es-CR" : "en-US";
-  const card = expense.credit_card_id != null ? creditCards.find((c) => c.id === expense.credit_card_id) : undefined;
+  const card = expense.credit_card_id != null
+    ? creditCards.find((candidate) => candidate.id === expense.credit_card_id)
+    : undefined;
   const bank = card ? resolveBank(card.bank_name) : resolveBank(expense.entity);
   const typeLabel = t.expenseDetailPanel.typeLabels[expense.type ?? ""] ?? expense.type;
-
-  const hasCard = expense.credit_card_id != null && expense.card_type;
-  const paymentDateShifted = expense.payment_date.slice(0, 10) !== expense.date.slice(0, 10);
-  const nothingToShow = !bank && !hasCard && !expense.motive && !expense.flag_reason && !paymentDateShifted;
+  const hasCard = expense.credit_card_id != null && Boolean(expense.card_type);
+  const hasPaymentDate = hasCard && Boolean(expense.payment_date);
+  const hasPaymentIdentity = Boolean(bank || hasCard || typeLabel);
+  const nothingToShow = !hasPaymentIdentity && !hasPaymentDate && !expense.motive && !expense.flag_reason;
 
   return (
-    <div className="mt-2 flex flex-col gap-2 rounded-md border border-border bg-secondary/30 p-3 text-sm">
+    <div className="mt-2 space-y-2.5 rounded-panel border border-border bg-background p-3 sm:ml-12">
       {nothingToShow ? (
         <p className="text-xs text-muted-foreground">{t.expenseDetailPanel.noAdditionalDetails}</p>
       ) : (
         <>
-          <div className="flex items-center gap-2 flex-wrap">
-            {bank && <BankBadge codeOrName={card ? card.bank_name : expense.entity} />}
-            {hasCard ? (
-              <>
-                <CardNetworkBadge type={expense.card_type} />
-                <span className="font-medium">•••• {expense.card_last4}</span>
-              </>
-            ) : (
-              typeLabel && <Badge variant="outline">{typeLabel}</Badge>
-            )}
-            {paymentDateShifted && (
-              <Badge variant="secondary">
-                {t.expenseDetailPanel.paymentDateLabel} {formatPaymentDate(expense.payment_date, locale)}
-              </Badge>
-            )}
-          </div>
+          {hasPaymentIdentity && (
+            <ExpenseDetailRow icon={<Landmark className="h-4 w-4" />}>
+              <div className="flex flex-wrap items-center gap-2">
+                {bank && <BankBadge codeOrName={card ? card.bank_name : expense.entity} />}
+                {hasCard ? (
+                  <>
+                    <CardNetworkBadge type={expense.card_type} />
+                    {expense.card_last4 && <strong className="font-medium">•••• {expense.card_last4}</strong>}
+                  </>
+                ) : (
+                  typeLabel && <Badge variant="outline">{typeLabel}</Badge>
+                )}
+              </div>
+            </ExpenseDetailRow>
+          )}
 
-          {expense.motive && <p className="text-muted-foreground">{expense.motive}</p>}
-          {expense.flag_reason && <p className="text-destructive">{expense.flag_reason}</p>}
+          {hasPaymentDate && (
+            <ExpenseDetailRow icon={<CalendarDays className="h-4 w-4" />}>
+              <span>
+                {t.expenseDetailPanel.paymentDateLabel} {formatPaymentDate(expense.payment_date, locale)}
+              </span>
+            </ExpenseDetailRow>
+          )}
+
+          {expense.motive && (
+            <ExpenseDetailRow icon={<MessageSquareText className="h-4 w-4" />}>
+              <span className="text-muted-foreground">{expense.motive}</span>
+            </ExpenseDetailRow>
+          )}
+
+          {expense.flag_reason && (
+            <ExpenseDetailRow icon={<Copy className="h-4 w-4" />} className="text-destructive">
+              <span>{expense.flag_reason}</span>
+            </ExpenseDetailRow>
+          )}
         </>
       )}
     </div>
   );
 }
+
+// Kept as a compatibility export while callers migrate to the shared naming.
+export const ExpenseDetailPanel = ExpenseDetails;

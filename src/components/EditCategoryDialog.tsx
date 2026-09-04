@@ -1,6 +1,6 @@
 import * as React from "react";
 import { api, type Category, type Expense } from "@/lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -45,15 +45,8 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4" onClick={onClose}>
-      <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">
-            {t.dialogs.editCategory.title(expense.merchant ?? expense.entity)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    <ExpenseDialog title={t.dialogs.editCategory.title(expense.merchant ?? expense.entity)} onClose={onClose}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} autoFocus>
               <option value="" disabled>
                 {t.dialogs.editCategory.chooseCategory}
@@ -74,9 +67,7 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
                 {saving ? t.common.saving : t.common.save}
               </Button>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+      </form>
+    </ExpenseDialog>
   );
 }

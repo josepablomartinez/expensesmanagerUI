@@ -1,22 +1,20 @@
 import * as React from "react";
-import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { api, type Category, type CreditCard, type DayExpenses, type Expense, type Settings } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatMoney, formatExpenseAmount } from "@/lib/format";
+import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useLanguage } from "@/lib/language";
-import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate as isoDate } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
+import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
 import { Greeting } from "@/components/dashboard/Greeting";
 import { ExchangeRateWidget } from "@/components/dashboard/ExchangeRateWidget";
 import { FavoriteCategoriesWidget } from "@/components/dashboard/FavoriteCategoriesWidget";
-import { ExpenseDetailPanel } from "@/components/expenses/ExpenseDetailPanel";
+import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
 
 const PAGE_DAYS = 7;
 
@@ -52,6 +50,7 @@ export default function Home() {
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
+  const [clearFlagTarget, setClearFlagTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [settings, setSettings] = React.useState<Settings | null>(null);
@@ -130,80 +129,27 @@ export default function Home() {
                 </p>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {group.items.map((expense) => {
-                    const Icon = getCategoryIcon(mainCategoryOf(expense.category_name));
-                    const isExpanded = expandedId === expense.id;
-                    return (
-                      <div key={expense.id} className="rounded-md bg-secondary/40 px-3 py-2">
-                        <div className="flex items-center justify-between gap-4">
-                          <button
-                            type="button"
-                            className="flex flex-1 items-center gap-3 text-left"
-                            onClick={() => setExpandedId(isExpanded ? null : expense.id)}
-                            aria-expanded={isExpanded}
-                            aria-label={t.common.toggleExpenseDetails}
-                          >
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                              <Icon className="h-4 w-4" />
-                            </span>
-                            <div className="flex flex-col">
-                              <span className="font-medium">{expense.merchant ?? expense.entity}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {expense.category_name ?? t.common.uncategorized}
-                              </span>
-                            </div>
-                            {isExpanded ? (
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </button>
-                          <div className="flex items-center gap-2">
-                            {expense.flag_type && (
-                              <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
-                                {t.common.possibleDuplicate}
-                              </Badge>
-                            )}
-                            {!expense.reviewed && expense.confidence != null && (
-                              <Badge variant="outline">
-                                {t.common.confidencePercent(Math.round(expense.confidence * 100))}
-                              </Badge>
-                            )}
-                            <span className="font-medium">{formatExpenseAmount(expense, currency)}</span>
-                            {expense.reviewed && (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  aria-label={t.common.editCategory}
-                                  onClick={() => setEditTarget(expense)}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  aria-label={t.common.splitExpense}
-                                  onClick={() => setSplitTarget(expense)}
-                                >
-                                  <Split className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  aria-label={t.common.deleteExpense}
-                                  onClick={() => setDeleteTarget(expense)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        {isExpanded && <ExpenseDetailPanel expense={expense} creditCards={creditCards} />}
-                      </div>
-                    );
-                  })}
+                  {group.items.map((expense) => (
+                    <ExpenseFrame
+                      key={expense.id}
+                      expense={expense}
+                      creditCards={creditCards}
+                      expanded={expandedId === expense.id}
+                      onToggle={() => setExpandedId(expandedId === expense.id ? null : expense.id)}
+                      onEdit={() => setEditTarget(expense)}
+                      onSplit={() => setSplitTarget(expense)}
+                      onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
+                      onDelete={() => setDeleteTarget(expense)}
+                      status={
+                        !expense.reviewed && expense.confidence != null ? (
+                          <span className="rounded-full border border-border px-2 py-0.5 text-xs">
+                            {t.common.confidencePercent(Math.round(expense.confidence * 100))}
+                          </span>
+                        ) : undefined
+                      }
+                      className="border-0 bg-secondary/40"
+                    />
+                  ))}
                 </div>
               )}
             </CardContent>
@@ -245,6 +191,17 @@ export default function Home() {
           onClose={() => setDeleteTarget(null)}
           onDeleted={() => {
             setDeleteTarget(null);
+            load();
+          }}
+        />
+      )}
+
+      {clearFlagTarget && (
+        <ClearExpenseFlagDialog
+          expense={clearFlagTarget}
+          onClose={() => setClearFlagTarget(null)}
+          onCleared={() => {
+            setClearFlagTarget(null);
             load();
           }}
         />

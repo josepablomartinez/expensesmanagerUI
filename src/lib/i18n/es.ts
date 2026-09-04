@@ -17,6 +17,7 @@ export const es: Dictionary = {
     unknownMerchant: "Comercio desconocido",
     possibleDuplicateCharge: "Posible cargo duplicado",
     dismiss: "Descartar",
+    close: "Cerrar",
     uncategorized: "Sin categoría",
     confidencePercent: (pct: number) => `${pct}% de confianza`,
     toggleExpenseDetails: "Mostrar detalles del gasto",
@@ -24,6 +25,9 @@ export const es: Dictionary = {
     editCategory: "Editar categoría",
     splitExpense: "Dividir gasto",
     deleteExpense: "Eliminar gasto",
+    clearExpenseFlag: "Quitar marca del gasto",
+    suspiciousExpense: "Gasto sospechoso",
+    expenseActions: "Acciones del gasto",
   },
   nav: {
     brand: "MiHarina",
@@ -206,6 +210,13 @@ export const es: Dictionary = {
     },
   },
   dialogs: {
+    clearFlag: {
+      title: (name: string) => `¿Quitar la marca de "${name}"?`,
+      detail: "Esto quita la marca del gasto. No elimina el gasto.",
+      failedToClear: "No se pudo quitar la marca del gasto",
+      clear: "Quitar marca",
+      clearing: "Quitando…",
+    },
     editCategory: {
       title: (name: string) => `Editar categoría de "${name}"`,
       chooseCategory: "Elegir categoría",

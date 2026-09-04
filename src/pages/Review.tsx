@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { InfoModal } from "@/components/InfoModal";
+import { ExpenseFlag } from "@/components/expenses/ExpenseFlag";
 
 export default function Review() {
   const { currency } = useCurrency();
@@ -206,11 +207,7 @@ export default function Review() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {expense.flag_type && (
-                    <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
-                      {t.common.possibleDuplicate}
-                    </Badge>
-                  )}
+                  <ExpenseFlag expense={expense} className="mt-0" />
                   {expense.confidence != null && (
                     <Badge variant="outline">{t.common.confidencePercent(Math.round(expense.confidence * 100))}</Badge>
                   )}

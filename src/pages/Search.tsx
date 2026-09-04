@@ -1,21 +1,19 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Split, Pencil, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { api, type Category, type CreditCard, type Expense } from "@/lib/api";
-import { formatMoney, formatExpenseAmount, expenseValue } from "@/lib/format";
+import { formatMoney, expenseValue } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useT } from "@/lib/language";
-import { getCategoryIcon, mainCategoryOf } from "@/lib/categoryIcons";
 import { localISODate, monthRange } from "@/lib/date";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
-import { ExpenseDetailPanel } from "@/components/expenses/ExpenseDetailPanel";
+import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
+import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
 
 function firstOfMonth() {
   const d = new Date();
@@ -48,6 +46,7 @@ export default function Search() {
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
+  const [clearFlagTarget, setClearFlagTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -174,88 +173,33 @@ export default function Search() {
         <p className="text-sm text-muted-foreground">{t.search.noExpensesMatch}</p>
       ) : (
         <div className="flex flex-col gap-2">
-          {results.map((expense) => {
-            const Icon = getCategoryIcon(mainCategoryOf(expense.category_name));
-            const isExpanded = expandedId === expense.id;
-            return (
-              <Card key={expense.id}>
-                <CardContent className="pt-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <button
-                      type="button"
-                      className="flex flex-1 items-center gap-3 text-left"
-                      onClick={() => setExpandedId(isExpanded ? null : expense.id)}
-                      aria-expanded={isExpanded}
-                      aria-label={t.common.toggleExpenseDetails}
-                    >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                        <Icon className="h-4 w-4" />
-                      </span>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{expense.merchant ?? expense.entity}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {expense.date.slice(0, 10)} · {expense.category_name ?? t.common.uncategorized}
-                        </span>
-                      </div>
-                      {isExpanded ? (
-                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </button>
-                    <div className="flex items-center gap-2">
-                      {expense.flag_type && (
-                        <Badge variant="destructive" title={expense.flag_reason ?? undefined}>
-                          {t.common.possibleDuplicate}
-                        </Badge>
-                      )}
-                      {!expense.reviewed && (
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/review?focus=${expense.id}`)}
-                          aria-label={t.search.goToReview}
-                        >
-                          <Badge variant="outline" className="cursor-pointer hover:bg-accent">
-                            {t.search.unreviewed}
-                          </Badge>
-                        </button>
-                      )}
-                      <span className="font-medium">{formatExpenseAmount(expense, currency)}</span>
-                      {expense.reviewed && (
-                        <>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label={t.common.editCategory}
-                            onClick={() => setEditTarget(expense)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label={t.common.splitExpense}
-                            onClick={() => setSplitTarget(expense)}
-                          >
-                            <Split className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label={t.common.deleteExpense}
-                            onClick={() => setDeleteTarget(expense)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  {isExpanded && <ExpenseDetailPanel expense={expense} creditCards={creditCards} />}
-                </CardContent>
-              </Card>
-            );
-          })}
+          {results.map((expense) => (
+            <ExpenseFrame
+              key={expense.id}
+              expense={expense}
+              creditCards={creditCards}
+              expanded={expandedId === expense.id}
+              onToggle={() => setExpandedId(expandedId === expense.id ? null : expense.id)}
+              onEdit={() => setEditTarget(expense)}
+              onSplit={() => setSplitTarget(expense)}
+              onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
+              onDelete={() => setDeleteTarget(expense)}
+              showDate
+              status={
+                !expense.reviewed ? (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/review?focus=${expense.id}`)}
+                    aria-label={t.search.goToReview}
+                  >
+                    <Badge variant="outline" className="cursor-pointer hover:bg-accent">
+                      {t.search.unreviewed}
+                    </Badge>
+                  </button>
+                ) : undefined
+              }
+            />
+          ))}
         </div>
       )}
 
@@ -289,6 +233,17 @@ export default function Search() {
           onClose={() => setDeleteTarget(null)}
           onDeleted={() => {
             setDeleteTarget(null);
+            load();
+          }}
+        />
+      )}
+
+      {clearFlagTarget && (
+        <ClearExpenseFlagDialog
+          expense={clearFlagTarget}
+          onClose={() => setClearFlagTarget(null)}
+          onCleared={() => {
+            setClearFlagTarget(null);
             load();
           }}
         />

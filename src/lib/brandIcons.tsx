@@ -67,7 +67,7 @@ const ALIAS_KEYS = Object.keys(BANK_ALIASES).sort((a, b) => b.length - a.length)
 
 const FALLBACK_BANK_STYLE: BankStyle = {
   label: "Bank",
-  render: () => <ChartNoAxesColumnIncreasing className="h-4 w-4 text-slate-600" strokeWidth={2.5} />,
+  render: () => <ChartNoAxesColumnIncreasing className="h-4 w-4" strokeWidth={2.5} />,
 };
 
 // Resolves a bank display style from either a `banks.code`/`banks.name`
@@ -96,7 +96,7 @@ export function BankBadge({ codeOrName, className = "" }: { codeOrName?: string 
     <span
       title={style.label}
       aria-label={style.label}
-      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/10 ${className}`}
+      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-muted-foreground shadow-sm ring-1 ring-black/10 ${className}`}
     >
       {style.render()}
     </span>

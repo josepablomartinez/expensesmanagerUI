@@ -3,7 +3,7 @@ import { api, type Category, type Expense } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useT } from "@/lib/language";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -55,21 +55,19 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4" onClick={onClose}>
-      <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">
-            {t.dialogs.splitExpense.title(expense.merchant ?? expense.entity)}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground">
+    <ExpenseDialog
+      title={t.dialogs.splitExpense.title(expense.merchant ?? expense.entity)}
+      description={
+        <p className="mt-1 text-xs text-muted-foreground">
             {t.dialogs.splitExpense.total} {formatMoney(expense.amount, expense.currency)}
             {equivalent != null && expense.currency !== currency && (
               <> · {formatMoney(equivalent, currency)}</>
             )}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="flex flex-col gap-3">
+        </p>
+      }
+      onClose={onClose}
+    >
+      <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
               placeholder={t.dialogs.splitExpense.amountToSplitOff}
               type="number"
@@ -102,9 +100,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
                 {saving ? t.dialogs.splitExpense.splitting : t.dialogs.splitExpense.split}
               </Button>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+      </form>
+    </ExpenseDialog>
   );
 }

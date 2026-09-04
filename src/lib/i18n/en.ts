@@ -20,6 +20,7 @@ export const en = {
     unknownMerchant: "Unknown merchant",
     possibleDuplicateCharge: "Possible duplicate charge",
     dismiss: "Dismiss",
+    close: "Close",
     uncategorized: "Uncategorized",
     confidencePercent: (pct: number) => `${pct}% confident`,
     toggleExpenseDetails: "Toggle expense details",
@@ -27,6 +28,9 @@ export const en = {
     editCategory: "Edit category",
     splitExpense: "Split expense",
     deleteExpense: "Delete expense",
+    clearExpenseFlag: "Clear expense flag",
+    suspiciousExpense: "Suspicious expense",
+    expenseActions: "Expense actions",
   },
   nav: {
     brand: "MiHarina",
@@ -209,6 +213,13 @@ export const en = {
     },
   },
   dialogs: {
+    clearFlag: {
+      title: (name: string) => `Clear the flag from "${name}"?`,
+      detail: "This removes the flag from the expense. It does not delete the expense.",
+      failedToClear: "Failed to clear expense flag",
+      clear: "Clear flag",
+      clearing: "Clearing…",
+    },
     editCategory: {
       title: (name: string) => `Edit category for "${name}"`,
       chooseCategory: "Choose category",

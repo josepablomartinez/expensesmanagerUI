@@ -318,6 +318,10 @@ export const api = {
         method: "DELETE",
         body: JSON.stringify(body),
       }),
+    clearFlag: (id: number) =>
+      request<void>(`/events/anomaly/${id}`, {
+        method: "DELETE",
+      }),
   },
   categories: {
     list: () => request<Category[]>("/categories"),
