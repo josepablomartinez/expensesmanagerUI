@@ -39,6 +39,7 @@ function ToggleChip({
   return (
     <button
       type="button"
+      aria-pressed={active}
       onClick={onClick}
       className={cn(
         "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
@@ -239,6 +240,7 @@ export default function Basic() {
           ) : (
             <>
               <Select
+                aria-label={t.settings.favoriteCategories}
                 value={selectedGroupName ?? ""}
                 onChange={(e) => setSelectedGroupName(e.target.value)}
                 className="w-56"

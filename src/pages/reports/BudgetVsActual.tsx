@@ -88,7 +88,7 @@ export default function BudgetVsActual() {
               <h3 id="budget-ranking-title" className="font-medium">{t.budgetVsActual.highestUsed}</h3>
               <p className="text-sm text-muted-foreground">{t.budgetVsActual.rankingDescription}</p>
             </div>
-            {highestUsed.length === 0 ? <Card><CardContent className="pt-4 text-sm text-muted-foreground">{t.budgetVsActual.noBudgetedCategories}</CardContent></Card> : (
+            {highestUsed.length === 0 ? <Card><CardContent className="pt-4 text-sm text-muted-foreground">{groups.length ? t.budgetVsActual.noUsage : t.budgetVsActual.noBudgetedCategories}</CardContent></Card> : (
               <div className="flex flex-col gap-2">
                 {highestUsed.slice(0, visibleCount).map((row, index) => {
                   const pct = row.pct_used ?? 0;

@@ -47,7 +47,7 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
   return (
     <ExpenseDialog title={t.dialogs.editCategory.title(expense.merchant ?? expense.entity)} onClose={onClose}>
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
-            <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} autoFocus>
+            <Select aria-label={t.dialogs.editCategory.chooseCategory} value={categoryId} onChange={(e) => setCategoryId(e.target.value)} autoFocus>
               <option value="" disabled>
                 {t.dialogs.editCategory.chooseCategory}
               </option>
@@ -57,8 +57,8 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
                 </option>
               ))}
             </Select>
-            <Input placeholder={t.dialogs.editCategory.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            <Input aria-label={t.dialogs.editCategory.reasonPlaceholder} placeholder={t.dialogs.editCategory.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
                 {t.common.cancel}

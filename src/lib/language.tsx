@@ -26,6 +26,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = React.useState<Language>(getInitialLanguage);
 
   React.useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
+  React.useEffect(() => {
     api.settings
       .get()
       .then((s) => {

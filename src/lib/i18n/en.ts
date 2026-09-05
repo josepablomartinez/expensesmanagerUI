@@ -191,6 +191,8 @@ export const en = {
     failedToLoad: "Failed to load",
   },
   reportsLayout: {
+    month: "Month",
+    year: "Year",
     title: "Reports",
     subtitle: "See where your money is going and how spending tracks against your budget.",
     sectionsLabel: "Report sections",
@@ -232,6 +234,7 @@ export const en = {
     category: "Main category",
     subcategory: "Subcategory",
     rankingDescription: "Categories ranked by the share of budget already used.",
+    noUsage: "No budget use recorded for this period.",
     detailDescription: "A closer look at the selected category.",
   },
   burndown: {

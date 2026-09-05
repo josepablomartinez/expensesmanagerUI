@@ -61,8 +61,8 @@ export function ExpenseFrame({
           aria-expanded={expanded}
           aria-label={t.common.toggleExpenseDetails}
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
-            <Icon className="h-4 w-4" aria-hidden="true" />
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#fcf8f1]">
+            <Icon className="h-9 w-9" aria-hidden="true" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate font-medium">{merchant}</span>

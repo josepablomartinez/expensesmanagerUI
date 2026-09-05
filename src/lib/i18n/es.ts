@@ -188,6 +188,8 @@ export const es: Dictionary = {
     failedToLoad: "Error al cargar",
   },
   reportsLayout: {
+    month: "Mes",
+    year: "Año",
     title: "Reportes",
     subtitle: "Mira adónde va tu dinero y cómo avanzan tus gastos frente al presupuesto.",
     sectionsLabel: "Secciones de reportes",
@@ -229,6 +231,7 @@ export const es: Dictionary = {
     category: "Categoría principal",
     subcategory: "Subcategoría",
     rankingDescription: "Categorías ordenadas por la proporción del presupuesto ya utilizada.",
+    noUsage: "No hay consumo de presupuesto registrado para este período.",
     detailDescription: "Un vistazo más detallado a la categoría seleccionada.",
   },
   burndown: {

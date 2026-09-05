@@ -25,6 +25,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   const toggleTheme = React.useCallback(() => {
+    // Apply tokens before consumers render and resolve chart colors.
+    document.documentElement.classList.toggle("dark");
     setTheme((t) => (t === "dark" ? "light" : "dark"));
   }, []);
 

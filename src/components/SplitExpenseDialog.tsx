@@ -69,6 +69,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
     >
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
+              aria-label={t.dialogs.splitExpense.amountToSplitOff}
               placeholder={t.dialogs.splitExpense.amountToSplitOff}
               type="number"
               inputMode="decimal"
@@ -77,7 +78,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
               onChange={(e) => setAmount(e.target.value)}
               autoFocus
             />
-            <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+            <Select aria-label={t.dialogs.editCategory.chooseCategory} value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
               <option value="">{t.common.uncategorized}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -90,8 +91,8 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
                 {t.dialogs.splitExpense.leftUncategorizedNote}
               </p>
             )}
-            <Input placeholder={t.dialogs.splitExpense.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            <Input aria-label={t.dialogs.splitExpense.reasonPlaceholder} placeholder={t.dialogs.splitExpense.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
                 {t.common.cancel}

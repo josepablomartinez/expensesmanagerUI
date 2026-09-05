@@ -57,12 +57,13 @@ export function DeleteExpenseDialog({ expense, onClose, onDeleted }: Props) {
     >
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
+              aria-label={t.dialogs.deleteExpense.reasonPlaceholder}
               placeholder={t.dialogs.deleteExpense.reasonPlaceholder}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               autoFocus
             />
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
                 {t.common.cancel}

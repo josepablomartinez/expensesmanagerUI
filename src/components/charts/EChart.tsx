@@ -14,6 +14,7 @@ export const chartColors = {
   mutedForeground: () => cssVar("--muted-foreground"),
   border: () => cssVar("--border"),
   foreground: () => cssVar("--foreground"),
+  series: () => [1, 2, 3, 4, 5].map((index) => cssVar(`--chart-${index}`)),
 };
 
 interface EChartProps {

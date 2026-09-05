@@ -426,8 +426,8 @@ export default function Categories() {
           return (
             <Card key={group.mainCategoryId}>
               <CardHeader className="flex-row items-center gap-3 space-y-0">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                  <Icon className="h-4 w-4" />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#fcf8f1]">
+                  <Icon className="h-8 w-8 overflow-hidden rounded-md" aria-hidden="true" />
                 </span>
                 <MainCategoryName
                   name={group.mainName}

@@ -7,11 +7,13 @@ import { Select } from "@/components/ui/select";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
+import { useTheme } from "@/lib/theme";
 import type { EChartsOption } from "echarts";
 
 export default function SubcategoriesByMonth() {
   const { currency } = useCurrency();
   const t = useT();
+  const { theme } = useTheme();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
 
@@ -85,6 +87,7 @@ export default function SubcategoriesByMonth() {
     }));
 
     const option: EChartsOption = {
+      color: chartColors.series(),
       tooltip: {
         trigger: "axis",
         formatter: (params) => {
@@ -113,13 +116,13 @@ export default function SubcategoriesByMonth() {
       series,
     };
     return option;
-  }, [rows, currency, t]);
+  }, [rows, currency, t, theme]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-semibold">{t.subcategoriesByMonth.title}</h2>
-        <Select value={year} onChange={(e) => setYear(Number(e.target.value))} className="w-fit">
+        <Select aria-label={t.reportsLayout.year} value={year} onChange={(e) => setYear(Number(e.target.value))} className="w-fit">
           {[year - 1, year, year + 1].map((y) => (
             <option key={y} value={y}>
               {y}

@@ -8,6 +8,7 @@ import { PeriodSelect } from "@/components/reports/PeriodSelect";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
+import { useTheme } from "@/lib/theme";
 import type { EChartsOption } from "echarts";
 
 function dayOfMonth(dateStr: string) {
@@ -18,6 +19,7 @@ function dayOfMonth(dateStr: string) {
 export default function Burndown() {
   const { currency } = useCurrency();
   const t = useT();
+  const { theme } = useTheme();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
   const [month, setMonth] = React.useState(now.getMonth() + 1);
@@ -112,6 +114,7 @@ export default function Burndown() {
     }));
 
     const option: EChartsOption = {
+      color: chartColors.series(),
       tooltip: {
         trigger: "axis",
         formatter: (params) => {
@@ -140,7 +143,7 @@ export default function Burndown() {
       series,
     };
     return option;
-  }, [subRows, currency]);
+  }, [subRows, currency, t, theme]);
 
   const chartOption = React.useMemo(() => {
     if (rows.length === 0) return null;
@@ -204,6 +207,7 @@ export default function Burndown() {
           emphasis: { disabled: true },
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { type: "dashed", color: muted, width: 1.5 },
+          itemStyle: { color: muted },
         },
         {
           name: t.burndown.actual,
@@ -214,6 +218,7 @@ export default function Burndown() {
           emphasis: { disabled: true },
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { color: primary, width: 2.5 },
+          itemStyle: { color: primary },
           markLine:
             budget != null
               ? {
@@ -233,6 +238,7 @@ export default function Burndown() {
           emphasis: { disabled: true },
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { color: destructive, width: 2.5 },
+          itemStyle: { color: destructive },
           markPoint:
             crossIndex >= 0
               ? {
@@ -247,7 +253,7 @@ export default function Burndown() {
       ],
     };
     return option;
-  }, [rows, currency, t]);
+  }, [rows, currency, t, theme]);
 
   return (
     <div className="flex flex-col gap-4">

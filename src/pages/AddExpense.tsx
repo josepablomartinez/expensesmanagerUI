@@ -56,6 +56,15 @@ export default function AddExpense() {
   const [saving, setSaving] = React.useState(false);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
   const [confirmingCancel, setConfirmingCancel] = React.useState(false);
+  const [desktop, setDesktop] = React.useState(() => window.matchMedia("(min-width: 768px)").matches);
+  const formPanelRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const update = () => setDesktop(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   const isDirty = Boolean(
     merchant ||
@@ -127,7 +136,24 @@ export default function AddExpense() {
   return (
     <>
       <div className="mx-auto w-full max-w-lg md:fixed md:inset-0 md:z-30 md:flex md:max-w-none md:items-center md:justify-center md:bg-foreground/45 md:px-6 md:py-8 md:backdrop-blur-sm">
-        <Card className="w-full overflow-hidden rounded-panel shadow-xl md:max-h-[calc(100vh-4rem)] md:max-w-lg md:overflow-y-auto">
+        <Card
+          ref={formPanelRef}
+          role={desktop ? "dialog" : undefined}
+          aria-modal={desktop ? true : undefined}
+          aria-label={desktop ? t.addExpense.title : undefined}
+          onKeyDown={(event) => {
+            if (!desktop || confirmingCancel) return;
+            if (event.key === "Escape") { event.preventDefault(); requestCancel(); }
+            if (event.key !== "Tab") return;
+            const controls = Array.from(formPanelRef.current?.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])") ?? [])
+              .filter((element) => element.getClientRects().length > 0);
+            const first = controls[0];
+            const last = controls[controls.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+            if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+          }}
+          className="w-full overflow-hidden rounded-panel shadow-xl md:max-h-[calc(100vh-4rem)] md:max-w-lg md:overflow-y-auto"
+        >
           <form onSubmit={onSubmit} noValidate>
             <CardHeader className="flex-row items-center justify-between border-b border-border">
               <CardTitle className="text-lg font-semibold text-foreground">{t.addExpense.title}</CardTitle>
