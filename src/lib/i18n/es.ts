@@ -188,6 +188,9 @@ export const es: Dictionary = {
     failedToLoad: "Error al cargar",
   },
   reportsLayout: {
+    title: "Reportes",
+    subtitle: "Mira adónde va tu dinero y cómo avanzan tus gastos frente al presupuesto.",
+    sectionsLabel: "Secciones de reportes",
     tabs: {
       budgetVsActual: "Presupuesto vs real",
       burndown: "Consumo",
@@ -223,6 +226,10 @@ export const es: Dictionary = {
     overBudget: "Sobre presupuesto",
     spent: "Gastado",
     remaining: "Restante",
+    category: "Categoría principal",
+    subcategory: "Subcategoría",
+    rankingDescription: "Categorías ordenadas por la proporción del presupuesto ya utilizada.",
+    detailDescription: "Un vistazo más detallado a la categoría seleccionada.",
   },
   burndown: {
     title: "Consumo",
@@ -234,12 +241,19 @@ export const es: Dictionary = {
     budget: "Presupuesto",
     bySubcategoryTitle: "Por subcategoría",
     noSubcategories: "No hay subcategorías bajo esta categoría.",
+    paceTitle: "Ritmo de gasto",
+    paceDescription: "Gasto real acumulado comparado con el ritmo esperado para este mes.",
+    bySubcategoryDescription: "Gasto acumulado de cada subcategoría durante el mes.",
+    category: "Categoría principal",
   },
   subcategoriesByMonth: {
     title: "Subcategorías x mes",
     noBudgetedCategoriesForYear: "No hay categorías con presupuesto para este año.",
     noSubcategories: "No hay subcategorías bajo esta categoría.",
     failedToLoad: "Error al cargar",
+    chartTitle: "Gasto mensual",
+    chartDescription: "Compara cada subcategoría a lo largo de los doce meses.",
+    category: "Categoría principal",
   },
   expenseDetailPanel: {
     typeLabels: {

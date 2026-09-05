@@ -2,7 +2,7 @@ import * as React from "react";
 import { api, type CategoryMonthMatrixRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
@@ -98,7 +98,7 @@ export default function SubcategoriesByMonth() {
         top: 0,
         textStyle: { color: muted },
       },
-      grid: { left: 56, right: 16, top: 40, bottom: 28 },
+      grid: { left: 8, right: 12, top: 40, bottom: 24, containLabel: true },
       xAxis: {
         type: "category",
         data: t.months.short,
@@ -117,8 +117,8 @@ export default function SubcategoriesByMonth() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t.subcategoriesByMonth.title}</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold">{t.subcategoriesByMonth.title}</h2>
         <Select value={year} onChange={(e) => setYear(Number(e.target.value))} className="w-fit">
           {[year - 1, year, year + 1].map((y) => (
             <option key={y} value={y}>
@@ -132,16 +132,19 @@ export default function SubcategoriesByMonth() {
         <p className="text-sm text-muted-foreground">{t.subcategoriesByMonth.noBudgetedCategoriesForYear}</p>
       ) : (
         <>
-          <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-fit">
-            {categories.map((g) => (
-              <option key={g.mainCategoryId} value={g.mainCategoryId}>
-                {g.mainName}
-              </option>
-            ))}
-          </Select>
+          <label className="flex max-w-sm flex-col gap-1 text-xs font-medium text-muted-foreground">
+            {t.subcategoriesByMonth.category}
+            <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))}>
+              {categories.map((g) => <option key={g.mainCategoryId} value={g.mainCategoryId}>{g.mainName}</option>)}
+            </Select>
+          </label>
 
           <Card>
-            <CardContent className="pt-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base text-foreground">{t.subcategoriesByMonth.chartTitle}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t.subcategoriesByMonth.chartDescription}</p>
+            </CardHeader>
+            <CardContent>
               {loading ? (
                 <p className="text-sm text-muted-foreground">{t.common.loading}</p>
               ) : error ? (

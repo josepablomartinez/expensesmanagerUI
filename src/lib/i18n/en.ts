@@ -191,6 +191,9 @@ export const en = {
     failedToLoad: "Failed to load",
   },
   reportsLayout: {
+    title: "Reports",
+    subtitle: "See where your money is going and how spending tracks against your budget.",
+    sectionsLabel: "Report sections",
     tabs: {
       budgetVsActual: "Budget vs actual",
       burndown: "Burn-down",
@@ -226,6 +229,10 @@ export const en = {
     overBudget: "Over budget",
     spent: "Spent",
     remaining: "Remaining",
+    category: "Main category",
+    subcategory: "Subcategory",
+    rankingDescription: "Categories ranked by the share of budget already used.",
+    detailDescription: "A closer look at the selected category.",
   },
   burndown: {
     title: "Burn-down",
@@ -237,12 +244,19 @@ export const en = {
     budget: "Budget",
     bySubcategoryTitle: "By subcategory",
     noSubcategories: "No subcategories under this category.",
+    paceTitle: "Spending pace",
+    paceDescription: "Cumulative actual spending compared with the expected pace for this month.",
+    bySubcategoryDescription: "Cumulative spending for each subcategory across the month.",
+    category: "Main category",
   },
   subcategoriesByMonth: {
     title: "Subcategories by month",
     noBudgetedCategoriesForYear: "No budgeted categories for this year.",
     noSubcategories: "No subcategories under this category.",
     failedToLoad: "Failed to load",
+    chartTitle: "Monthly spending",
+    chartDescription: "Compare each subcategory across all twelve months.",
+    category: "Main category",
   },
   expenseDetailPanel: {
     typeLabels: {

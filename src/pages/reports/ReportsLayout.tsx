@@ -13,22 +13,30 @@ export default function ReportsLayout() {
 
   return (
     <div className="flex flex-col gap-6">
-      <nav className="flex w-fit items-center gap-1 rounded-full border border-border bg-secondary/40 p-1">
+      <header className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight">{t.reportsLayout.title}</h1>
+        <p className="text-sm text-muted-foreground">{t.reportsLayout.subtitle}</p>
+      </header>
+
+      <nav
+        aria-label={t.reportsLayout.sectionsLabel}
+        className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-secondary/40 p-1"
+      >
         {REPORT_TABS.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                "flex min-w-0 items-center justify-center gap-1.5 rounded-md px-2 py-2 text-center text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground",
               )
             }
           >
-            <tab.icon className="h-4 w-4" />
-            {tab.label}
+            <tab.icon className="h-4 w-4 shrink-0" />
+            <span className="truncate">{tab.label}</span>
           </NavLink>
         ))}
       </nav>

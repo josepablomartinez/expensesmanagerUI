@@ -2,7 +2,7 @@ import * as React from "react";
 import { api, type BudgetBurndownRow, type BudgetBurndownBySubcategoryRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { PeriodSelect } from "@/components/reports/PeriodSelect";
 import { EChart, chartColors } from "@/components/charts/EChart";
@@ -125,7 +125,7 @@ export default function Burndown() {
         top: 0,
         textStyle: { color: muted },
       },
-      grid: { left: 56, right: 16, top: 40, bottom: 28 },
+      grid: { left: 8, right: 12, top: 40, bottom: 24, containLabel: true },
       xAxis: {
         type: "category",
         data: days,
@@ -183,7 +183,7 @@ export default function Burndown() {
         top: 0,
         textStyle: { color: muted },
       },
-      grid: { left: 56, right: 52, top: 40, bottom: 28 },
+      grid: { left: 8, right: 20, top: 40, bottom: 24, containLabel: true },
       xAxis: {
         type: "category",
         data: days,
@@ -218,7 +218,7 @@ export default function Burndown() {
             budget != null
               ? {
                   symbol: "none",
-                  label: { formatter: t.burndown.budget, color: muted },
+                  label: { formatter: t.burndown.budget, color: muted, position: "insideEndTop" },
                   lineStyle: { type: "dashed", color: border },
                   data: [{ yAxis: budget }],
                 }
@@ -251,8 +251,8 @@ export default function Burndown() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t.burndown.title}</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold">{t.burndown.title}</h2>
         <PeriodSelect year={year} month={month} onYearChange={setYear} onMonthChange={setMonth} />
       </div>
 
@@ -260,16 +260,19 @@ export default function Burndown() {
         <p className="text-sm text-muted-foreground">{t.burndown.noBudgetedCategories}</p>
       ) : (
         <>
-          <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-fit">
-            {categories.map((g) => (
-              <option key={g.mainCategoryId} value={g.mainCategoryId}>
-                {g.mainName}
-              </option>
-            ))}
-          </Select>
+          <label className="flex max-w-sm flex-col gap-1 text-xs font-medium text-muted-foreground">
+            {t.burndown.category}
+            <Select value={categoryId ?? ""} onChange={(e) => setCategoryId(Number(e.target.value))}>
+              {categories.map((g) => <option key={g.mainCategoryId} value={g.mainCategoryId}>{g.mainName}</option>)}
+            </Select>
+          </label>
 
           <Card>
-            <CardContent className="pt-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base text-foreground">{t.burndown.paceTitle}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t.burndown.paceDescription}</p>
+            </CardHeader>
+            <CardContent>
               {loading ? (
                 <p className="text-sm text-muted-foreground">{t.common.loading}</p>
               ) : error ? (
@@ -282,9 +285,12 @@ export default function Burndown() {
             </CardContent>
           </Card>
 
-          <h2 className="text-sm font-semibold text-muted-foreground">{t.burndown.bySubcategoryTitle}</h2>
           <Card>
-            <CardContent className="pt-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base text-foreground">{t.burndown.bySubcategoryTitle}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t.burndown.bySubcategoryDescription}</p>
+            </CardHeader>
+            <CardContent>
               {subLoading ? (
                 <p className="text-sm text-muted-foreground">{t.common.loading}</p>
               ) : subError ? (
