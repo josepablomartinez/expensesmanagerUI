@@ -1,57 +1,42 @@
 import * as React from "react";
 import { siVisa, siMastercard, siAmericanexpress } from "simple-icons";
-import { ChartNoAxesColumnIncreasing, Star } from "lucide-react";
+import { ChartNoAxesColumnIncreasing } from "lucide-react";
 import type { CardType } from "@/lib/api";
+import bacLogo from "@/assets/banks/bac.png";
+import bancoGeneralLogo from "@/assets/banks/banco-general.png";
+import daviviendaLogo from "@/assets/banks/davivienda-badge.png";
+import promericaLogo from "@/assets/banks/promerica.png";
 
-// Bank badges: simple original pictograms (not traced from any bank's
-// actual logo artwork) in the bank's real brand colors -- see the module
-// comment on each shape below for why it's a safe simplification rather
-// than an imitation of the specific proprietary artwork. Keyed by
-// normalized bank code/name so both `banks.code` (from GET /banks) and the
-// free-text `expenses.entity` column (which holds the same codes, plus
-// legacy variants like "ProA") resolve to the same badge.
+// Approved compact marks are bundled as icon-only crops from the third badge
+// row in the bank-treatment exploration; see assets/banks/README.md. The
+// registry is keyed by normalized bank code/name so both `banks.code` and
+// legacy `expenses.entity` variants resolve to the same badge.
 interface BankStyle {
   label: string;
   render: () => React.ReactElement;
 }
 
-// Plain two-triangle house (roof + body, no door/window/chimney detail) --
-// generic enough that it reads as "a house," not Davivienda's specific
-// illustrated mascot house.
-function HouseGlyph({ roof, body }: { roof: string; body: string }) {
+function ApprovedBankMark({ src }: { src: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4">
-      <path d="M2 12 L12 3 L22 12 Z" fill={roof} />
-      <rect x="4" y="12" width="16" height="9" rx="1" fill={body} />
-    </svg>
-  );
-}
-
-// A plain star, mostly one color with a thin accent sliver clipped onto one
-// edge -- a subtle nod to the two-tone idea without matching Promerica's
-// specific diagonal motion-line split.
-function AccentStarGlyph({ main, accent }: { main: string; accent: string }) {
-  return (
-    <span className="relative block h-4 w-4">
-      <Star className="absolute inset-0 h-4 w-4" fill={main} color={main} strokeWidth={0} />
-      <span className="absolute inset-0 overflow-hidden" style={{ clipPath: "polygon(58% 0, 100% 0, 100% 100%, 58% 100%)" }}>
-        <Star className="h-4 w-4" fill={accent} color={accent} strokeWidth={0} />
-      </span>
-    </span>
+    <img
+      src={src}
+      alt=""
+      className="h-7 w-7 rounded-full object-cover"
+      aria-hidden="true"
+      draggable={false}
+    />
   );
 }
 
 const BANK_ALIASES: Record<string, BankStyle> = {
-  // Ascending-bars/growth icon -- a completely generic finance pictogram,
-  // unrelated in concept to BAC's actual flag-shaped mark.
-  BAC: { label: "BAC San Jose", render: () => <ChartNoAxesColumnIncreasing className="h-4 w-4 text-red-600" strokeWidth={2.5} /> },
-  BG: { label: "Banco General", render: () => <Star className="h-4 w-4" fill="#1e40af" color="#1e40af" strokeWidth={0} /> },
-  BANCOGENERAL: { label: "Banco General", render: () => <Star className="h-4 w-4" fill="#1e40af" color="#1e40af" strokeWidth={0} /> },
-  DV: { label: "Davivienda", render: () => <HouseGlyph roof="#ea580c" body="#dc2626" /> },
-  DAVIVIENDA: { label: "Davivienda", render: () => <HouseGlyph roof="#ea580c" body="#dc2626" /> },
-  PROMERICA: { label: "Promerica", render: () => <AccentStarGlyph main="#15803d" accent="#84cc16" /> },
-  PROM: { label: "Promerica", render: () => <AccentStarGlyph main="#15803d" accent="#84cc16" /> },
-  PROA: { label: "Promerica", render: () => <AccentStarGlyph main="#15803d" accent="#84cc16" /> },
+  BAC: { label: "BAC San Jose", render: () => <ApprovedBankMark src={bacLogo} /> },
+  BG: { label: "Banco General", render: () => <ApprovedBankMark src={bancoGeneralLogo} /> },
+  BANCOGENERAL: { label: "Banco General", render: () => <ApprovedBankMark src={bancoGeneralLogo} /> },
+  DV: { label: "Davivienda", render: () => <ApprovedBankMark src={daviviendaLogo} /> },
+  DAVIVIENDA: { label: "Davivienda", render: () => <ApprovedBankMark src={daviviendaLogo} /> },
+  PROMERICA: { label: "Promerica", render: () => <ApprovedBankMark src={promericaLogo} /> },
+  PROM: { label: "Promerica", render: () => <ApprovedBankMark src={promericaLogo} /> },
+  PROA: { label: "Promerica", render: () => <ApprovedBankMark src={promericaLogo} /> },
 };
 
 function normalize(s: string) {
@@ -96,7 +81,7 @@ export function BankBadge({ codeOrName, className = "" }: { codeOrName?: string 
     <span
       title={style.label}
       aria-label={style.label}
-      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-muted-foreground shadow-sm ring-1 ring-black/10 ${className}`}
+      className={`flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white text-muted-foreground shadow-sm ring-1 ring-black/10 ${className}`}
     >
       {style.render()}
     </span>

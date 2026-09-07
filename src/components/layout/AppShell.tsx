@@ -122,6 +122,7 @@ export function AppShell() {
               variant="ghost"
               size="sm"
               aria-label={currency === "CRC" ? t.nav.switchToUsd : t.nav.switchToCrc}
+              title={currency === "CRC" ? t.nav.switchToUsd : t.nav.switchToCrc}
               onClick={toggleCurrency}
               className="min-w-9 bg-muted px-2 text-sm font-medium"
             >
@@ -131,6 +132,7 @@ export function AppShell() {
               variant="ghost"
               size="icon"
               aria-label={theme === "dark" ? t.nav.switchToLight : t.nav.switchToDark}
+              title={theme === "dark" ? t.nav.switchToLight : t.nav.switchToDark}
               onClick={toggleTheme}
               className="h-9 w-9"
             >
@@ -145,6 +147,7 @@ export function AppShell() {
                 variant="ghost"
                 size="icon"
                 aria-label={t.nav.alerts}
+                title={t.nav.alerts}
                 aria-haspopup="dialog"
                 aria-expanded={alertsOpen}
                 className="relative h-9 w-9"
@@ -168,6 +171,7 @@ export function AppShell() {
             <NavLink
               to="/settings"
               aria-label={t.nav.settings}
+              title={t.nav.settings}
               className={({ isActive }) =>
                 cn(
                   "flex h-9 w-9 items-center justify-center rounded-md",

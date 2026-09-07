@@ -8,10 +8,10 @@ interface MiHarinaLogoProps {
 export function MiHarinaLogo({ compact = false, className }: MiHarinaLogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5 whitespace-nowrap", className)}>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-panel bg-logo text-logo-foreground shadow-sm">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-panel bg-logo text-logo-foreground shadow-sm">
         <svg
           aria-hidden="true"
-          className="h-7 w-7"
+          className="h-9 w-9"
           viewBox="0 0 32 32"
           fill="none"
         >
