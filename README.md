@@ -1,9 +1,11 @@
-# Expenses Manager UI
+# MiHarina (Expenses Manager UI)
 
-React + TypeScript web app for reviewing, searching, and reporting on
+React + TypeScript web app for tracking, reviewing, searching, and reporting on
 personal expenses captured by the [Expenses Manager](https://github.com/josepablomartinez/expensesmanager)
-automation. Talks to the [`expense-api`](https://github.com/josepablomartinez/expensesmanager/tree/main/API)
-Go backend and updates live as new expenses arrive via Server-Sent Events.
+automation. It talks to the [`expense-api`](https://github.com/josepablomartinez/expensesmanager/tree/main/API)
+Go backend. The responsive MiHarina interface supports English and Spanish,
+light and dark themes, and CRC/USD display. Expense events refresh relevant
+views through Server-Sent Events.
 
 ## Tech stack
 
@@ -12,9 +14,9 @@ Go backend and updates live as new expenses arrive via Server-Sent Events.
 - **React Router v6** — client-side routing (`src/App.tsx`)
 - **Tailwind CSS** — styling, with `class-variance-authority`, `clsx`, and
   `tailwind-merge` for composable component variants (`src/components/ui/`)
-- **ECharts** (`echarts` + `echarts-for-react`) — report charts (budget vs.
-  actual, burndown)
-- **lucide-react** — icon set
+- **ECharts** (`echarts` + `echarts-for-react`) — report charts
+- **lucide-react**, local category artwork, and local bank/brand assets — icons
+- **Inter** (`@fontsource/inter`) — interface font
 - Plain `fetch` for API calls (`src/lib/api.ts`), no data-fetching library
 - Served in production by **nginx** (see Deployment below)
 
@@ -22,53 +24,80 @@ Go backend and updates live as new expenses arrive via Server-Sent Events.
 
 ```
 src/
-├── App.tsx               Route table
-├── main.tsx               Entry point
+├── App.tsx                  Route table
+├── main.tsx                 Entry point and context providers
 ├── lib/
-│   ├── api.ts              Typed fetch wrapper for expense-api + JWT header injection
-│   ├── auth.tsx             AuthProvider / useAuth / ProtectedRoute (JWT in localStorage)
-│   ├── events.ts            SSE client for expense-api's /events stream
-│   ├── categoryGrouping.ts  Groups categories/subcategories for display
-│   ├── categoryIcons.tsx    Icon mapping per category
-│   └── format.ts            Currency/date formatting helpers
+│   ├── api.ts               Typed expense-api requests and JWT header injection
+│   ├── auth.tsx              Auth context and optional ProtectedRoute
+│   ├── events.ts             Shared /events SSE connection
+│   ├── alerts.tsx            Alert state and unread count
+│   ├── language.tsx          English/Spanish selection and translations
+│   ├── currency.tsx          Shared CRC/USD display selection
+│   ├── theme.tsx             Light/dark theme
+│   └── i18n/                 English and Spanish dictionaries
 ├── components/
-│   ├── layout/AppShell.tsx  Page chrome (nav, outlet) shared by all routes
-│   ├── charts/EChart.tsx    ECharts wrapper used by the report pages
-│   ├── SplitExpenseDialog.tsx
-│   ├── InfoModal.tsx
-│   └── ui/                  Low-level primitives (button, card, input, select, badge)
+│   ├── layout/AppShell.tsx   Responsive navigation and utilities
+│   ├── expenses/            Shared expense rows, details, flags, and actions
+│   ├── dashboard/           Home widgets
+│   ├── alerts/              Alert list and desktop panel
+│   ├── reports/             Shared report controls
+│   ├── charts/EChart.tsx     ECharts wrapper
+│   └── ui/                  Reusable controls
 └── pages/
-    ├── Login.tsx
-    ├── Home.tsx
-    ├── Search.tsx
-    ├── AddExpense.tsx
-    ├── Review.tsx            Approve/categorize low-confidence expenses (bulk approve, split)
-    ├── Categories.tsx
-    └── reports/
-        ├── ReportsLayout.tsx
-        ├── BudgetVsActual.tsx
-        └── Burndown.tsx
+    ├── Home.tsx             Dashboard and recent expense previews
+    ├── Activity.tsx         Chronological expense activity
+    ├── Search.tsx           Filterable expense results
+    ├── AddExpense.tsx       Manual expense entry
+    ├── Review.tsx           Review and bulk approval queue
+    ├── Alerts.tsx           Alert center
+    ├── Login.tsx            Future authentication screen
+    ├── settings/            Basic, credit cards, categories, advanced
+    └── reports/             Budget, burndown, subcategories by month
 ```
 
 ## Routes
 
 | Path | Page | Notes |
 |------|------|-------|
-| `/login` | `Login` | Not currently enforced — see Authentication below |
-| `/` | `Home` | Dashboard |
-| `/search` | `Search` | Filterable expense list (`GET /expenses`) |
-| `/add` | `AddExpense` | Manual entry (`POST /expenses`) |
-| `/review` | `Review` | Low-confidence queue, bulk approve, split (`GET /expenses/review`, `POST /expenses/bulk-approve`, `POST /expenses/{id}/split`) |
-| `/categories` | `Categories` | `GET /categories` |
-| `/reports/budget-vs-actual` | `BudgetVsActual` | `GET /reports/budget-vs-actual` |
-| `/reports/burndown` | `Burndown` | `GET /reports/burndown` |
+| `/login` | Login | Auth route exists but is not enforced; see Authentication below |
+| `/` | Home | Greeting, expense previews, favorite category budgets, exchange rates |
+| `/activity` | Activity | Chronological expense list from `GET /expenses`, with older dates loaded on demand |
+| `/search` | Search | Filterable expense list from `GET /expenses` |
+| `/add` | Add Expense | Manual Cash or SINPE entry via `POST /expenses` |
+| `/review` | Review | Categorization and approval queue, including bulk review |
+| `/alerts` | Alerts | Alert center; desktop also has a compact bell panel |
+| `/settings` | Settings | Basic settings on desktop; section index on mobile |
+| `/settings/basic` | Basic | Profile, language, currency, and favorites |
+| `/settings/credit-cards` | Credit cards | Manage saved credit cards |
+| `/settings/categories` | Categories | Manage categories, subcategories, and budgets |
+| `/settings/advanced` | Advanced | Exchange-rate, credit-card reporting, and alert preferences |
+| `/reports` | Reports | Redirects to Budget versus actual |
+| `/reports/budget-vs-actual` | Budget versus actual | Category budget ranking and details |
+| `/reports/burndown` | Burndown | Actual versus expected spending pace |
+| `/reports/subcategories-by-month` | Subcategories by month | Monthly subcategory trends |
+
+## Interface
+
+The desktop header links to Review, Search, and Reports, with Add Expense and
+currency, theme, alerts, and Settings controls alongside. Mobile uses a bottom
+bar for Home, Review, Add, Search, and Reports. Activity opens from Home;
+Categories is under Settings. The desktop alert bell opens a panel, while the
+mobile bell opens `/alerts`.
+
+Home, Activity, and Search share expense rows, details, flags, and edit/split/
+delete actions. The API returns expenses grouped by day; Activity starts with
+two weeks and can load older two-week windows. Search filters and sorts the
+returned expenses. The interface uses
+English or Spanish labels, light or dark styling, and a shared CRC/USD display
+selection. Language and display currency are saved through Settings; theme is
+stored in the browser.
 
 ## Live updates
 
 `src/lib/events.ts` opens an `EventSource` against `expense-api`'s
-`GET /events` SSE stream, which fires whenever n8n (or a manual entry)
-inserts or updates an expense in Postgres. Pages that show expense lists
-subscribe to this to refresh without polling.
+`GET /events` SSE stream. The shared connection notifies subscribers when an
+expense is created or deleted. Expense views, the review count, and alert
+state use these events to refresh without polling.
 
 ## Authentication
 
@@ -84,10 +113,10 @@ element in `<ProtectedRoute>` to require a token.
 
 | Var | Example | Notes |
 |-----|---------|-------|
-| `VITE_API_URL` | `http://localhost:8080` | Base URL of `expense-api`. **Baked into the JS bundle at build time** (Vite inlines `import.meta.env.*` values), so it must be an origin reachable from the *browser*, not an internal Docker service name. |
+| `VITE_API_URL` | `http://localhost:8081` | Base URL of `expense-api`. **Baked into the JS bundle at build time** (Vite inlines `import.meta.env.*` values), so it must be an origin reachable from the *browser*, not an internal Docker service name. |
 
 ```bash
-cp .env.example .env.local   # edit VITE_API_URL if the API isn't on localhost:8080
+cp .env.example .env.local   # edit VITE_API_URL if the API isn't on localhost:8081
 ```
 
 ## Running locally
@@ -98,8 +127,8 @@ npm run dev
 ```
 
 Serves on `http://localhost:5173` (see `vite.config.ts`) with hot reload.
-Requires `expense-api` running and reachable at `VITE_API_URL` (default
-`http://localhost:8080`) — see the
+Requires `expense-api` running and reachable at `VITE_API_URL` (set to
+`http://localhost:8081` in `.env.example`) — see the
 [API README](https://github.com/josepablomartinez/expensesmanager/tree/main/API)
 for running it, or bring up the whole stack via the
 [parent repo's docker-compose.yaml](https://github.com/josepablomartinez/expensesmanager/blob/main/docker-compose.yaml).
@@ -122,7 +151,7 @@ docker compose up -d --build
 ```
 
 `docker-compose.yaml` here builds the `web` service with
-`VITE_API_URL: http://localhost:8080` as a build arg and publishes it on
+`VITE_API_URL: http://localhost:8081` as a build arg and publishes it on
 `5173:80`. **Because the API URL is compiled into the bundle at build
 time**, changing it means rebuilding the image — there's no runtime env
 var for this. Update the `args.VITE_API_URL` value (or override it with
