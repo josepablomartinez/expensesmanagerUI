@@ -75,6 +75,8 @@ export const en = {
     failedToLoad: "Failed to load activity",
   },
   login: {
+    welcome: "Welcome back",
+    prompt: "Sign in to MiHarina to continue.",
     signIn: "Sign in",
     signingIn: "Signing in...",
     email: "Email",

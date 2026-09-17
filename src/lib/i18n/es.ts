@@ -72,6 +72,8 @@ export const es: Dictionary = {
     failedToLoad: "No se pudo cargar la actividad",
   },
   login: {
+    welcome: "Te damos la bienvenida",
+    prompt: "Inicia sesión en MiHarina para continuar.",
     signIn: "Iniciar sesión",
     signingIn: "Iniciando sesión...",
     email: "Correo electrónico",
