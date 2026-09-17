@@ -74,9 +74,9 @@ export const es: Dictionary = {
   login: {
     signIn: "Iniciar sesión",
     signingIn: "Iniciando sesión...",
-    username: "Usuario",
+    email: "Correo electrónico",
     password: "Contraseña",
-    invalidCredentials: "Credenciales inválidas, o la API aún no tiene el endpoint /auth/login.",
+    invalidCredentials: "Correo electrónico o contraseña incorrectos.",
   },
   review: {
     queueTitle: "Cola de revisión",

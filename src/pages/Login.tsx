@@ -11,7 +11,7 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -21,7 +21,7 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      await login(username, password);
+      await login(email, password);
       const from = (location.state as { from?: Location })?.from?.pathname ?? "/review";
       navigate(from, { replace: true });
     } catch {
@@ -39,7 +39,13 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
-            <Input placeholder={t.login.username} value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
+            <Input
+              type="email"
+              placeholder={t.login.email}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoFocus
+            />
             <Input placeholder={t.login.password} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={loading}>

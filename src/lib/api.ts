@@ -267,20 +267,22 @@ class ApiError extends Error {
   }
 }
 
-// Token accessor is injected by AuthProvider so this module doesn't depend on
-// React context directly (keeps api.ts usable from anywhere, incl. non-component code).
-let getToken: () => string | null = () => null;
-export function setTokenGetter(fn: () => string | null) {
-  getToken = fn;
+export interface AuthUser {
+  id: number;
+  email: string;
+  name: string;
+  is_owner: boolean;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const token = getToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
+    // Session-cookie auth (see session-auth-spec.md) -- the API sets an
+    // HttpOnly cookie on login, and the browser attaches it automatically
+    // on every request from here on. No token to read or attach ourselves.
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
   });
@@ -294,6 +296,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  auth: {
+    login: (email: string, password: string) =>
+      request<{ status: string }>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      }),
+    logout: () => request<{ status: string }>("/auth/logout", { method: "POST" }),
+    me: () => request<AuthUser>("/auth/me"),
+  },
   expenses: {
     review: (minConfidence = 1.0) =>
       request<Expense[]>(`/expenses/review?min_confidence=${minConfidence}`),

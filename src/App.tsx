@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
+import { ProtectedRoute } from "@/lib/auth";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
 import Activity from "@/pages/Activity";
@@ -17,14 +18,17 @@ import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
 import SubcategoriesByMonth from "@/pages/reports/SubcategoriesByMonth";
 
-// Routes are open for now since the Go API has no /auth/login endpoint yet.
-// Once it does, wrap this <Route element={<AppShell />}> in <ProtectedRoute>
-// (see src/lib/auth.tsx) to require a token before rendering any of it.
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route element={<AppShell />}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Home />} />
         <Route path="/activity" element={<Activity />} />
         <Route path="/search" element={<Search />} />

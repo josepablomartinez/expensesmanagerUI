@@ -77,9 +77,9 @@ export const en = {
   login: {
     signIn: "Sign in",
     signingIn: "Signing in...",
-    username: "Username",
+    email: "Email",
     password: "Password",
-    invalidCredentials: "Invalid credentials, or the API has no /auth/login endpoint yet.",
+    invalidCredentials: "Invalid email or password.",
   },
   review: {
     queueTitle: "Review queue",

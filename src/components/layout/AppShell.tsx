@@ -5,6 +5,7 @@ import {
   Bell,
   Home,
   ListChecks,
+  LogOut,
   Moon,
   Plus,
   Search,
@@ -24,7 +25,7 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 export function AppShell() {
-  const { token, logout } = useAuth();
+  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { currency, toggleCurrency } = useCurrency();
   const location = useLocation();
@@ -181,9 +182,16 @@ export function AppShell() {
             >
               <Settings className="h-4 w-4" aria-hidden="true" />
             </NavLink>
-            {token && (
-              <Button variant="ghost" size="sm" onClick={logout} className="hidden lg:inline-flex">
-                {t.nav.logOut}
+            {user && (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={t.nav.logOut}
+                title={t.nav.logOut}
+                onClick={logout}
+                className="h-9 w-9"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
           </div>
