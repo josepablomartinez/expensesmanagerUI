@@ -27,8 +27,8 @@ src/
 ├── App.tsx                  Route table
 ├── main.tsx                 Entry point and context providers
 ├── lib/
-│   ├── api.ts               Typed expense-api requests and JWT header injection
-│   ├── auth.tsx              Auth context and optional ProtectedRoute
+│   ├── api.ts               Typed expense-api requests, credentials: "include"
+│   ├── auth.tsx              Auth context and ProtectedRoute (session cookie)
 │   ├── events.ts             Shared /events SSE connection
 │   ├── alerts.tsx            Alert state and unread count
 │   ├── language.tsx          English/Spanish selection and translations
@@ -59,7 +59,7 @@ src/
 
 | Path | Page | Notes |
 |------|------|-------|
-| `/login` | Login | Auth route exists but is not enforced; see Authentication below |
+| `/login` | Login | Required to reach any other route; see Authentication below |
 | `/` | Home | Greeting, expense previews, favorite category budgets, exchange rates |
 | `/activity` | Activity | Chronological expense list from `GET /expenses`, with older dates loaded on demand |
 | `/search` | Search | Filterable expense list from `GET /expenses` |
@@ -101,13 +101,23 @@ state use these events to refresh without polling.
 
 ## Authentication
 
-`src/lib/auth.tsx` implements a full JWT flow — `AuthProvider`, token
-storage in `localStorage` (`expenses_jwt`), a `Bearer` header injected into
-every `api.ts` request, and a `ProtectedRoute` wrapper — but it's currently
-**unused**: the Go API has no `/auth/login` endpoint yet, so `App.tsx`
-leaves every route open (see the comment at the top of that file). Once
-`expense-api` gains an auth endpoint, wrap the routed `<AppShell />`
-element in `<ProtectedRoute>` to require a token.
+`src/lib/auth.tsx` implements session-cookie auth against the Go API's
+`/auth/*` endpoints — no client-readable token. `AuthProvider` resolves
+`user` via `GET /auth/me` on mount (the only way to know "am I logged in"
+now that the session lives in an `HttpOnly` cookie, not `localStorage`),
+and `ProtectedRoute` wraps the routed `<AppShell />` in `App.tsx`, holding
+off any redirect until that initial check resolves (avoids a flash-redirect
+to `/login`).
+
+Every `api.ts` request is sent with `credentials: "include"` so the browser
+attaches the session cookie automatically; there's no `Authorization`
+header. Because the frontend and API are on different subdomains in
+production (`app.miharina.co.cr` vs `api.miharina.co.cr`), this is a
+credentialed **cross-origin** request — the API's CORS config needs
+`Access-Control-Allow-Credentials: true` and an explicit, non-wildcard
+`Access-Control-Allow-Origin` for the cookie to actually be sent/accepted
+(see `expense-api`'s `CORS_ALLOWED_ORIGINS`). See the backend repo's
+`docs/session-auth-spec.md` for the full design.
 
 ## Configuration
 
@@ -158,8 +168,32 @@ var for this. Update the `args.VITE_API_URL` value (or override it with
 `--build-arg`) before building for any environment other than local
 Docker, and rebuild whenever the API's public URL changes.
 
+### Production
+
+`docker-compose.prod.yml` builds against `https://api.miharina.co.cr` and
+adds Traefik labels for `app.miharina.co.cr`, following the same pattern as
+the backend repo's `expense-api`/`n8n` services (Traefik does TLS
+termination + routing only; no `ports:` published). It joins the
+backend stack's `web` Docker network as an **external** network
+(`miharina_web`, from that stack's `docker-compose.prod.yml` setting
+`name: miharina`) so Traefik — which runs as part of the backend stack —
+can route to this container. Deploy on the same host, after the backend
+stack is already up:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+Requires:
+- The `app.miharina.co.cr` DNS record pointed at the host (see the backend
+  repo's `docs/miharina-deployment-guide.md`)
+- `expense-api`'s `CORS_ALLOWED_ORIGINS` (prod `.env`) including
+  `https://app.miharina.co.cr` — see Authentication above
+
 ## Known gaps
 
-- No `/auth/login` on the backend yet, so the JWT login flow in
-  `lib/auth.tsx` is wired but unreachable — see Authentication above.
+- Not yet deployed to production — `docker-compose.prod.yml` exists but has
+  not been run on the actual host yet; the cross-origin credentialed CORS
+  setup has only been exercised against `localhost` ports so far, not the
+  real `app.miharina.co.cr` / `api.miharina.co.cr` subdomains.
 - No test suite currently configured.
