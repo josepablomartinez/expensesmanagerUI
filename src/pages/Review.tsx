@@ -15,6 +15,7 @@ import { InfoModal } from "@/components/InfoModal";
 import { ExpenseFlag } from "@/components/expenses/ExpenseFlag";
 import { BulkReviewDialog } from "@/components/BulkReviewDialog";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
+import { resolveCategoryOverrides } from "@/lib/reviewApprove";
 
 export default function Review() {
   const { currency } = useCurrency();
@@ -131,6 +132,8 @@ export default function Review() {
     if (ids.length === 0) return;
     setActionError(null);
     try {
+      const overrides = resolveCategoryOverrides(expenses, ids, selections);
+      await Promise.all(overrides.map((o) => api.expenses.updateCategory(o.id, o.categoryId)));
       await api.expenses.bulkApprove(ids);
       const idSet = new Set(ids);
       setExpenses((prev) => prev.filter((e) => !idSet.has(e.id)));
