@@ -208,6 +208,18 @@ export default function Burndown() {
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { type: "dashed", color: muted, width: 1.5 },
           itemStyle: { color: muted },
+          // Flat budget ceiling, independent of the diagonal proration line above --
+          // attached here (rather than the under/over-pace segments) so it always
+          // spans the full width regardless of where the crossover falls.
+          markLine:
+            budget != null
+              ? {
+                  symbol: "none",
+                  label: { formatter: `${t.burndown.budget}: ${formatMoney(budget, currency)}`, color: muted, position: "insideEndTop" },
+                  lineStyle: { type: "solid", color: muted, width: 2 },
+                  data: [{ yAxis: budget }],
+                }
+              : undefined,
         },
         {
           name: t.burndown.actual,
@@ -219,15 +231,6 @@ export default function Burndown() {
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { color: primary, width: 2.5 },
           itemStyle: { color: primary },
-          markLine:
-            budget != null
-              ? {
-                  symbol: "none",
-                  label: { formatter: t.burndown.budget, color: muted, position: "insideEndTop" },
-                  lineStyle: { type: "dashed", color: border },
-                  data: [{ yAxis: budget }],
-                }
-              : undefined,
         },
         {
           name: t.burndown.actual,

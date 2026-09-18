@@ -36,6 +36,7 @@ function ninetyDaysAgo() {
 type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
 type QuickRange = "" | "0" | "1" | "2";
+type DateField = "event" | "payment";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function Search() {
   const [to, setTo] = React.useState(today());
   const [quickRange, setQuickRange] = React.useState<QuickRange>("");
   const [categoryId, setCategoryId] = React.useState("");
+  const [dateField, setDateField] = React.useState<DateField>("event");
   const [query, setQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<SortBy>("date");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
@@ -72,11 +74,11 @@ export default function Search() {
     setLoading(true);
     setError(null);
     return api.expenses
-      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: 500 })
+      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: 500, dateField })
       .then((res) => setExpenses(res.days.flatMap((d) => d.expenses)))
       .catch((err) => setError(err instanceof Error ? err.message : t.search.failedToLoad))
       .finally(() => setLoading(false));
-  }, [from, to, categoryId]);
+  }, [from, to, categoryId, dateField]);
 
   React.useEffect(() => {
     load();
@@ -198,6 +200,14 @@ export default function Search() {
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.category} / {c.subcategory}</option>
               ))}
+            </Select>
+          </label>
+
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.dateBasis}
+            <Select value={dateField} onChange={(e) => setDateField(e.target.value as DateField)} className="w-full">
+              <option value="event">{t.search.dateBasisEvent}</option>
+              <option value="payment">{t.search.dateBasisPayment}</option>
             </Select>
           </label>
 
