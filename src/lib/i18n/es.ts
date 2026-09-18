@@ -128,6 +128,7 @@ export const es: Dictionary = {
     to: "Hasta",
     quickRange: "Rango rápido",
     customRange: "Fechas personalizadas",
+    nextMonth: "Próximo mes",
     thisMonth: "Mes actual",
     lastMonth: "Último mes",
     secondLastMonth: "Penúltimo mes",
@@ -238,6 +239,7 @@ export const es: Dictionary = {
     rankingDescription: "Categorías ordenadas por la proporción del presupuesto ya utilizada.",
     noUsage: "No hay consumo de presupuesto registrado para este período.",
     detailDescription: "Un vistazo más detallado a la categoría seleccionada.",
+    seeExpenses: "Ver gastos",
   },
   burndown: {
     title: "Consumo",

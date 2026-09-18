@@ -35,7 +35,7 @@ function ninetyDaysAgo() {
 
 type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
-type QuickRange = "" | "0" | "1" | "2";
+type QuickRange = "" | "-1" | "0" | "1" | "2";
 type DateField = "event" | "payment";
 
 export default function Search() {
@@ -44,11 +44,11 @@ export default function Search() {
   const focusedExpenseId = Number(searchParams.get("expense")) || null;
   const { currency } = useCurrency();
   const t = useT();
-  const [from, setFrom] = React.useState(focusedExpenseId ? ninetyDaysAgo() : firstOfMonth());
-  const [to, setTo] = React.useState(today());
+  const [from, setFrom] = React.useState(() => searchParams.get("from") || (focusedExpenseId ? ninetyDaysAgo() : firstOfMonth()));
+  const [to, setTo] = React.useState(() => searchParams.get("to") || today());
   const [quickRange, setQuickRange] = React.useState<QuickRange>("");
-  const [categoryId, setCategoryId] = React.useState("");
-  const [dateField, setDateField] = React.useState<DateField>("event");
+  const [categoryId, setCategoryId] = React.useState(() => searchParams.get("category") || "");
+  const [dateField, setDateField] = React.useState<DateField>(() => (searchParams.get("date_field") === "payment" ? "payment" : "event"));
   const [query, setQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<SortBy>("date");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
@@ -187,6 +187,7 @@ export default function Search() {
               className="w-full"
             >
               <option value="">{t.search.customRange}</option>
+              <option value="-1">{t.search.nextMonth}</option>
               <option value="0">{t.search.thisMonth}</option>
               <option value="1">{t.search.lastMonth}</option>
               <option value="2">{t.search.secondLastMonth}</option>

@@ -131,6 +131,7 @@ export const en = {
     to: "To",
     quickRange: "Quick range",
     customRange: "Custom dates",
+    nextMonth: "Next month",
     thisMonth: "This month",
     lastMonth: "Last month",
     secondLastMonth: "Second last month",
@@ -241,6 +242,7 @@ export const en = {
     rankingDescription: "Categories ranked by the share of budget already used.",
     noUsage: "No budget use recorded for this period.",
     detailDescription: "A closer look at the selected category.",
+    seeExpenses: "See expenses",
   },
   burndown: {
     title: "Burn-down",

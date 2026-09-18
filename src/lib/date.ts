@@ -15,3 +15,12 @@ export function monthRange(monthsAgo: number) {
   const end = new Date(now.getFullYear(), now.getMonth() - monthsAgo + 1, 0);
   return { from: localISODate(start), to: localISODate(end) };
 }
+
+// Same as monthRange, but for an explicit (year, month) pair (month is
+// 1-indexed) instead of one relative to today -- for report periods the
+// user has navigated to, which aren't necessarily near the current month.
+export function monthRangeFor(year: number, month: number) {
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0);
+  return { from: localISODate(start), to: localISODate(end) };
+}

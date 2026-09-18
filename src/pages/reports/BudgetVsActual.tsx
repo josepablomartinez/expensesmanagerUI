@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Flame } from "lucide-react";
 import { api, type BudgetVsActual as BudgetVsActualRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { PeriodSelect } from "@/components/reports/PeriodSelect";
+import { monthRangeFor } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import { groupByMainCategory, splitCategoryName } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
@@ -22,6 +23,7 @@ function severityBarClass(pct: number) {
 export default function BudgetVsActual() {
   const { currency } = useCurrency();
   const t = useT();
+  const navigate = useNavigate();
   const now = new Date();
   const [searchParams] = useSearchParams();
   const [year, setYear] = React.useState(now.getFullYear());
@@ -75,6 +77,18 @@ export default function BudgetVsActual() {
     detailRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
+  // This report's actual_crc/actual_usd figures always come from
+  // fn_budget_vs_actual, which filters on payment date (see db/functions.sql)
+  // regardless of the user's credit_card_expense_date setting -- so linking
+  // through with date_field=payment is what reproduces exactly the expenses
+  // behind the number shown here (a no-op when that setting is "event",
+  // since payment date then equals the transaction date anyway).
+  function seeExpenses(row: BudgetVsActualRow) {
+    const { from, to } = monthRangeFor(year, month);
+    const params = new URLSearchParams({ from, to, category: String(row.category_id), date_field: "payment" });
+    navigate(`/search?${params}`);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -121,6 +135,11 @@ export default function BudgetVsActual() {
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">{t.budgetVsActual.category}<Select value={selectedMainId ?? ""} onChange={(e) => setSelectedMainId(Number(e.target.value))}>{groups.map((group) => <option key={group.mainCategoryId} value={group.mainCategoryId}>{group.mainName}</option>)}</Select></label>
                 <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">{t.budgetVsActual.subcategory}<Select value={selectedSubId ?? ""} onChange={(e) => setSelectedSubId(Number(e.target.value))}>{selectedGroup?.subcategories.map((row) => <option key={row.category_id} value={row.category_id}>{splitCategoryName(row.category_name).subName}</option>)}</Select></label>
                 <BudgetDetail row={selectedRow} currency={currency} labels={t.budgetVsActual} />
+                {selectedRow && (
+                  <Button type="button" variant="outline" size="sm" onClick={() => seeExpenses(selectedRow)}>
+                    {t.budgetVsActual.seeExpenses}
+                  </Button>
+                )}
               </>}
             </CardContent></Card>
           </div>
