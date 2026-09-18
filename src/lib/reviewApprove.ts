@@ -26,3 +26,32 @@ export function resolveCategoryOverrides(
   }
   return overrides;
 }
+
+export interface MerchantRuleRequest {
+  id: number;
+  commercePattern: string;
+  categoryId: number;
+}
+
+// Mirrors confirmApprove's "always categorize this merchant" behavior for the
+// bulk approve flow (approveIds) -- without this, checking that box on a row
+// and then using "Approve Selected"/"Approve All" silently drops the
+// merchant-rule request instead of creating it.
+export function resolveMerchantRules(
+  expenses: Expense[],
+  ids: number[],
+  selections: Record<number, string>,
+  alwaysCategorize: Record<number, boolean>,
+): MerchantRuleRequest[] {
+  const idSet = new Set(ids);
+  const rules: MerchantRuleRequest[] = [];
+  for (const expense of expenses) {
+    if (!idSet.has(expense.id)) continue;
+    if (!alwaysCategorize[expense.id] || !expense.merchant) continue;
+    const categoryId = Number(selections[expense.id]);
+    if (categoryId > 0) {
+      rules.push({ id: expense.id, commercePattern: expense.merchant, categoryId });
+    }
+  }
+  return rules;
+}

@@ -15,7 +15,7 @@ import { InfoModal } from "@/components/InfoModal";
 import { ExpenseFlag } from "@/components/expenses/ExpenseFlag";
 import { BulkReviewDialog } from "@/components/BulkReviewDialog";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
-import { resolveCategoryOverrides } from "@/lib/reviewApprove";
+import { resolveCategoryOverrides, resolveMerchantRules } from "@/lib/reviewApprove";
 
 export default function Review() {
   const { currency } = useCurrency();
@@ -135,6 +135,16 @@ export default function Review() {
       const overrides = resolveCategoryOverrides(expenses, ids, selections);
       await Promise.all(overrides.map((o) => api.expenses.updateCategory(o.id, o.categoryId)));
       await api.expenses.bulkApprove(ids);
+
+      const ruleRequests = resolveMerchantRules(expenses, ids, selections, alwaysCategorize);
+      let ruleFailures = 0;
+      if (ruleRequests.length > 0) {
+        const results = await Promise.allSettled(
+          ruleRequests.map((r) => api.merchantRules.create({ commercePattern: r.commercePattern, categoryId: r.categoryId })),
+        );
+        ruleFailures = results.filter((r) => r.status === "rejected").length;
+      }
+
       const idSet = new Set(ids);
       setExpenses((prev) => prev.filter((e) => !idSet.has(e.id)));
       setSelected((prev) => {
@@ -142,7 +152,14 @@ export default function Review() {
         ids.forEach((id) => next.delete(id));
         return next;
       });
-      setSuccessMessage(t.review.approvedCount(ids.length));
+      setAlwaysCategorize((prev) => {
+        const next = { ...prev };
+        ids.forEach((id) => delete next[id]);
+        return next;
+      });
+      setSuccessMessage(
+        t.review.approvedCount(ids.length) + (ruleFailures > 0 ? t.review.bulk.rulesNotSaved(ruleFailures) : ""),
+      );
     } catch (err) {
       setActionError(err instanceof Error ? err.message : t.review.failedToApprove);
     }
