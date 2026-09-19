@@ -243,7 +243,8 @@ export default function Search() {
       ) : results.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t.search.noExpensesMatch}</p>
       ) : (
-        <div className="flex flex-col gap-2">
+        <Card className="border-border/80 shadow-sm">
+        <CardContent className="flex flex-col gap-2 pt-4">
           {results.map((expense) => (
             <div key={expense.id} id={`expense-${expense.id}`} className={cn(expense.id === focusedExpenseId && "rounded-lg ring-2 ring-ring ring-offset-2 ring-offset-background")}>
             <ExpenseFrame
@@ -256,6 +257,7 @@ export default function Search() {
               onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
               onDelete={() => setDeleteTarget(expense)}
               showDate
+              className="border-0 bg-secondary/40"
               status={
                 !expense.reviewed ? (
                   <button
@@ -272,7 +274,8 @@ export default function Search() {
             />
             </div>
           ))}
-        </div>
+        </CardContent>
+        </Card>
       )}
 
       {splitTarget && (
