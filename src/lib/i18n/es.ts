@@ -83,6 +83,7 @@ export const es: Dictionary = {
   review: {
     queueTitle: "Cola de revisión",
     pendingCount: (n: number) => `${n} pendientes`,
+    foreignCurrency: (amount: number, code: string) => `Moneda extranjera: ${amount} ${code}`,
     approveSelected: (n: number) => `Aprobar seleccionados (${n})`,
     approveAll: "Aprobar todos",
     focusedExpenseMissing: "Ese gasto ya no está en la cola de revisión (puede que ya haya sido aprobado).",

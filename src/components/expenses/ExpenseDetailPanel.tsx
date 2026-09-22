@@ -1,4 +1,4 @@
-import { CalendarDays, Copy, Landmark, MessageSquareText } from "lucide-react";
+import { CalendarDays, Coins, Copy, Landmark, MessageSquareText } from "lucide-react";
 import type { CreditCard, Expense } from "@/lib/api";
 import { BankBadge, CardNetworkBadge, resolveBank } from "@/lib/brandIcons";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +25,8 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
   const hasCard = expense.credit_card_id != null && Boolean(expense.card_type);
   const hasPaymentDate = hasCard && Boolean(expense.payment_date);
   const hasPaymentIdentity = Boolean(bank || hasCard || typeLabel);
-  const nothingToShow = !hasPaymentIdentity && !hasPaymentDate && !expense.motive && !expense.flag_reason;
+  const nothingToShow =
+    !hasPaymentIdentity && !hasPaymentDate && !expense.foreign?.note && !expense.motive && !expense.flag_reason;
 
   return (
     <div className="mt-2 space-y-2.5 rounded-panel border border-border bg-background p-3 sm:ml-12">
@@ -54,6 +55,12 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
               <span>
                 {t.expenseDetailPanel.paymentDateLabel} {formatPaymentDate(expense.payment_date, locale)}
               </span>
+            </ExpenseDetailRow>
+          )}
+
+          {expense.foreign?.note && (
+            <ExpenseDetailRow icon={<Coins className="h-4 w-4" />}>
+              <span className="text-muted-foreground">{expense.foreign.note}</span>
             </ExpenseDetailRow>
           )}
 

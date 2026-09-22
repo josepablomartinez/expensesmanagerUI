@@ -86,6 +86,7 @@ export const en = {
   review: {
     queueTitle: "Review queue",
     pendingCount: (n: number) => `${n} pending`,
+    foreignCurrency: (amount: number, code: string) => `Foreign currency: ${amount} ${code}`,
     approveSelected: (n: number) => `Approve selected (${n})`,
     approveAll: "Approve all",
     focusedExpenseMissing: "That expense isn't in the review queue anymore (it may have already been approved).",

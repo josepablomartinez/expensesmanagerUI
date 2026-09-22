@@ -51,17 +51,3 @@ export function expenseValue(expense: AmountLike, displayCurrency: DisplayCurren
   }
   return expense.colones_amount ?? (expense.currency === "CRC" ? expense.amount : null) ?? 0;
 }
-
-// n8n's foreign-currency node writes a full explanation into `motive` (rate,
-// source, date...) for its own audit trail, but the review queue only needs
-// enough to say *what* needs a second look -- the amount and currency code.
-// Cuts "Foreign currency: 38556 ARS converted at 0.00066363247 USD per ARS
-// (currency-api, rate date 2026-09-16)." down to "Foreign currency: 38556
-// ARS"; any other motive (e.g. an unresolved currency, or a future reason
-// unrelated to currency) is left as-is. Callers should keep the full text
-// available too, e.g. via a title/tooltip.
-const FOREIGN_CURRENCY_PREFIX = /^(Foreign currency: [\d.,]+ [A-Z]{3})\b/;
-
-export function summarizeMotive(motive: string): string {
-  return motive.match(FOREIGN_CURRENCY_PREFIX)?.[1] ?? motive;
-}
