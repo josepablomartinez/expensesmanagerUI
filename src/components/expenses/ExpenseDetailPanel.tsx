@@ -22,8 +22,11 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
     : undefined;
   const bank = card ? resolveBank(card.bank_name) : resolveBank(expense.entity);
   const typeLabel = t.expenseDetailPanel.typeLabels[expense.type ?? ""] ?? expense.type;
-  const hasCard = expense.credit_card_id != null && Boolean(expense.card_type);
-  const hasPaymentDate = hasCard && Boolean(expense.payment_date);
+  const isDebit = expense.debit_card_id != null;
+  const hasCard = (expense.credit_card_id != null || isDebit) && Boolean(expense.card_type);
+  // Debit charges always pay on the event date, so there's no separate
+  // payment date worth showing.
+  const hasPaymentDate = hasCard && !isDebit && Boolean(expense.payment_date);
   const hasPaymentIdentity = Boolean(bank || hasCard || typeLabel);
   const nothingToShow =
     !hasPaymentIdentity && !hasPaymentDate && !expense.foreign?.note && !expense.motive && !expense.flag_reason;
@@ -42,6 +45,7 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
                   <>
                     <CardNetworkBadge type={expense.card_type} />
                     {expense.card_last4 && <strong className="font-medium">•••• {expense.card_last4}</strong>}
+                    {isDebit && <Badge variant="outline">{t.expenseDetailPanel.debitCard}</Badge>}
                   </>
                 ) : (
                   typeLabel && <Badge variant="outline">{typeLabel}</Badge>

@@ -22,6 +22,7 @@ function makeExpense(id: number, categoryId: number | null, merchant: string | n
     motive: null,
     reviewed: false,
     credit_card_id: null,
+    debit_card_id: null,
     card_type: null,
     card_last4: null,
     flag_type: null,

@@ -211,7 +211,7 @@ export const es: Dictionary = {
     backToSettings: "Volver a Ajustes",
     tabs: {
       basic: "Básico",
-      creditCards: "Tarjetas de crédito",
+      creditCards: "Tarjetas de crédito/débito",
       categories: "Categorías",
       advanced: "Avanzado",
     },
@@ -274,6 +274,7 @@ export const es: Dictionary = {
     },
     noAdditionalDetails: "Sin detalles adicionales.",
     paymentDateLabel: "Se paga el",
+    debitCard: "Débito",
   },
   dashboard: {
     greeting: {
@@ -383,12 +384,16 @@ export const es: Dictionary = {
     alertFlagsNote: "Cambiar esto no quita las marcas de duplicado que ya tienen los gastos.",
   },
   creditCards: {
-    title: "Tarjetas de crédito",
+    title: "Tarjetas de crédito/débito",
+    creditHeading: "Crédito",
+    debitHeading: "Débito",
     edit: "Editar tarjeta",
     noCardsYet: "Aún no hay tarjetas de crédito.",
+    noDebitCardsYet: "Aún no hay tarjetas de débito.",
     noBanksYet:
       "Aún no hay bancos registrados — los bancos se crean automáticamente a partir del tipo de cambio, así que agrega uno primero.",
     addCreditCard: "Agregar tarjeta de crédito",
+    addDebitCard: "Agregar tarjeta de débito",
     inactive: "(inactiva)",
     activate: "Activar",
     deactivate: "Desactivar",
@@ -410,7 +415,7 @@ export const es: Dictionary = {
     failedToSave: "Error al guardar",
     failedToUpdate: "Error al actualizar",
     failedToAddCard: "Error al agregar la tarjeta",
-    failedToLoad: "Error al cargar las tarjetas de crédito",
+    failedToLoad: "Error al cargar las tarjetas",
     cutoffDaySuffix: (day: number) => ` · Día de corte ${day}`,
     dueDaySuffix: (day: number) => ` · Día de pago ${day}`,
   },

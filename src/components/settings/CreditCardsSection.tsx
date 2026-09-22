@@ -1,6 +1,15 @@
 import * as React from "react";
 import { Plus, X, Pencil, Check } from "lucide-react";
-import { api, ApiError, type Bank, type CardType, type CreditCard, type UpdateCreditCardRequest } from "@/lib/api";
+import {
+  api,
+  ApiError,
+  type Bank,
+  type CardType,
+  type CreditCard,
+  type DebitCard,
+  type UpdateCreditCardRequest,
+  type UpdateDebitCardRequest,
+} from "@/lib/api";
 import { BankBadge, CardNetworkBadge } from "@/lib/brandIcons";
 import { formatMoney } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -152,9 +161,16 @@ function CreditCardRow({ card, onSave }: { card: CreditCard; onSave: (patch: Upd
   );
 }
 
-function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Parameters<typeof api.creditCards.create>[0]) => Promise<void> }) {
+function AddCreditCardForm({
+  banks,
+  onAdd,
+  onClose,
+}: {
+  banks: Bank[];
+  onAdd: (body: Parameters<typeof api.creditCards.create>[0]) => Promise<void>;
+  onClose: () => void;
+}) {
   const t = useT();
-  const [open, setOpen] = React.useState(false);
   const [bankId, setBankId] = React.useState("");
   const [cardType, setCardType] = React.useState<CardType>("visa");
   const [last4, setLast4] = React.useState("");
@@ -164,15 +180,6 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
   const [dueDay, setDueDay] = React.useState("");
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-
-  if (!open) {
-    return (
-      <Button variant="outline" className="gap-1.5" onClick={() => setOpen(true)}>
-        <Plus className="h-4 w-4" />
-        {t.creditCards.addCreditCard}
-      </Button>
-    );
-  }
 
   function reset() {
     setBankId("");
@@ -211,7 +218,7 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
         due_day: dueDay.trim() === "" ? undefined : Number(dueDay),
       });
       reset();
-      setOpen(false);
+      onClose();
     } catch (err) {
       setError(errorMessage(err, t.creditCards.failedToAddCard));
     } finally {
@@ -302,12 +309,135 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
           variant="ghost"
           className="h-8 w-8"
           disabled={saving}
-          onClick={() => {
-            setOpen(false);
-            reset();
-            setError(null);
-          }}
+          onClick={onClose}
         >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+      {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
+  );
+}
+
+// Debit cards have nothing editable besides active -- no limit or statement
+// dates -- so there's no edit mode, only activate/deactivate.
+function DebitCardRow({ card, onSave }: { card: DebitCard; onSave: (patch: UpdateDebitCardRequest) => Promise<void> }) {
+  const t = useT();
+  const [saving, setSaving] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  async function handleToggleActive() {
+    setSaving(true);
+    setError(null);
+    try {
+      await onSave({ active: !card.active });
+    } catch (err) {
+      setError(errorMessage(err, t.creditCards.failedToUpdate));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2 border-t border-border py-3 first:border-t-0">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <BankBadge codeOrName={card.bank_name} />
+          <CardNetworkBadge type={card.card_type} />
+        </div>
+        <div className="flex flex-1 flex-col">
+          <span className="flex items-center gap-2 font-medium">
+            •••• {card.last4}
+            {!card.active && <span className="text-xs font-normal text-muted-foreground">{t.creditCards.inactive}</span>}
+          </span>
+        </div>
+        <div className="ml-9 flex items-center gap-2 sm:ml-0">
+          <Button size="sm" variant="outline" disabled={saving} onClick={handleToggleActive}>
+            {card.active ? t.creditCards.deactivate : t.creditCards.activate}
+          </Button>
+        </div>
+      </div>
+      {error && <p className="pl-9 text-xs text-destructive">{error}</p>}
+    </div>
+  );
+}
+
+function AddDebitCardForm({
+  banks,
+  onAdd,
+  onClose,
+}: {
+  banks: Bank[];
+  onAdd: (body: Parameters<typeof api.debitCards.create>[0]) => Promise<void>;
+  onClose: () => void;
+}) {
+  const t = useT();
+  const [bankId, setBankId] = React.useState("");
+  const [cardType, setCardType] = React.useState<CardType>("visa");
+  const [last4, setLast4] = React.useState("");
+  const [saving, setSaving] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  async function handleAdd() {
+    if (!bankId) {
+      setError(t.creditCards.chooseBankRequired);
+      return;
+    }
+    if (!/^\d{4}$/.test(last4)) {
+      setError(t.creditCards.last4MustBeFourDigits);
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      await onAdd({ bank_id: Number(bankId), card_type: cardType, last4 });
+      onClose();
+    } catch (err) {
+      setError(errorMessage(err, t.creditCards.failedToAddCard));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2 border-t border-border pt-3">
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-muted-foreground">{t.creditCards.bank}</label>
+          <Select value={bankId} onChange={(e) => setBankId(e.target.value)} className="h-8 w-48" disabled={saving}>
+            <option value="" disabled>
+              {t.creditCards.chooseBankPlaceholder}
+            </option>
+            {banks.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name} ({b.code})
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-muted-foreground">{t.creditCards.type}</label>
+          <Select value={cardType} onChange={(e) => setCardType(e.target.value as CardType)} className="h-8 w-32" disabled={saving}>
+            <option value="visa">Visa</option>
+            <option value="mastercard">Mastercard</option>
+            <option value="amex">Amex</option>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-muted-foreground">{t.creditCards.last4Digits}</label>
+          <Input
+            value={last4}
+            onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            inputMode="numeric"
+            placeholder="1234"
+            className="h-8 w-20"
+            disabled={saving}
+          />
+        </div>
+        <Button size="sm" disabled={saving} onClick={handleAdd}>
+          {saving ? t.creditCards.adding : t.creditCards.add}
+        </Button>
+        <Button size="icon" variant="ghost" className="h-8 w-8" disabled={saving} onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -319,13 +449,17 @@ function AddCreditCardForm({ banks, onAdd }: { banks: Bank[]; onAdd: (body: Para
 export function CreditCardsSection({ banks }: { banks: Bank[] }) {
   const t = useT();
   const [cards, setCards] = React.useState<CreditCard[]>([]);
+  const [debitCards, setDebitCards] = React.useState<DebitCard[]>([]);
+  const [adding, setAdding] = React.useState<"credit" | "debit" | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
   const load = React.useCallback(() => {
-    return api.creditCards
-      .list()
-      .then(setCards)
+    return Promise.all([api.creditCards.list(), api.debitCards.list()])
+      .then(([credit, debit]) => {
+        setCards(credit);
+        setDebitCards(debit);
+      })
       .catch((err) => setError(errorMessage(err, t.creditCards.failedToLoad)));
   }, []);
 
@@ -343,6 +477,16 @@ export function CreditCardsSection({ banks }: { banks: Bank[] }) {
     await load();
   }
 
+  async function handleAddDebit(body: Parameters<typeof api.debitCards.create>[0]) {
+    await api.debitCards.create(body);
+    await load();
+  }
+
+  async function handleSaveDebit(id: number, patch: UpdateDebitCardRequest) {
+    await api.debitCards.update(id, patch);
+    await load();
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -354,19 +498,47 @@ export function CreditCardsSection({ banks }: { banks: Bank[] }) {
           <p className="text-sm text-muted-foreground">{t.common.loading}</p>
         ) : (
           <>
-            {cards.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t.creditCards.noCardsYet}</p>
-            ) : (
-              <div className="flex flex-col">
-                {cards.map((card) => (
-                  <CreditCardRow key={card.id} card={card} onSave={(patch) => handleSave(card.id, patch)} />
-                ))}
-              </div>
-            )}
+            <section className="flex flex-col gap-1">
+              <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t.creditCards.creditHeading}</h3>
+              {cards.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t.creditCards.noCardsYet}</p>
+              ) : (
+                <div className="flex flex-col">
+                  {cards.map((card) => (
+                    <CreditCardRow key={card.id} card={card} onSave={(patch) => handleSave(card.id, patch)} />
+                  ))}
+                </div>
+              )}
+            </section>
+            <section className="flex flex-col gap-1 border-t border-border pt-3">
+              <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t.creditCards.debitHeading}</h3>
+              {debitCards.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t.creditCards.noDebitCardsYet}</p>
+              ) : (
+                <div className="flex flex-col">
+                  {debitCards.map((card) => (
+                    <DebitCardRow key={card.id} card={card} onSave={(patch) => handleSaveDebit(card.id, patch)} />
+                  ))}
+                </div>
+              )}
+            </section>
             {banks.length === 0 ? (
               <p className="text-sm text-muted-foreground">{t.creditCards.noBanksYet}</p>
+            ) : adding === "credit" ? (
+              <AddCreditCardForm banks={banks} onAdd={handleAdd} onClose={() => setAdding(null)} />
+            ) : adding === "debit" ? (
+              <AddDebitCardForm banks={banks} onAdd={handleAddDebit} onClose={() => setAdding(null)} />
             ) : (
-              <AddCreditCardForm banks={banks} onAdd={handleAdd} />
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" className="gap-1.5" onClick={() => setAdding("credit")}>
+                  <Plus className="h-4 w-4" />
+                  {t.creditCards.addCreditCard}
+                </Button>
+                <Button variant="outline" className="gap-1.5" onClick={() => setAdding("debit")}>
+                  <Plus className="h-4 w-4" />
+                  {t.creditCards.addDebitCard}
+                </Button>
+              </div>
             )}
           </>
         )}

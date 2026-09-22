@@ -36,6 +36,8 @@ export interface Expense {
   motive: string | null;
   reviewed: boolean | null;
   credit_card_id: number | null;
+  debit_card_id: number | null;
+  // From whichever card (credit or debit) is set.
   card_type?: string | null;
   card_last4?: string | null;
   flag_type: string | null;
@@ -231,6 +233,27 @@ export interface UpdateCreditCardRequest {
   limit_currency?: string;
   cutoff_day?: number;
   due_day?: number;
+  active?: boolean;
+}
+
+export interface DebitCard {
+  id: number;
+  bank_id: number;
+  bank_name: string;
+  card_type: CardType;
+  last4: string;
+  active: boolean;
+}
+
+export interface CreateDebitCardRequest {
+  bank_id: number;
+  card_type: CardType;
+  last4: string;
+}
+
+export interface UpdateDebitCardRequest {
+  card_type?: CardType;
+  last4?: string;
   active?: boolean;
 }
 
@@ -450,6 +473,13 @@ export const api = {
       request<CreditCard>("/credit-cards", { method: "POST", body: JSON.stringify(body) }),
     update: (id: number, body: UpdateCreditCardRequest) =>
       request<CreditCard>(`/credit-cards/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+  },
+  debitCards: {
+    list: () => request<DebitCard[]>("/debit-cards"),
+    create: (body: CreateDebitCardRequest) =>
+      request<DebitCard>("/debit-cards", { method: "POST", body: JSON.stringify(body) }),
+    update: (id: number, body: UpdateDebitCardRequest) =>
+      request<DebitCard>(`/debit-cards/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   },
   reports: {
     budgetVsActual: (year: number, month: number) =>

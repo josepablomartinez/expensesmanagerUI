@@ -214,7 +214,7 @@ export const en = {
     backToSettings: "Back to Settings",
     tabs: {
       basic: "Basic",
-      creditCards: "Credit cards",
+      creditCards: "Credit/Debit cards",
       categories: "Categories",
       advanced: "Advanced",
     },
@@ -277,6 +277,7 @@ export const en = {
     } as Record<string, string>,
     noAdditionalDetails: "No additional details.",
     paymentDateLabel: "Pays on",
+    debitCard: "Debit",
   },
   dashboard: {
     greeting: {
@@ -386,12 +387,16 @@ export const en = {
     alertFlagsNote: "Changing this does not clear duplicate flags already attached to expenses.",
   },
   creditCards: {
-    title: "Credit cards",
+    title: "Credit/Debit cards",
+    creditHeading: "Credit",
+    debitHeading: "Debit",
     edit: "Edit card",
     noCardsYet: "No credit cards yet.",
+    noDebitCardsYet: "No debit cards yet.",
     noBanksYet:
       "No banks on file yet — banks are created automatically from exchange-rate data, so add one there first.",
     addCreditCard: "Add credit card",
+    addDebitCard: "Add debit card",
     inactive: "(inactive)",
     activate: "Activate",
     deactivate: "Deactivate",
@@ -413,7 +418,7 @@ export const en = {
     failedToSave: "Failed to save",
     failedToUpdate: "Failed to update",
     failedToAddCard: "Failed to add card",
-    failedToLoad: "Failed to load credit cards",
+    failedToLoad: "Failed to load cards",
     cutoffDaySuffix: (day: number) => ` · Cutoff day ${day}`,
     dueDaySuffix: (day: number) => ` · Due day ${day}`,
   },
