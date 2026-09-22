@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      args:
+        # Baked into the JS bundle at build time -- must be a URL reachable
+        # from the *browser*, not the internal Docker network.
+        VITE_API_URL: http://localhost:8081
+    ports:
+      - "5173:80" # host-only -- must never be published on the production server

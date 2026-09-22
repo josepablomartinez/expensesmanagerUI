@@ -141,7 +141,7 @@ Requires `expense-api` running and reachable at `VITE_API_URL` (set to
 `http://localhost:8081` in `.env.example`) — see the
 [API README](https://github.com/josepablomartinez/expensesmanager/tree/main/API)
 for running it, or bring up the whole stack via the
-[parent repo's docker-compose.yaml](https://github.com/josepablomartinez/expensesmanager/blob/main/docker-compose.yaml).
+[parent repo's docker-compose.yml](https://github.com/josepablomartinez/expensesmanager/blob/main/docker-compose.yml).
 
 ```bash
 npm run build     # tsc -b && vite build -> dist/
@@ -160,13 +160,22 @@ client-side routing (`try_files $uri $uri/ /index.html`).
 docker compose up -d --build
 ```
 
-`docker-compose.yaml` here builds the `web` service with
-`VITE_API_URL: http://localhost:8081` as a build arg and publishes it on
-`5173:80`. **Because the API URL is compiled into the bundle at build
-time**, changing it means rebuilding the image — there's no runtime env
-var for this. Update the `args.VITE_API_URL` value (or override it with
-`--build-arg`) before building for any environment other than local
-Docker, and rebuild whenever the API's public URL changes.
+Split into base + override + prod, same pattern as the backend repo:
+
+- **`docker-compose.yml`** — shared `web` service definition (build context,
+  restart policy). No ports, no environment-specific values.
+- **`docker-compose.override.yml`** — local dev only, auto-loaded by plain
+  `docker compose up`. Builds with `VITE_API_URL: http://localhost:8081` and
+  publishes the container on host port `5173:80`.
+- **`docker-compose.prod.yml`** — Traefik labels, prod `VITE_API_URL`,
+  external network join. No `ports:` — only Traefik reaches this container,
+  so the dev-only `5173:80` mapping never reaches the production server.
+
+**Because the API URL is compiled into the bundle at build time**, changing
+it means rebuilding the image — there's no runtime env var for this. Update
+the relevant file's `args.VITE_API_URL` value (or override it with
+`--build-arg`) before building for any environment, and rebuild whenever
+the API's public URL changes.
 
 ### Production
 
