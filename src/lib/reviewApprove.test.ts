@@ -27,6 +27,7 @@ function makeExpense(id: number, categoryId: number | null, merchant: string | n
     flag_type: null,
     flag_reason: null,
     payment_date: "2026-08-16",
+    foreign: null,
   };
 }
 

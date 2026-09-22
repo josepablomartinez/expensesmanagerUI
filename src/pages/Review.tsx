@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSearchParams } from "react-router-dom";
-import { Check, ListChecks, Split } from "lucide-react";
+import { Check, ListChecks, MessageSquareText, Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
-import { formatExpenseAmount } from "@/lib/format";
+import { formatExpenseAmount, summarizeMotive } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { useT } from "@/lib/language";
 import { cn } from "@/lib/utils";
@@ -239,6 +239,15 @@ export default function Review() {
                         <Badge variant="outline">{t.common.confidencePercent(Math.round(expense.confidence * 100))}</Badge>
                       )}
                     </div>
+                    {expense.motive && (
+                      <p
+                        className="mt-1 flex items-start gap-1.5 text-xs text-muted-foreground"
+                        title={expense.motive}
+                      >
+                        <MessageSquareText className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                        <span>{summarizeMotive(expense.motive)}</span>
+                      </p>
+                    )}
                   </div>
                 </div>
 

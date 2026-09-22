@@ -1,5 +1,20 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+// What the bank originally charged, for an expense that arrived in a
+// currency other than CRC/USD and was converted to USD by the n8n workflow.
+// See API/README.md's GET /expenses section. The conversion details are
+// also already summarized in Expense.motive (shown in the review queue and
+// the expense detail panel), so this is here for type completeness /
+// future use rather than rendered as its own UI element today.
+export interface ForeignCurrency {
+  original_amount: number;
+  original_currency: string;
+  original_currency_name: string;
+  fx_rate_dollar_based: number | null;
+  fx_rate_date: string | null;
+  fx_source: string | null;
+}
+
 export interface Expense {
   id: number;
   country: string | null;
@@ -26,6 +41,7 @@ export interface Expense {
   flag_type: string | null;
   flag_reason: string | null;
   payment_date: string;
+  foreign: ForeignCurrency | null;
 }
 
 export interface DayExpenses {
