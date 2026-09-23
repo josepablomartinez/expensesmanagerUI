@@ -22,8 +22,8 @@ function monthLabel(monthStart: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(y, m - 1, 1));
 }
 
-// One category's rows (one per payment month, newest first) as independent
-// bars against the category's current budget.
+// One category's rows (one per payment month) as independent bars against the
+// category's current budget, shown oldest to newest (e.g. JUL, AUG, SEP, OCT).
 export function PaymentWindowCategory({
   rows,
   currency,
@@ -47,7 +47,7 @@ export function PaymentWindowCategory({
           {t.paymentWindow.budget}: {budget != null ? formatMoney(budget, currency) : "—"}
         </span>
       </div>
-      {rows.map((row) => {
+      {[...rows].sort((a, b) => a.month_start.localeCompare(b.month_start)).map((row) => {
         const spent = currency === "USD" ? row.spent_usd : row.spent_crc;
         const pct = budget != null && budget > 0 ? (spent / budget) * 100 : 0;
         const over = pct >= 100;
