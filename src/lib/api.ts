@@ -1,3 +1,5 @@
+import { localISODate } from "@/lib/date";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 // What the bank originally charged, for an expense that arrived in a
@@ -75,6 +77,17 @@ export interface BudgetVsActual {
   actual_crc: number;
   actual_usd: number;
   pct_used: number | null;
+}
+
+export interface PaymentWindowRow {
+  category_id: number;
+  main_category_id: number;
+  category_name: string;
+  month_start: string; // YYYY-MM-DD, first day of the payment month
+  budget: number | null;
+  budget_usd: number | null;
+  spent_crc: number;
+  spent_usd: number;
 }
 
 export interface BudgetBurndownRow {
@@ -506,6 +519,13 @@ export const api = {
   reports: {
     budgetVsActual: (year: number, month: number) =>
       request<BudgetVsActual[]>(`/reports/budget-vs-actual?year=${year}&month=${month}`),
+    // Window ends next month and walks back monthsBack months from `today`
+    // (the caller's local date, so it can't drift to UTC's day).
+    paymentWindow: (monthsBack: number, mainCategoryId?: number) => {
+      const q = new URLSearchParams({ months_back: String(monthsBack), today: localISODate(new Date()) });
+      if (mainCategoryId) q.set("main_category_id", String(mainCategoryId));
+      return request<PaymentWindowRow[]>(`/reports/payment-window?${q}`);
+    },
     burndown: (year: number, month: number, categoryId?: number) => {
       const q = new URLSearchParams({ year: String(year), month: String(month) });
       if (categoryId) q.set("category_id", String(categoryId));

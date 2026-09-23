@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { PieChart, TrendingDown, LineChart } from "lucide-react";
+import { PieChart, TrendingDown, LineChart, CalendarClock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/language";
 
@@ -7,6 +7,7 @@ export default function ReportsLayout() {
   const t = useT();
   const REPORT_TABS = [
     { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
+    { to: "/reports/payment-window", label: t.reportsLayout.tabs.paymentWindow, icon: CalendarClock },
     { to: "/reports/burndown", label: t.reportsLayout.tabs.burndown, icon: TrendingDown },
     { to: "/reports/subcategories-by-month", label: t.reportsLayout.tabs.subcategoriesByMonth, icon: LineChart },
   ];
@@ -20,7 +21,7 @@ export default function ReportsLayout() {
 
       <nav
         aria-label={t.reportsLayout.sectionsLabel}
-        className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-secondary/40 p-1"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg border border-border bg-secondary/40 p-1"
       >
         {REPORT_TABS.map((tab) => (
           <NavLink

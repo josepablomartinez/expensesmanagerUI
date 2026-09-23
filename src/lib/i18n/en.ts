@@ -208,6 +208,7 @@ export const en = {
     tabs: {
       budgetVsActual: "Budget vs actual",
       burndown: "Burn-down",
+      paymentWindow: "Payment window",
       subcategoriesByMonth: "Subcategories by month",
     },
   },
@@ -226,6 +227,16 @@ export const en = {
       categories: "Categories and subcategories",
       advanced: "Exchange rates, reporting, and alerts",
     },
+  },
+  paymentWindow: {
+    title: "Payment window",
+    description: "What you pay each month, by payment date. Card purchases count in the month their statement is due.",
+    mainCategory: "Main category",
+    allCategories: "All",
+    months: "Months",
+    budget: "Budget",
+    failedToLoad: "Failed to load",
+    noData: "No spending in this window yet.",
   },
   budgetVsActual: {
     title: "Budget vs actual",
@@ -293,7 +304,7 @@ export const en = {
       showLess: "Hide additional favorite banks",
     },
     favoriteCategories: {
-      title: "Favorite categories — this month",
+      title: "Favorite categories",
       noData: "No data for your favorite categories yet.",
       reports: "Reports",
     },

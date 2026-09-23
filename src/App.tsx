@@ -16,6 +16,7 @@ import SettingsAdvanced from "@/pages/settings/Advanced";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
+import PaymentWindow from "@/pages/reports/PaymentWindow";
 import SubcategoriesByMonth from "@/pages/reports/SubcategoriesByMonth";
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="/reports" element={<ReportsLayout />}>
           <Route index element={<Navigate to="budget-vs-actual" replace />} />
           <Route path="budget-vs-actual" element={<BudgetVsActual />} />
+          <Route path="payment-window" element={<PaymentWindow />} />
           <Route path="burndown" element={<Burndown />} />
           <Route path="subcategories-by-month" element={<SubcategoriesByMonth />} />
         </Route>

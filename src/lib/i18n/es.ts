@@ -205,6 +205,7 @@ export const es: Dictionary = {
     tabs: {
       budgetVsActual: "Presupuesto vs real",
       burndown: "Consumo",
+      paymentWindow: "Ventana de pagos",
       subcategoriesByMonth: "Subcategorías x mes",
     },
   },
@@ -223,6 +224,16 @@ export const es: Dictionary = {
       categories: "Categorías y subcategorías",
       advanced: "Tipos de cambio, reportes y alertas",
     },
+  },
+  paymentWindow: {
+    title: "Ventana de pagos",
+    description: "Lo que pagas cada mes, según la fecha de pago. Las compras con tarjeta cuentan en el mes en que vence su estado de cuenta.",
+    mainCategory: "Categoría principal",
+    allCategories: "Todas",
+    months: "Meses",
+    budget: "Presupuesto",
+    failedToLoad: "Error al cargar",
+    noData: "Aún no hay gastos en esta ventana.",
   },
   budgetVsActual: {
     title: "Presupuesto vs real",
@@ -290,7 +301,7 @@ export const es: Dictionary = {
       showLess: "Ocultar bancos favoritos adicionales",
     },
     favoriteCategories: {
-      title: "Categorías favoritas — este mes",
+      title: "Categorías favoritas",
       noData: "Aún no hay datos para tus categorías favoritas.",
       reports: "Reportes",
     },
