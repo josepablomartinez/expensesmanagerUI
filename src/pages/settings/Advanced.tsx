@@ -2,9 +2,13 @@ import * as React from "react";
 import { api, type Bank } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useT } from "@/lib/language";
+
+const HOURS = Array.from({ length: 24 }, (_, h) => h);
+const formatHour = (h: number) => `${String(h).padStart(2, "0")}:00`;
 
 export default function Advanced() {
   const t = useT();
@@ -19,6 +23,11 @@ export default function Advanced() {
   const [creditCardExpenseDate, setCreditCardExpenseDate] = React.useState("event");
   const [alertsEnabled, setAlertsEnabled] = React.useState(true);
   const [duplicateAlertsEnabled, setDuplicateAlertsEnabled] = React.useState(true);
+  const [suspiciousAlertsEnabled, setSuspiciousAlertsEnabled] = React.useState(true);
+  const [zThreshold, setZThreshold] = React.useState("3.5");
+  const [medianRatio, setMedianRatio] = React.useState("1.5");
+  const [quietStart, setQuietStart] = React.useState(0);
+  const [quietEnd, setQuietEnd] = React.useState(6);
 
   React.useEffect(() => {
     Promise.all([api.settings.get(), api.banks.list()])
@@ -28,6 +37,11 @@ export default function Advanced() {
         setCreditCardExpenseDate(settings.credit_card_expense_date);
         setAlertsEnabled(settings.alerts_enabled);
         setDuplicateAlertsEnabled(settings.duplicate_alerts_enabled);
+        setSuspiciousAlertsEnabled(settings.suspicious_alerts_enabled);
+        setZThreshold(String(settings.suspicious_z_threshold));
+        setMedianRatio(String(settings.suspicious_median_ratio));
+        setQuietStart(settings.quiet_hours_start);
+        setQuietEnd(settings.quiet_hours_end);
         setBanks(bankList);
       })
       .catch((err) => setError(err instanceof Error ? err.message : t.settings.failedToLoad))
@@ -45,6 +59,11 @@ export default function Advanced() {
         credit_card_expense_date: creditCardExpenseDate,
         alerts_enabled: alertsEnabled,
         duplicate_alerts_enabled: duplicateAlertsEnabled,
+        suspicious_alerts_enabled: suspiciousAlertsEnabled,
+        suspicious_z_threshold: Number(zThreshold),
+        suspicious_median_ratio: Number(medianRatio),
+        quiet_hours_start: quietStart,
+        quiet_hours_end: quietEnd,
       });
       setSaved(true);
     } catch (err) {
@@ -162,7 +181,6 @@ export default function Advanced() {
                 {t.settings.duplicateAlerts}
               </label>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t.settings.duplicateAlertsHelp}</p>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{t.settings.alertFlagsNote}</p>
             </div>
             <Switch
               id="duplicate-alerts-enabled"
@@ -175,6 +193,113 @@ export default function Advanced() {
               aria-label={t.settings.duplicateAlerts}
             />
           </div>
+
+          <div className="mt-4 flex items-start justify-between gap-4 border-t border-border pt-4">
+            <div className="min-w-0">
+              <label htmlFor="suspicious-alerts-enabled" className="text-sm font-medium text-foreground">
+                {t.settings.suspiciousAlerts}
+              </label>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t.settings.suspiciousAlertsHelp}</p>
+            </div>
+            <Switch
+              id="suspicious-alerts-enabled"
+              checked={suspiciousAlertsEnabled}
+              onCheckedChange={(checked) => {
+                setSaved(false);
+                setSuspiciousAlertsEnabled(checked);
+              }}
+              disabled={!alertsEnabled}
+              aria-label={t.settings.suspiciousAlerts}
+            />
+          </div>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground" htmlFor="suspicious_z_threshold">
+                {t.settings.suspiciousZThreshold}
+              </label>
+              <Input
+                id="suspicious_z_threshold"
+                type="number"
+                inputMode="decimal"
+                min={0.5}
+                max={10}
+                step={0.1}
+                value={zThreshold}
+                onChange={(e) => {
+                  setSaved(false);
+                  setZThreshold(e.target.value);
+                }}
+                className="w-28"
+              />
+              <p className="text-xs leading-relaxed text-muted-foreground">{t.settings.suspiciousZThresholdHelp}</p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground" htmlFor="suspicious_median_ratio">
+                {t.settings.suspiciousMedianRatio}
+              </label>
+              <Input
+                id="suspicious_median_ratio"
+                type="number"
+                inputMode="decimal"
+                min={1}
+                max={10}
+                step={0.1}
+                value={medianRatio}
+                onChange={(e) => {
+                  setSaved(false);
+                  setMedianRatio(e.target.value);
+                }}
+                className="w-28"
+              />
+              <p className="text-xs leading-relaxed text-muted-foreground">{t.settings.suspiciousMedianRatioHelp}</p>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground">{t.settings.quietHours}</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <label className="text-xs text-muted-foreground" htmlFor="quiet_hours_start">
+                {t.settings.quietHoursFrom}
+              </label>
+              <Select
+                id="quiet_hours_start"
+                value={quietStart}
+                onChange={(e) => {
+                  setSaved(false);
+                  setQuietStart(Number(e.target.value));
+                }}
+                className="w-24"
+              >
+                {HOURS.map((h) => (
+                  <option key={h} value={h}>
+                    {formatHour(h)}
+                  </option>
+                ))}
+              </Select>
+              <label className="text-xs text-muted-foreground" htmlFor="quiet_hours_end">
+                {t.settings.quietHoursUntil}
+              </label>
+              <Select
+                id="quiet_hours_end"
+                value={quietEnd}
+                onChange={(e) => {
+                  setSaved(false);
+                  setQuietEnd(Number(e.target.value));
+                }}
+                className="w-24"
+              >
+                {HOURS.map((h) => (
+                  <option key={h} value={h}>
+                    {formatHour(h)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <p className="text-xs leading-relaxed text-muted-foreground">{t.settings.quietHoursHelp}</p>
+          </div>
+
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{t.settings.alertFlagsNote}</p>
         </CardContent>
       </Card>
 

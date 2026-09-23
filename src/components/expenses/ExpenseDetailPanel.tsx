@@ -1,7 +1,8 @@
-import { CalendarDays, Coins, Copy, Landmark, MessageSquareText } from "lucide-react";
+import { CalendarDays, Coins, Landmark, MessageSquareText } from "lucide-react";
 import type { CreditCard, Expense } from "@/lib/api";
 import { BankBadge, CardNetworkBadge, resolveBank } from "@/lib/brandIcons";
 import { Badge } from "@/components/ui/badge";
+import { flagIcons, flagKind } from "@/lib/flags";
 import { ExpenseDetailRow } from "@/components/expenses/ExpenseDetailRow";
 import { useLanguage } from "@/lib/language";
 
@@ -28,6 +29,7 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
   // payment date worth showing.
   const hasPaymentDate = hasCard && !isDebit && Boolean(expense.payment_date);
   const hasPaymentIdentity = Boolean(bank || hasCard || typeLabel);
+  const FlagIcon = expense.flag_type ? flagIcons[flagKind(expense.flag_type)] : null;
   const nothingToShow =
     !hasPaymentIdentity && !hasPaymentDate && !expense.foreign?.note && !expense.motive && !expense.flag_reason;
 
@@ -74,8 +76,8 @@ export function ExpenseDetails({ expense, creditCards }: { expense: Expense; cre
             </ExpenseDetailRow>
           )}
 
-          {expense.flag_reason && (
-            <ExpenseDetailRow icon={<Copy className="h-4 w-4" />} className="text-destructive">
+          {expense.flag_reason && FlagIcon && (
+            <ExpenseDetailRow icon={<FlagIcon className="h-4 w-4" />} className="text-destructive">
               <span>{expense.flag_reason}</span>
             </ExpenseDetailRow>
           )}

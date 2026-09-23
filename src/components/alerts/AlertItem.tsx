@@ -1,5 +1,8 @@
-import { CircleCheck, Copy } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 import type { ExpenseAlert } from "@/lib/api";
+import { flagIcons, type FlagKind } from "@/lib/flags";
+import { useCurrency } from "@/lib/currency";
+import { formatExpenseAmount, formatMoney } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language";
 import { cn } from "@/lib/utils";
@@ -11,17 +14,58 @@ interface AlertItemProps {
   compact?: boolean;
 }
 
+function alertKind(alert: ExpenseAlert): FlagKind {
+  switch (alert.payload?.template_key) {
+    case "alert.suspicious_amount":
+      return "amount";
+    case "alert.suspicious_hour":
+      return "hour";
+    default:
+      return alert.type === "suspicious_expense" ? "suspicious" : "duplicate";
+  }
+}
+
 export function AlertItem({ alert, onOpen, onDismiss, compact = false }: AlertItemProps) {
   const { language, t } = useLanguage();
+  const { currency } = useCurrency();
   const params = alert.payload?.params;
+  const kind = alertKind(alert);
+  const KindIcon = flagIcons[kind];
+  const title =
+    kind === "amount"
+      ? t.alerts.unusualAmount
+      : kind === "hour"
+        ? t.alerts.unusualHour
+        : kind === "suspicious"
+          ? t.common.suspiciousExpense
+          : t.alerts.possibleDuplicate;
+  const detail =
+    kind === "amount" && params?.ratio != null && params.median_colones != null
+      ? t.alerts.unusualAmountDetail(
+          params.ratio,
+          currency === "USD" && params.median_dollars != null
+            ? formatMoney(params.median_dollars, "USD")
+            : formatMoney(params.median_colones, "CRC"),
+        )
+      : kind === "hour" && params?.hour_event
+        ? t.alerts.unusualHourDetail(params.hour_event)
+        : null;
   const merchant = params?.merchant || t.common.unknownMerchant;
+  // Same display-currency rule as the expense lists. Alerts written before
+  // the payload carried colones_amount/dollars_amount fall back to the raw
+  // amount/currency.
   const amount =
     params?.amount == null
       ? null
-      : new Intl.NumberFormat(language === "es" ? "es-CR" : "en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(params.amount);
+      : formatExpenseAmount(
+          {
+            amount: params.amount,
+            currency: params.currency,
+            colones_amount: params.colones_amount,
+            dollars_amount: params.dollars_amount,
+          },
+          currency,
+        );
   const created = new Intl.DateTimeFormat(language === "es" ? "es-CR" : "en-US", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -52,11 +96,12 @@ export function AlertItem({ alert, onOpen, onDismiss, compact = false }: AlertIt
           resolved ? "bg-secondary text-secondary-foreground" : "bg-destructive-soft text-destructive",
         )}
       >
-        {resolved ? <CircleCheck className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+        {resolved ? <CircleCheck className="h-4 w-4" aria-hidden="true" /> : <KindIcon className="h-4 w-4" aria-hidden="true" />}
       </span>
 
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-foreground">{t.alerts.possibleDuplicate}</p>
+        <p className="font-medium text-foreground">{title}</p>
+        {detail && <p className="mt-0.5 text-sm text-foreground/80">{detail}</p>}
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {[merchant, amount, created, status].filter(Boolean).join(" · ")}
         </p>

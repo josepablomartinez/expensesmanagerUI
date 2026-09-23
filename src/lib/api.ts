@@ -140,6 +140,10 @@ export interface Settings {
   alerts_enabled: boolean;
   duplicate_alerts_enabled: boolean;
   suspicious_alerts_enabled: boolean;
+  suspicious_z_threshold: number;
+  suspicious_median_ratio: number;
+  quiet_hours_start: number;
+  quiet_hours_end: number;
   updated_at: string;
 }
 
@@ -156,6 +160,11 @@ export interface UpdateSettingsRequest {
   credit_card_expense_date?: string;
   alerts_enabled?: boolean;
   duplicate_alerts_enabled?: boolean;
+  suspicious_alerts_enabled?: boolean;
+  suspicious_z_threshold?: number;
+  suspicious_median_ratio?: number;
+  quiet_hours_start?: number;
+  quiet_hours_end?: number;
 }
 
 export interface AlertPayload {
@@ -164,6 +173,19 @@ export interface AlertPayload {
     merchant?: string | null;
     amount?: number | null;
     matched_expense_id?: number;
+    currency?: string | null;
+    colones_amount?: number | null;
+    dollars_amount?: number | null;
+    // alert.suspicious_amount
+    median_colones?: number;
+    median_dollars?: number | null;
+    ratio?: number;
+    z_score?: number | null;
+    sample_size?: number;
+    // alert.suspicious_hour
+    hour_event?: string;
+    quiet_hours_start?: number;
+    quiet_hours_end?: number;
   };
 }
 
