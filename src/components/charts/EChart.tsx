@@ -14,8 +14,22 @@ export const chartColors = {
   mutedForeground: () => cssVar("--muted-foreground"),
   border: () => cssVar("--border"),
   foreground: () => cssVar("--foreground"),
+  card: () => cssVar("--card"),
   series: () => [1, 2, 3, 4, 5].map((index) => cssVar(`--chart-${index}`)),
 };
+
+// Data-point markers for a line series: a filled dot per value, ringed in
+// the card surface so dots stay distinct where lines cross. A function (not
+// a constant) so the ring follows the current theme. color is optional --
+// without it the dot takes the series' palette color.
+export function lineMarkers(color?: string) {
+  return {
+    showSymbol: true,
+    symbol: "circle",
+    symbolSize: 7,
+    itemStyle: { color, borderColor: cssVar("--card"), borderWidth: 1.5 },
+  };
+}
 
 interface EChartProps {
   option: EChartsOption;

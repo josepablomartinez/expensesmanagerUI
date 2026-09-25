@@ -160,7 +160,6 @@ export default function Burndown() {
     const crossIndex = rows.findIndex((r) => cumulativeOf(r) > expectedOf(r));
     const underPace = rows.map((r, i) => (crossIndex === -1 || i <= crossIndex ? cumulativeOf(r) : null));
     const overPace = rows.map((r, i) => (crossIndex !== -1 && i >= crossIndex ? cumulativeOf(r) : null));
-    const budget = (currency === "USD" ? rows[0]?.budget_dollars : rows[0]?.budget_colones) ?? null;
 
     // Two null-padded segments (rather than one series recolored by
     // visualMap) so under/over-pace portions render in different colors.
@@ -208,18 +207,6 @@ export default function Burndown() {
           blur: { lineStyle: { opacity: 1 } },
           lineStyle: { type: "dashed", color: muted, width: 1.5 },
           itemStyle: { color: muted },
-          // Flat budget ceiling, independent of the diagonal proration line above --
-          // attached here (rather than the under/over-pace segments) so it always
-          // spans the full width regardless of where the crossover falls.
-          markLine:
-            budget != null
-              ? {
-                  symbol: "none",
-                  label: { formatter: `${t.burndown.budget}: ${formatMoney(budget, currency)}`, color: muted, position: "insideEndTop" },
-                  lineStyle: { type: "solid", color: muted, width: 2 },
-                  data: [{ yAxis: budget }],
-                }
-              : undefined,
         },
         {
           name: t.burndown.actual,

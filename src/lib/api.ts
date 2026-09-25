@@ -252,6 +252,24 @@ export interface ExchangeRateLatest {
 
 export type CardType = "mastercard" | "visa" | "amex";
 
+export interface ExchangeRateHistoryRow {
+  date: string;
+  buy_price: number;
+  sell_price: number;
+}
+
+// One subcategory's spend on a card in its open statement cycle; a null
+// category is the card's uncategorized spend.
+export interface CreditCardCycleRow {
+  category_id: number | null;
+  main_category_id: number | null;
+  category_name: string | null;
+  cycle_start: string;
+  cycle_end: string;
+  spent_crc: number;
+  spent_usd: number;
+}
+
 export interface CreditCard {
   id: number;
   bank_id: number;
@@ -661,6 +679,12 @@ export const api = {
       request<CategoryMonthMatrixRow[]>(
         `/reports/category-month-matrix?year=${year}&category_id=${categoryId}`,
       ),
+    // Window ends at the bank's latest rate on file, not today.
+    exchangeRateHistory: (bankId: number, days: number) =>
+      request<ExchangeRateHistoryRow[]>(`/reports/exchange-rate-history?bank_id=${bankId}&days=${days}`),
+    // Statement cycle containing the caller's local today.
+    creditCardCycle: (cardId: number) =>
+      request<CreditCardCycleRow[]>(`/reports/credit-card-cycle?card_id=${cardId}&today=${localISODate(new Date())}`),
   },
 };
 

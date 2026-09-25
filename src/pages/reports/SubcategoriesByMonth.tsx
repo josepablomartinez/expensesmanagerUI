@@ -4,7 +4,7 @@ import { formatMoney } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
-import { EChart, chartColors } from "@/components/charts/EChart";
+import { EChart, chartColors, lineMarkers } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
@@ -80,7 +80,7 @@ export default function SubcategoriesByMonth() {
       name: s.name,
       type: "line" as const,
       data: s.totals,
-      showSymbol: false,
+      ...lineMarkers(),
       emphasis: { disabled: true },
       blur: { lineStyle: { opacity: 1 } },
       lineStyle: { width: 2 },

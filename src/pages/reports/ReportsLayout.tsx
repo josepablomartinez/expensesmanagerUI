@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { PieChart, TrendingDown, LineChart, CalendarClock } from "lucide-react";
+import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/language";
 
@@ -14,9 +14,24 @@ export default function ReportsLayout() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{t.reportsLayout.title}</h1>
-        <p className="text-sm text-muted-foreground">{t.reportsLayout.subtitle}</p>
+      <header className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight">{t.reportsLayout.title}</h1>
+          <p className="text-sm text-muted-foreground">{t.reportsLayout.subtitle}</p>
+        </div>
+        {/* Charts is a side section, deliberately kept out of the tab bar. */}
+        <NavLink
+          to="/reports/charts"
+          className={({ isActive }) =>
+            cn(
+              "flex min-h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium",
+              isActive ? "bg-secondary text-secondary-foreground" : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+            )
+          }
+        >
+          <ChartSpline className="h-4 w-4" aria-hidden="true" />
+          {t.charts.link}
+        </NavLink>
       </header>
 
       <nav
