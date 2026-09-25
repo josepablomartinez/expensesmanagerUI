@@ -5,6 +5,7 @@ import { getCategoryIcon } from "@/lib/categoryIcons";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { useT } from "@/lib/language";
 
 interface MainGroup {
@@ -131,34 +132,44 @@ function SubcategoryRow({
   onSave,
 }: {
   category: Category;
-  onSave: (patch: { subcategory?: string; budget?: number }) => Promise<void>;
+  onSave: (patch: { subcategory?: string; budget?: number; currency?: string }) => Promise<void>;
 }) {
   const t = useT();
   const [subcategory, setSubcategory] = React.useState(category.subcategory);
   const [budget, setBudget] = React.useState(category.budget != null ? String(category.budget) : "");
+  const initialCurrency = category.budget_currency ?? "CRC";
+  const [currency, setCurrency] = React.useState(initialCurrency);
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     setSubcategory(category.subcategory);
     setBudget(category.budget != null ? String(category.budget) : "");
+    setCurrency(category.budget_currency ?? "CRC");
   }, [category]);
 
   const trimmedSub = subcategory.trim();
   const budgetNum = budget.trim() === "" ? null : Number(budget);
   const budgetValid = budget.trim() === "" || !Number.isNaN(budgetNum);
+  // A currency change needs a budget to attach to (the API sets both
+  // together), so it only counts once there is one.
+  const currencyChanged = budgetNum !== null && currency !== initialCurrency;
   const dirty =
     (trimmedSub !== "" && trimmedSub !== category.subcategory) ||
-    (budgetValid && budgetNum !== null && budgetNum !== category.budget);
+    (budgetValid && budgetNum !== null && budgetNum !== category.budget) ||
+    currencyChanged;
 
   async function handleSave() {
     if (!dirty || !budgetValid) return;
     setSaving(true);
     setError(null);
     try {
-      const patch: { subcategory?: string; budget?: number } = {};
+      const patch: { subcategory?: string; budget?: number; currency?: string } = {};
       if (trimmedSub !== category.subcategory) patch.subcategory = trimmedSub;
-      if (budgetNum !== null && budgetNum !== category.budget) patch.budget = budgetNum;
+      if (budgetNum !== null && (budgetNum !== category.budget || currencyChanged)) {
+        patch.budget = budgetNum;
+        patch.currency = currency;
+      }
       await onSave(patch);
     } catch (err) {
       setError(errorMessage(err, t.categories.failedToSave));
@@ -186,6 +197,16 @@ function SubcategoryRow({
           className="h-8 w-32"
           disabled={saving}
         />
+        <Select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          aria-label={t.categories.budgetCurrency}
+          className="h-8 w-20"
+          disabled={saving}
+        >
+          <option value="CRC">CRC</option>
+          <option value="USD">USD</option>
+        </Select>
         <Button
           size="icon"
           variant="ghost"
@@ -394,12 +415,12 @@ export default function Categories() {
     await load();
   }
 
-  async function handleSaveSubcategory(id: number, patch: { subcategory?: string; budget?: number }) {
+  async function handleSaveSubcategory(id: number, patch: { subcategory?: string; budget?: number; currency?: string }) {
     if (patch.subcategory !== undefined) {
       await api.categories.update(id, { subcategory: patch.subcategory });
     }
     if (patch.budget !== undefined) {
-      await api.categories.updateBudget(id, patch.budget);
+      await api.categories.updateBudget(id, patch.budget, patch.currency);
     }
     await load();
   }

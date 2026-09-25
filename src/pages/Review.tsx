@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSearchParams } from "react-router-dom";
-import { Check, Coins, ListChecks, MessageSquareText, Split } from "lucide-react";
+import { CalendarClock, Check, Coins, Inbox, ListChecks, MessageSquareText, Split } from "lucide-react";
 import { api, type Category, type Expense } from "@/lib/api";
 import { useExpenseEvents } from "@/lib/events";
 import { formatExpenseAmount } from "@/lib/format";
@@ -16,12 +16,19 @@ import { ExpenseFlag } from "@/components/expenses/ExpenseFlag";
 import { BulkReviewDialog } from "@/components/BulkReviewDialog";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
 import { resolveCategoryOverrides, resolveMerchantRules } from "@/lib/reviewApprove";
+import { RecurrentDueList, useRecurrentDue } from "@/components/recurrent/RecurrentDueList";
+
+type ReviewTab = "expenses" | "recurring";
 
 export default function Review() {
   const { currency } = useCurrency();
   const t = useT();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const focusId = searchParams.get("focus");
+  // Kept in the URL so "mark as paid" can come back to this tab, and a
+  // deep link (?focus=) always lands on the expenses tab it points into.
+  const tab: ReviewTab = searchParams.get("tab") === "recurring" && !focusId ? "recurring" : "expenses";
+  const recurrent = useRecurrentDue();
 
   const [expenses, setExpenses] = React.useState<Expense[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -165,13 +172,58 @@ export default function Review() {
     }
   }
 
-  if (loading) return <p className="text-sm text-muted-foreground">{t.common.loading}</p>;
-  if (error) return <p className="text-sm text-destructive">{error}</p>;
+  const tabs: { id: ReviewTab; label: string; icon: typeof Inbox; count: number | null }[] = [
+    { id: "expenses", label: t.review.tabs.expenses, icon: Inbox, count: loading ? null : expenses.length },
+    { id: "recurring", label: t.review.tabs.recurring, icon: CalendarClock, count: recurrent.loading ? null : recurrent.attentionCount },
+  ];
+
+  const tabBar = (
+    <nav
+      aria-label={t.review.tabsLabel}
+      className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-secondary/40 p-1 sm:max-w-md"
+    >
+      {tabs.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          aria-current={tab === item.id ? "page" : undefined}
+          onClick={() => setSearchParams(item.id === "recurring" ? { tab: "recurring" } : {})}
+          className={cn(
+            "flex min-h-10 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium transition-colors",
+            tab === item.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <item.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>{item.label}</span>
+          {item.count != null && item.count > 0 && (
+            <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-gold px-1.5 py-0.5 text-[11px] font-medium leading-none text-[#17231f]">
+              {item.count > 99 ? "99+" : item.count}
+            </span>
+          )}
+        </button>
+      ))}
+    </nav>
+  );
+
+  if (tab === "recurring") {
+    return (
+      <div className="flex flex-col gap-4">
+        {tabBar}
+        <h1 className="text-xl font-semibold">{t.recurrent.title}</h1>
+        <RecurrentDueList state={recurrent} onMessage={setSuccessMessage} />
+        {successMessage && <InfoModal message={successMessage} onClose={() => setSuccessMessage(null)} />}
+      </div>
+    );
+  }
+
+  if (loading) return <div className="flex flex-col gap-4">{tabBar}<p className="text-sm text-muted-foreground">{t.common.loading}</p></div>;
+  if (error) return <div className="flex flex-col gap-4">{tabBar}<p className="text-sm text-destructive">{error}</p></div>;
 
   const focusedExpenseMissing = focusId != null && !expenses.some((e) => String(e.id) === focusId);
 
   return (
     <div className="flex flex-col gap-4">
+      {tabBar}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold">{t.review.queueTitle}</h1>

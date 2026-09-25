@@ -35,10 +35,15 @@ export function AppShell() {
   const [pendingCount, setPendingCount] = React.useState<number | null>(null);
   const [alertsOpen, setAlertsOpen] = React.useState(false);
 
+  // Unreviewed expenses plus recurring payments asking for attention
+  // (overdue, or matched and waiting for confirmation) -- both live on the
+  // Review page. A failing recurring fetch doesn't hide the expense count.
   const loadPendingCount = React.useCallback(() => {
-    api.expenses
-      .review()
-      .then((expenses) => setPendingCount(expenses.length))
+    Promise.all([
+      api.expenses.review(),
+      api.recurrent.due().catch(() => []),
+    ])
+      .then(([expenses, due]) => setPendingCount(expenses.length + due.filter((d) => d.status !== "pending").length))
       .catch(() => setPendingCount(null));
   }, []);
 

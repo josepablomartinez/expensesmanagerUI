@@ -61,6 +61,7 @@ export interface Category {
   subcategory: string;
   budget: number | null;
   main_category_id: number;
+  budget_currency: string | null; // CRC/USD; null when no budget is set
 }
 
 export interface MainCategory {
@@ -157,6 +158,7 @@ export interface Settings {
   suspicious_median_ratio: number;
   quiet_hours_start: number;
   quiet_hours_end: number;
+  recurrent_grace_days: number;
   updated_at: string;
 }
 
@@ -178,6 +180,7 @@ export interface UpdateSettingsRequest {
   suspicious_median_ratio?: number;
   quiet_hours_start?: number;
   quiet_hours_end?: number;
+  recurrent_grace_days?: number;
 }
 
 export interface AlertPayload {
@@ -307,6 +310,85 @@ export interface CreateExpenseRequest {
   motive?: string;
   amount_colones?: number; // required when currency is USD
   credit_card_id?: number;
+  // "Mark as paid" on a pending recurrent expense: sent together, and the
+  // new expense marks that period paid directly (no confirm step).
+  recurrent_expense_id?: number;
+  recurrent_period?: string; // YYYY-MM
+}
+
+// A fixed monthly payment (loan, subscription, ...). One per subcategory;
+// amount/currency are that subcategory's budget. See API/README.md's
+// "Recurrent expenses" section.
+export interface RecurrentExpense {
+  id: number;
+  category_id: number;
+  category_name: string;
+  name: string;
+  day_of_month: number;
+  active: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  amount: number | null;
+  currency: string | null;
+}
+
+export interface RecurrentExpenseRequest {
+  name: string;
+  day_of_month: number;
+  start_date: string | null; // YYYY-MM-DD
+  end_date: string | null;
+}
+
+export type RecurrentStatus = "overdue" | "matched" | "pending";
+
+// One card in the review tab's Recurring section: a recurrence's next
+// period that isn't paid or skipped yet. expense_* are only set when
+// status is "matched" (the expense the DB linked, waiting for confirmation).
+// previous_* describe the month right before, when it was paid or skipped
+// -- the card's "September paid · Undo" line.
+export interface RecurrentDue {
+  recurrent_expense_id: number;
+  name: string;
+  category_id: number;
+  category_name: string;
+  period: string;
+  due_date: string;
+  days_until_due: number;
+  status: RecurrentStatus;
+  amount: number | null;
+  currency: string | null;
+  expense_id: number | null;
+  expense_date: string | null;
+  expense_amount: number | null;
+  expense_currency: string | null;
+  expense_merchant: string | null;
+  previous_period: string | null;
+  previous_status: "paid" | "skipped" | null;
+  previous_expense_id: number | null;
+  previous_expense_date: string | null;
+  previous_expense_amount: number | null;
+  previous_expense_currency: string | null;
+  previous_expense_merchant: string | null;
+}
+
+export interface RecurrentPeriodResult {
+  recurrent_expense_id: number;
+  period: string;
+  status: "paid" | "pending" | "skipped";
+  expense_id: number | null;
+}
+
+// An expense that can be linked to a period by hand. linked_* are set when
+// it's already linked somewhere: "matched" can be moved, "paid" can't.
+export interface RecurrentCandidate {
+  expense_id: number;
+  date_event: string;
+  amount: number | null;
+  currency: string | null;
+  merchant: string | null;
+  reviewed: boolean;
+  linked_period: string | null;
+  linked_status: "matched" | "paid" | null;
 }
 
 export interface SplitRequest {
@@ -458,10 +540,10 @@ export const api = {
         method: "PUT",
         body: JSON.stringify(body),
       }),
-    updateBudget: (id: number, budget: number) =>
-      request<{ user_id: number; category_id: number; budget: number }>(`/categories/${id}/budget`, {
+    updateBudget: (id: number, budget: number, currency?: string) =>
+      request<{ user_id: number; category_id: number; budget: number; currency: string }>(`/categories/${id}/budget`, {
         method: "PUT",
-        body: JSON.stringify({ budget }),
+        body: JSON.stringify({ budget, ...(currency ? { currency } : {}) }),
       }),
   },
   mainCategories: {
@@ -515,6 +597,35 @@ export const api = {
       request<DebitCard>("/debit-cards", { method: "POST", body: JSON.stringify(body) }),
     update: (id: number, body: UpdateDebitCardRequest) =>
       request<DebitCard>(`/debit-cards/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+  },
+  recurrent: {
+    list: () => request<RecurrentExpense[]>("/recurrent-expenses"),
+    create: (body: RecurrentExpenseRequest & { category_id: number }) =>
+      request<RecurrentExpense>("/recurrent-expenses", { method: "POST", body: JSON.stringify(body) }),
+    // Full replace: a null start_date/end_date clears it.
+    update: (id: number, body: RecurrentExpenseRequest & { active: boolean }) =>
+      request<RecurrentExpense>(`/recurrent-expenses/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+    delete: (id: number) => request<{ id: number }>(`/recurrent-expenses/${id}`, { method: "DELETE" }),
+    // today is the caller's local date, so "overdue" flips at local
+    // midnight rather than the database's (UTC).
+    due: () => request<RecurrentDue[]>(`/recurrent-expenses/due?today=${localISODate(new Date())}`),
+    // period is YYYY-MM.
+    confirm: (id: number, period: string) =>
+      request<RecurrentPeriodResult>(`/recurrent-expenses/${id}/periods/${period}/confirm`, { method: "POST" }),
+    reject: (id: number, period: string) =>
+      request<RecurrentPeriodResult>(`/recurrent-expenses/${id}/periods/${period}/reject`, { method: "POST" }),
+    skip: (id: number, period: string) =>
+      request<RecurrentPeriodResult>(`/recurrent-expenses/${id}/periods/${period}/skip`, { method: "POST" }),
+    // Takes back a paid or skipped period; a linked expense stays as-is.
+    undo: (id: number, period: string) =>
+      request<RecurrentPeriodResult>(`/recurrent-expenses/${id}/periods/${period}/undo`, { method: "POST" }),
+    candidates: (id: number, period: string) =>
+      request<RecurrentCandidate[]>(`/recurrent-expenses/${id}/periods/${period}/candidates`),
+    link: (id: number, period: string, expenseId: number) =>
+      request<RecurrentPeriodResult>(`/recurrent-expenses/${id}/periods/${period}/link`, {
+        method: "POST",
+        body: JSON.stringify({ expense_id: expenseId }),
+      }),
   },
   reports: {
     budgetVsActual: (year: number, month: number) =>

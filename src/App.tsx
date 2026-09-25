@@ -12,6 +12,7 @@ import SettingsLayout, { SettingsIndex } from "@/pages/settings/SettingsLayout";
 import SettingsBasic from "@/pages/settings/Basic";
 import SettingsCreditCards from "@/pages/settings/CreditCards";
 import SettingsCategories from "@/pages/settings/Categories";
+import SettingsRecurring from "@/pages/settings/Recurring";
 import SettingsAdvanced from "@/pages/settings/Advanced";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="basic" element={<SettingsBasic />} />
           <Route path="credit-cards" element={<SettingsCreditCards />} />
           <Route path="categories" element={<SettingsCategories />} />
+          <Route path="recurring" element={<SettingsRecurring />} />
           <Route path="advanced" element={<SettingsAdvanced />} />
         </Route>
         <Route path="/reports" element={<ReportsLayout />}>

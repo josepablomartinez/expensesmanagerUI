@@ -1,8 +1,9 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { CalendarClock, ChevronDown, ChevronUp, X } from "lucide-react";
 import { api, type Category } from "@/lib/api";
 import { localISODate } from "@/lib/date";
+import { readPayPrefill } from "@/lib/recurrent";
 import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,13 +36,23 @@ function generateAuthCode(str: string) {
 export default function AddExpense() {
   const t = useT();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // "Mark as paid" on a pending recurring payment links here with the
+  // recurrence prefilled (see payUrl in lib/recurrent). Read once: the form
+  // owns the values from then on.
+  const [prefill] = React.useState(() => readPayPrefill(searchParams));
+  const returnTo = prefill ? "/review?tab=recurring" : "/";
   const [categories, setCategories] = React.useState<Category[]>([]);
   const initialDate = React.useRef(today());
   const initialHour = React.useRef(nowHour());
+  const initialMerchant = prefill?.name ?? "";
+  const initialAmount = prefill?.amount != null ? String(prefill.amount) : "";
+  const initialCurrency: string = prefill?.currency ?? "CRC";
+  const initialCategoryId = prefill ? String(prefill.categoryId) : "";
 
-  const [merchant, setMerchant] = React.useState("");
-  const [amount, setAmount] = React.useState("");
-  const [currency, setCurrency] = React.useState("CRC");
+  const [merchant, setMerchant] = React.useState(initialMerchant);
+  const [amount, setAmount] = React.useState(initialAmount);
+  const [currency, setCurrency] = React.useState(initialCurrency);
   const [amountColones, setAmountColones] = React.useState("");
   const [date, setDate] = React.useState(initialDate.current);
   const [hour, setHour] = React.useState(initialHour.current);
@@ -49,12 +60,20 @@ export default function AddExpense() {
   const entity = "MANUAL";
   const country = "CRC";
   const city = "SJO";
-  const [categoryId, setCategoryId] = React.useState("");
+  const [categoryId, setCategoryId] = React.useState(initialCategoryId);
   const [motive, setMotive] = React.useState("");
 
   const [error, setError] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
-  const [detailsOpen, setDetailsOpen] = React.useState(false);
+
+  // "2026-10" -> "October 2026" in the current language.
+  function periodLabel(period: string) {
+    const [year, month] = period.split("-").map(Number);
+    return t.recurrent.periodLabel(t.months.full[month - 1], year);
+  }
+  // Open for a recurring payment, so the payment method isn't silently left
+  // on the default.
+  const [detailsOpen, setDetailsOpen] = React.useState(prefill != null);
   const [confirmingCancel, setConfirmingCancel] = React.useState(false);
   const [desktop, setDesktop] = React.useState(() => window.matchMedia("(min-width: 768px)").matches);
   const formPanelRef = React.useRef<HTMLDivElement>(null);
@@ -67,12 +86,12 @@ export default function AddExpense() {
   }, []);
 
   const isDirty = Boolean(
-    merchant ||
-      amount ||
+    merchant !== initialMerchant ||
+      amount !== initialAmount ||
       amountColones ||
-      categoryId ||
+      categoryId !== initialCategoryId ||
       motive ||
-      currency !== "CRC" ||
+      currency !== initialCurrency ||
       type !== "CASH" ||
       date !== initialDate.current ||
       hour !== initialHour.current,
@@ -88,7 +107,7 @@ export default function AddExpense() {
       setConfirmingCancel(true);
       return;
     }
-    navigate("/");
+    navigate(returnTo);
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -124,8 +143,10 @@ export default function AddExpense() {
         type,
         motive: motive || undefined,
         amount_colones: currency === "USD" ? Number(amountColones) : undefined,
+        recurrent_expense_id: prefill?.recurrentExpenseId,
+        recurrent_period: prefill?.period,
       });
-      navigate("/");
+      navigate(returnTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : t.addExpense.failedToSaveExpense);
     } finally {
@@ -171,6 +192,18 @@ export default function AddExpense() {
             </CardHeader>
 
             <CardContent className="flex flex-col gap-5 pt-5">
+              {prefill && (
+                <div className="flex items-start gap-3 rounded-lg border border-border bg-secondary/40 p-3">
+                  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0 text-sm">
+                    <p className="font-medium text-foreground">
+                      {t.addExpense.payingRecurrent(prefill.name, periodLabel(prefill.period))}
+                    </p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{t.addExpense.payingRecurrentHelp}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="rounded-lg bg-secondary/55 p-4">
                 <label htmlFor="expense-amount" className="mb-2 block text-sm font-medium text-foreground">
                   {t.addExpense.amountLabel}
@@ -237,7 +270,12 @@ export default function AddExpense() {
                   <label htmlFor="expense-category" className="mb-1.5 block text-sm font-medium text-foreground">
                     {t.addExpense.categoryLabel}
                   </label>
-                  <Select id="expense-category" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+                  <Select
+                    id="expense-category"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                    disabled={prefill != null}
+                  >
                     <option value="">{t.common.uncategorized}</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -331,7 +369,7 @@ export default function AddExpense() {
             <Button type="button" variant="outline" onClick={() => setConfirmingCancel(false)}>
               {t.addExpense.keepEditing}
             </Button>
-            <Button type="button" variant="destructive" onClick={() => navigate("/")}>
+            <Button type="button" variant="destructive" onClick={() => navigate(returnTo)}>
               {t.addExpense.discard}
             </Button>
           </div>
