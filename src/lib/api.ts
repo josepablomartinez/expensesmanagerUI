@@ -31,7 +31,7 @@ export interface Expense {
   dollars_amount: number | null;
   category_id: number | null;
   category_name?: string | null;
-  budget?: number | null;
+  budget_colones?: number | null;
   confidence: number | null;
   entity: string;
   type: string | null;
@@ -73,8 +73,11 @@ export interface BudgetVsActual {
   category_id: number;
   main_category_id: number;
   category_name: string;
-  budget: number | null;
-  budget_usd: number | null;
+  budget: number | null; // as the user set it, in budget_currency
+  budget_currency: string | null;
+  // budget converted at today's rate -- what to compare spend against.
+  budget_colones: number | null;
+  budget_dollars: number | null;
   actual_crc: number;
   actual_usd: number;
   pct_used: number | null;
@@ -85,8 +88,11 @@ export interface PaymentWindowRow {
   main_category_id: number;
   category_name: string;
   month_start: string; // YYYY-MM-DD, first day of the payment month
-  budget: number | null;
-  budget_usd: number | null;
+  budget: number | null; // as the user set it, in budget_currency
+  budget_currency: string | null;
+  // budget converted at today's rate -- what to compare spend against.
+  budget_colones: number | null;
+  budget_dollars: number | null;
   spent_crc: number;
   spent_usd: number;
 }
@@ -94,8 +100,10 @@ export interface PaymentWindowRow {
 export interface BudgetBurndownRow {
   category_id: number;
   category_name: string;
-  budget: number | null;
-  budget_usd: number | null;
+  // Sum of the subcategory budgets, each converted at today's rate (they
+  // can be in different currencies, so there's no original-currency total).
+  budget_colones: number | null;
+  budget_dollars: number | null;
   date: string;
   daily_crc: number;
   daily_usd: number;
@@ -108,8 +116,11 @@ export interface BudgetBurndownRow {
 export interface BudgetBurndownBySubcategoryRow {
   subcategory_id: number;
   subcategory_name: string;
-  budget: number | null;
-  budget_usd: number | null;
+  budget: number | null; // as the user set it, in budget_currency
+  budget_currency: string | null;
+  // budget converted at today's rate -- what to compare spend against.
+  budget_colones: number | null;
+  budget_dollars: number | null;
   date: string;
   daily_crc: number;
   daily_usd: number;

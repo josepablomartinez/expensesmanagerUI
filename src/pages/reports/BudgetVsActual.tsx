@@ -108,7 +108,7 @@ export default function BudgetVsActual() {
                   const pct = row.pct_used ?? 0;
                   const over = pct >= 100;
                   const actual = currency === "USD" ? row.actual_usd : row.actual_crc;
-                  const budget = currency === "USD" ? row.budget_usd : row.budget;
+                  const budget = currency === "USD" ? row.budget_dollars : row.budget_colones;
                   return (
                     <button key={row.category_id} type="button" onClick={() => selectRow(row)} aria-pressed={row.category_id === selectedSubId} className={cn("rounded-lg border border-border bg-card p-4 text-left shadow-sm transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", row.category_id === selectedSubId && "border-primary/60 bg-primary/5")}>
                       <div className="flex flex-col gap-3">
@@ -150,8 +150,14 @@ export default function BudgetVsActual() {
 }
 
 function BudgetDetail({ row, currency, labels }: { row: BudgetVsActualRow | null; currency: DisplayCurrency; labels: ReturnType<typeof useT>["budgetVsActual"] }) {
-  const budget = currency === "USD" ? row?.budget_usd : row?.budget;
+  const budget = currency === "USD" ? row?.budget_dollars : row?.budget_colones;
   if (!row || budget == null) return <p className="text-sm text-muted-foreground">{labels.noBudgetSet}</p>;
+  // A budget set in the other currency is converted at today's rate; show
+  // what the user actually entered next to it.
+  const original =
+    row.budget != null && row.budget_currency && row.budget_currency !== currency
+      ? formatMoney(row.budget, row.budget_currency)
+      : null;
   const actual = currency === "USD" ? row.actual_usd : row.actual_crc;
   const pct = row.pct_used ?? 0;
   const overAmount = Math.max(actual - budget, 0);
@@ -162,7 +168,7 @@ function BudgetDetail({ row, currency, labels }: { row: BudgetVsActualRow | null
       <div className="h-2.5 overflow-hidden rounded-full bg-background"><div className={cn("h-full rounded-full", severityBarClass(pct))} style={{ width: `${Math.min(pct, 100)}%` }} /></div>
       <dl className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
         <div><dt className="text-xs text-muted-foreground">{labels.spent}</dt><dd className="font-medium">{formatMoney(actual, currency)}</dd></div>
-        <div><dt className="text-xs text-muted-foreground">{labels.budget}</dt><dd className="font-medium">{formatMoney(budget, currency)}</dd></div>
+        <div><dt className="text-xs text-muted-foreground">{labels.budget}</dt><dd className="font-medium">{formatMoney(budget, currency)}{original && <span className="ml-1 text-xs font-normal text-muted-foreground">({original})</span>}</dd></div>
         <div className="col-span-2"><dt className="text-xs text-muted-foreground">{overAmount > 0 ? labels.overBudget : labels.remaining}</dt><dd className={cn("font-medium", overAmount > 0 && "text-destructive")}>{formatMoney(overAmount > 0 ? overAmount : remaining, currency)}</dd></div>
       </dl>
     </div>

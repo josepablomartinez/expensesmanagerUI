@@ -160,7 +160,7 @@ export default function Burndown() {
     const crossIndex = rows.findIndex((r) => cumulativeOf(r) > expectedOf(r));
     const underPace = rows.map((r, i) => (crossIndex === -1 || i <= crossIndex ? cumulativeOf(r) : null));
     const overPace = rows.map((r, i) => (crossIndex !== -1 && i >= crossIndex ? cumulativeOf(r) : null));
-    const budget = (currency === "USD" ? rows[0]?.budget_usd : rows[0]?.budget) ?? null;
+    const budget = (currency === "USD" ? rows[0]?.budget_dollars : rows[0]?.budget_colones) ?? null;
 
     // Two null-padded segments (rather than one series recolored by
     // visualMap) so under/over-pace portions render in different colors.

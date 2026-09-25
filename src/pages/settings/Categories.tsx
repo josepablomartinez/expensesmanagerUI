@@ -1,11 +1,14 @@
 import * as React from "react";
-import { Check, Pencil, Plus, X } from "lucide-react";
-import { api, ApiError, type Category, type MainCategory } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
+import { CalendarClock, Check, Pencil, Plus, X } from "lucide-react";
+import { api, ApiError, type Category, type MainCategory, type RecurrentExpense } from "@/lib/api";
 import { getCategoryIcon } from "@/lib/categoryIcons";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { RecurrentForm } from "@/components/recurrent/RecurrentForm";
+import { cn } from "@/lib/utils";
 import { useT } from "@/lib/language";
 
 interface MainGroup {
@@ -125,14 +128,60 @@ function MainCategoryName({ name, onSave }: { name: string; onSave: (name: strin
   );
 }
 
+// Marks whether a subcategory holds a recurring payment, and is the way in
+// either direction: muted when it doesn't (click to set one up, with the
+// add dialog preselected on this subcategory), highlighted when it does
+// (click to manage it on the Recurring payments page). A deactivated one
+// still counts -- the subcategory can't take a second -- just drawn fainter.
+function RecurringToggle({
+  recurrence,
+  onAdd,
+}: {
+  recurrence: RecurrentExpense | undefined;
+  onAdd: () => void;
+}) {
+  const t = useT();
+  const navigate = useNavigate();
+  const label = recurrence
+    ? recurrence.active
+      ? t.categories.recurringOn(recurrence.name)
+      : t.categories.recurringInactive(recurrence.name)
+    : t.categories.makeRecurring;
+
+  return (
+    <Button
+      type="button"
+      size="icon"
+      variant="ghost"
+      className={cn(
+        "h-8 w-8 shrink-0",
+        recurrence
+          ? "bg-primary/15 text-primary hover:bg-primary/25 hover:text-primary"
+          : "text-muted-foreground/60 hover:text-foreground",
+        recurrence && !recurrence.active && "opacity-60",
+      )}
+      title={label}
+      aria-label={label}
+      aria-pressed={recurrence != null}
+      onClick={() => (recurrence ? navigate(`/settings/recurring?focus=${recurrence.id}`) : onAdd())}
+    >
+      <CalendarClock className="h-4 w-4" aria-hidden="true" />
+    </Button>
+  );
+}
+
 // One subcategory row -- subcategory name and budget are always editable;
 // the check button only enables once something actually changed.
 function SubcategoryRow({
   category,
+  recurrence,
   onSave,
+  onAddRecurring,
 }: {
   category: Category;
+  recurrence: RecurrentExpense | undefined;
   onSave: (patch: { subcategory?: string; budget?: number; currency?: string }) => Promise<void>;
+  onAddRecurring: () => void;
 }) {
   const t = useT();
   const [subcategory, setSubcategory] = React.useState(category.subcategory);
@@ -181,11 +230,12 @@ function SubcategoryRow({
   return (
     <div className="flex flex-col gap-1 border-t border-border py-2 first:border-t-0">
       <div className="flex items-center gap-2">
+        <RecurringToggle recurrence={recurrence} onAdd={onAddRecurring} />
         <Input
           value={subcategory}
           onChange={(e) => setSubcategory(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSave()}
-          className="h-8 flex-1"
+          className="h-8 min-w-0 flex-1"
           disabled={saving}
         />
         <Input
@@ -392,14 +442,18 @@ export default function Categories() {
   const t = useT();
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [mainCategories, setMainCategories] = React.useState<MainCategory[]>([]);
+  const [recurrences, setRecurrences] = React.useState<RecurrentExpense[]>([]);
+  // Subcategory the recurring add dialog is open for.
+  const [addRecurringFor, setAddRecurringFor] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
   const load = React.useCallback(() => {
-    return Promise.all([api.categories.list(), api.mainCategories.list()])
-      .then(([cats, mainCats]) => {
+    return Promise.all([api.categories.list(), api.mainCategories.list(), api.recurrent.list()])
+      .then(([cats, mainCats, recurrent]) => {
         setCategories(cats);
         setMainCategories(mainCats);
+        setRecurrences(recurrent);
       })
       .catch((err) => setError(errorMessage(err, t.categories.failedToLoad)));
   }, []);
@@ -409,6 +463,10 @@ export default function Categories() {
   }, [load]);
 
   const groups = React.useMemo(() => groupCategories(mainCategories, categories), [mainCategories, categories]);
+  const recurrenceByCategory = React.useMemo(
+    () => new Map(recurrences.map((r) => [r.category_id, r])),
+    [recurrences],
+  );
 
   async function handleRenameMain(mainCategoryId: number, name: string) {
     await api.mainCategories.update(mainCategoryId, name);
@@ -460,7 +518,13 @@ export default function Categories() {
                   <p className="text-sm text-muted-foreground">{t.categories.noSubcategoriesYet}</p>
                 ) : (
                   group.items.map((c) => (
-                    <SubcategoryRow key={c.id} category={c} onSave={(patch) => handleSaveSubcategory(c.id, patch)} />
+                    <SubcategoryRow
+                      key={c.id}
+                      category={c}
+                      recurrence={recurrenceByCategory.get(c.id)}
+                      onSave={(patch) => handleSaveSubcategory(c.id, patch)}
+                      onAddRecurring={() => setAddRecurringFor(c.id)}
+                    />
                   ))
                 )}
                 <AddSubcategoryForm
@@ -473,6 +537,20 @@ export default function Categories() {
       </div>
 
       <AddMainCategoryForm onAdd={handleAddMainCategory} />
+
+      {addRecurringFor != null && (
+        <RecurrentForm
+          existing={null}
+          initialCategoryId={addRecurringFor}
+          categories={categories}
+          takenCategoryIds={new Set(recurrenceByCategory.keys())}
+          onClose={() => setAddRecurringFor(null)}
+          onSaved={() => {
+            setAddRecurringFor(null);
+            load();
+          }}
+        />
+      )}
     </div>
   );
 }

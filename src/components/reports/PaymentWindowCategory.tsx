@@ -34,7 +34,7 @@ export function PaymentWindowCategory({
   showMainCategory?: boolean;
 }) {
   const { language, t } = useLanguage();
-  const budget = currency === "USD" ? rows[0].budget_usd : rows[0].budget;
+  const budget = currency === "USD" ? rows[0].budget_dollars : rows[0].budget_colones;
 
   return (
     <div className="flex flex-col gap-2">
