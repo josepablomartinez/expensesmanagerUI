@@ -156,6 +156,7 @@ export const en = {
     ascending: "Ascending",
     expensesCount: (n: number) => (n === 1 ? "1 expense" : `${n} expenses`),
     noExpensesMatch: "No expenses match your search.",
+    truncated: (limit: number) => `Showing the newest ${limit} matches — narrow the dates or search to see older ones.`,
     goToReview: "Go to this expense in Review",
     unreviewed: "Unreviewed",
     failedToLoad: "Failed to load",

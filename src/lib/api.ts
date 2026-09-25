@@ -493,7 +493,7 @@ export const api = {
   expenses: {
     review: (minConfidence = 1.0) =>
       request<Expense[]>(`/expenses/review?min_confidence=${minConfidence}`),
-    list: (params: { from: string; to: string; categoryId?: number; type?: string; entity?: string; limit?: number; offset?: number; dateField?: "event" | "payment" }) => {
+    list: (params: { from: string; to: string; categoryId?: number; type?: string; entity?: string; limit?: number; offset?: number; dateField?: "event" | "payment"; q?: string }) => {
       const q = new URLSearchParams({ from: params.from, to: params.to });
       if (params.categoryId) q.set("category_id", String(params.categoryId));
       if (params.type) q.set("type", params.type);
@@ -501,6 +501,7 @@ export const api = {
       if (params.limit) q.set("limit", String(params.limit));
       if (params.offset) q.set("offset", String(params.offset));
       if (params.dateField) q.set("date_field", params.dateField);
+      if (params.q?.trim()) q.set("q", params.q.trim());
       return request<{ days: DayExpenses[] }>(`/expenses?${q}`);
     },
     updateCategory: (id: number, categoryId: number) =>

@@ -33,6 +33,9 @@ function ninetyDaysAgo() {
   return localISODate(d);
 }
 
+const LIST_LIMIT = 500;
+const QUERY_DEBOUNCE_MS = 300;
+
 type SortBy = "date" | "amount";
 type SortDir = "asc" | "desc";
 type QuickRange = "" | "-1" | "0" | "1" | "2";
@@ -50,6 +53,7 @@ export default function Search() {
   const [categoryId, setCategoryId] = React.useState(() => searchParams.get("category") || "");
   const [dateField, setDateField] = React.useState<DateField>(() => (searchParams.get("date_field") === "payment" ? "payment" : "event"));
   const [query, setQuery] = React.useState("");
+  const [debouncedQuery, setDebouncedQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<SortBy>("date");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -70,15 +74,29 @@ export default function Search() {
     api.creditCards.list().then(setCreditCards).catch(() => {});
   }, []);
 
+  React.useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query.trim()), QUERY_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [query]);
+
+  // Typing fires overlapping requests; only the latest one may set state.
+  const requestSeq = React.useRef(0);
   const load = React.useCallback(() => {
+    const seq = ++requestSeq.current;
     setLoading(true);
     setError(null);
     return api.expenses
-      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: 500, dateField })
-      .then((res) => setExpenses(res.days.flatMap((d) => d.expenses)))
-      .catch((err) => setError(err instanceof Error ? err.message : t.search.failedToLoad))
-      .finally(() => setLoading(false));
-  }, [from, to, categoryId, dateField]);
+      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: LIST_LIMIT, dateField, q: debouncedQuery })
+      .then((res) => {
+        if (seq === requestSeq.current) setExpenses(res.days.flatMap((d) => d.expenses));
+      })
+      .catch((err) => {
+        if (seq === requestSeq.current) setError(err instanceof Error ? err.message : t.search.failedToLoad);
+      })
+      .finally(() => {
+        if (seq === requestSeq.current) setLoading(false);
+      });
+  }, [from, to, categoryId, dateField, debouncedQuery]);
 
   React.useEffect(() => {
     load();
@@ -92,6 +110,8 @@ export default function Search() {
     requestAnimationFrame(() => document.getElementById(`expense-${focusedExpenseId}`)?.scrollIntoView({ block: "center" }));
   }, [expenses, focusedExpenseId]);
 
+  // The API already filters by debouncedQuery; this local pass only narrows
+  // instantly while the user is still typing ahead of the debounce.
   const results = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     let rows = expenses;
@@ -111,6 +131,7 @@ export default function Search() {
   }, [expenses, query, sortBy, sortDir, currency]);
 
   const total = results.reduce((sum, e) => sum + expenseValue(e, currency), 0);
+  const truncated = expenses.length >= LIST_LIMIT;
 
   return (
     <div className="flex flex-col gap-4">
@@ -236,7 +257,11 @@ export default function Search() {
         </CardContent>
       </Card>
 
-      {loading ? (
+      {truncated && !loading && !error && (
+        <p className="text-sm text-muted-foreground" role="status">{t.search.truncated(LIST_LIMIT)}</p>
+      )}
+
+      {loading && expenses.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t.common.loading}</p>
       ) : error ? (
         <p className="text-sm text-destructive">{error}</p>

@@ -153,6 +153,7 @@ export const es: Dictionary = {
     ascending: "Ascendente",
     expensesCount: (n: number) => (n === 1 ? "1 gasto" : `${n} gastos`),
     noExpensesMatch: "Ningún gasto coincide con tu búsqueda.",
+    truncated: (limit: number) => `Mostrando los ${limit} más recientes — acota las fechas o la búsqueda para ver los anteriores.`,
     goToReview: "Ir a este gasto en Revisar",
     unreviewed: "Sin revisar",
     failedToLoad: "Error al cargar",
