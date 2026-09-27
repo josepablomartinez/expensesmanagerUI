@@ -337,7 +337,6 @@ export interface CreateExpenseRequest {
   entity: string;
   type: string; // CARD/CASH/SINPE
   motive?: string;
-  amount_colones?: number; // required when currency is USD
   credit_card_id?: number;
   // "Mark as paid" on a pending recurrent expense: sent together, and the
   // new expense marks that period paid directly (no confirm step).

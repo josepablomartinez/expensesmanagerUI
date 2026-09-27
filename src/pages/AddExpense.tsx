@@ -53,7 +53,6 @@ export default function AddExpense() {
   const [merchant, setMerchant] = React.useState(initialMerchant);
   const [amount, setAmount] = React.useState(initialAmount);
   const [currency, setCurrency] = React.useState(initialCurrency);
-  const [amountColones, setAmountColones] = React.useState("");
   const [date, setDate] = React.useState(initialDate.current);
   const [hour, setHour] = React.useState(initialHour.current);
   const [type, setType] = React.useState("CASH");
@@ -88,7 +87,6 @@ export default function AddExpense() {
   const isDirty = Boolean(
     merchant !== initialMerchant ||
       amount !== initialAmount ||
-      amountColones ||
       categoryId !== initialCategoryId ||
       motive ||
       currency !== initialCurrency ||
@@ -119,10 +117,6 @@ export default function AddExpense() {
       setError(t.addExpense.enterValidAmount);
       return;
     }
-    if (currency === "USD" && (!amountColones || Number(amountColones) <= 0)) {
-      setError(t.addExpense.amountInColonesRequired);
-      return;
-    }
 
     const seed = `${date}|${parsedAmount}|${merchant || "Desconocido"}|${type}`;
     const authorization = `GEN-${generateAuthCode(seed)}`;
@@ -142,7 +136,6 @@ export default function AddExpense() {
         entity,
         type,
         motive: motive || undefined,
-        amount_colones: currency === "USD" ? Number(amountColones) : undefined,
         recurrent_expense_id: prefill?.recurrentExpenseId,
         recurrent_period: prefill?.period,
       });
@@ -232,25 +225,6 @@ export default function AddExpense() {
                     <option value="USD">USD</option>
                   </Select>
                 </div>
-
-                {currency === "USD" && (
-                  <div className="mt-3">
-                    <label htmlFor="expense-colones" className="mb-1.5 block text-sm font-medium text-foreground">
-                      {t.addExpense.amountInColonesLabel}
-                    </label>
-                    <Input
-                      id="expense-colones"
-                      placeholder={t.addExpense.amountInColonesPlaceholder}
-                      type="number"
-                      inputMode="decimal"
-                      step="0.01"
-                      min="0"
-                      value={amountColones}
-                      onChange={(e) => setAmountColones(e.target.value)}
-                      className="bg-card"
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="space-y-4">
