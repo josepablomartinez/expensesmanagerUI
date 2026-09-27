@@ -24,17 +24,8 @@ let sharedSource: EventSource | null = null;
 
 function ensureSharedSource() {
   if (sharedSource) return;
-  const source = new EventSource(`${API_URL}/events`);
-  sharedSource = source;
-  // EventSource reconnects on its own and surfaces nothing about it, so a
-  // stream that never connects (blocked by CORS, a proxy, a wrong API URL)
-  // is invisible. These two lines make it visible in the browser console.
-  source.onopen = () => console.info("[events] SSE connected", source.url);
-  source.onerror = () =>
-    console.warn(
-      `[events] SSE error, readyState=${source.readyState} (0=connecting, 2=closed)`,
-    );
-  source.onmessage = (message) => {
+  sharedSource = new EventSource(`${API_URL}/events`);
+  sharedSource.onmessage = (message) => {
     try {
       const event = JSON.parse(message.data) as ExpenseEvent;
       listeners.forEach((listener) => listener(event));
