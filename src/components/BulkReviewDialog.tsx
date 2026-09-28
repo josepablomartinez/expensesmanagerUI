@@ -18,7 +18,14 @@ export function BulkReviewDialog({ expenses, categories, onClose, onApproved }: 
   const { currency } = useCurrency();
   const t = useT();
   const [categoryById, setCategoryById] = React.useState<Record<number, string>>(() =>
-    Object.fromEntries(expenses.map((expense) => [expense.id, expense.category_id ? String(expense.category_id) : ""])),
+    Object.fromEntries(
+      expenses.map((expense) => [
+        expense.id,
+        // A disabled category isn't in the picker (and can't be kept on
+        // approve), so it starts unselected like an uncategorized one.
+        expense.category_id && categories.some((c) => c.id === expense.category_id) ? String(expense.category_id) : "",
+      ]),
+    ),
   );
   const [alwaysById, setAlwaysById] = React.useState<Record<number, boolean>>({});
   const [confirming, setConfirming] = React.useState(false);

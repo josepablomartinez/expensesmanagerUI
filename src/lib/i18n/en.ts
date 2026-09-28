@@ -207,6 +207,42 @@ export const en = {
     failedToSave: "Failed to save",
     failedToAdd: "Failed to add",
     failedToLoad: "Failed to load",
+    showDisabled: (n: number) => `Show disabled (${n})`,
+    disabled: "Disabled",
+    disabledTag: "(disabled)",
+    replacedBy: (name: string) => `New ones go to ${name}`,
+    allDisabled: "All subcategories are disabled.",
+    disable: (name: string) => `Disable ${name}`,
+    enable: "Enable",
+    failedToEnable: "Failed to enable",
+    moveAction: (name: string) => `Move ${name} to another category`,
+    disabledNotice: (name: string, moved: number, kept: number) =>
+      `${name} disabled.` +
+      (moved > 0 ? ` Moved ${moved} expense${moved === 1 ? "" : "s"}.` : "") +
+      (kept > 0 ? ` ${kept} expense${kept === 1 ? "" : "s"} stay${kept === 1 ? "s" : ""} in it.` : ""),
+    moveDialog: {
+      title: (name: string) => `Move ${name}`,
+      mainCategory: "Main category",
+      choose: "Choose a category",
+      hint: "Its expenses, budget and recurring payment go with it.",
+      confirm: "Move",
+      failed: "Failed to move",
+    },
+    disableDialog: {
+      title: (name: string) => `Disable ${name}?`,
+      body: "Its existing expenses stay in it and keep showing in reports, charts and searches. New expenses can't use it, and its budget stops counting. You can enable it again anytime.",
+      blockedByRecurring: (names: string) =>
+        `It's used by the recurring payment ${names}. Delete or deactivate it first.`,
+      manageRecurring: "Go to recurring payments",
+      advanced: "Advanced",
+      replacement: "Replacement category",
+      replacementHint: "Expenses categorized automatically (bank emails, SINPE) that would have landed here go to this one instead.",
+      moveExpenses: "Move existing expenses to",
+      moveExpensesHint: "Changes the category of past expenses. This can't be undone automatically. Expenses that pay a recurring period stay put.",
+      none: "None",
+      confirm: "Disable",
+      failed: "Failed to disable",
+    },
   },
   charts: {
     link: "Other charts",

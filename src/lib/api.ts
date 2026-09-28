@@ -62,6 +62,22 @@ export interface Category {
   budget: number | null;
   main_category_id: number;
   budget_currency: string | null; // CRC/USD; null when no budget is set
+  // Soft-disabled: existing expenses keep it, nothing new can use it. Only
+  // present in GET /categories?include_disabled=true.
+  disabled_at: string | null;
+  // Where new automatic categorizations go while disabled (optional).
+  replaced_by_id: number | null;
+}
+
+// Row returned by POST /categories/{id}/disable and /enable.
+export interface CategoryState {
+  id: number;
+  main_category_id: number;
+  subcategory: string;
+  disabled_at: string | null;
+  replaced_by_id: number | null;
+  moved_count?: number; // disable only: expenses the optional move took
+  kept_count?: number; // disable only: expenses still in the category afterwards
 }
 
 export interface MainCategory {
@@ -554,7 +570,10 @@ export const api = {
       }),
   },
   categories: {
-    list: () => request<Category[]>("/categories"),
+    // Enabled categories only by default (pickers); includeDisabled for the
+    // settings page, the search filter and showing a disabled current value.
+    list: (opts?: { includeDisabled?: boolean }) =>
+      request<Category[]>(opts?.includeDisabled ? "/categories?include_disabled=true" : "/categories"),
     create: (body: { mainCategoryId: number; subcategory: string; budget?: number }) =>
       request<Category>("/categories", {
         method: "POST",
@@ -564,11 +583,24 @@ export const api = {
           ...(body.budget !== undefined ? { budget: body.budget } : {}),
         }),
       }),
-    update: (id: number, body: { subcategory?: string; budget?: number }) =>
+    update: (id: number, body: { subcategory?: string; mainCategoryId?: number }) =>
       request<Category>(`/categories/${id}`, {
         method: "PUT",
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          ...(body.subcategory !== undefined ? { subcategory: body.subcategory } : {}),
+          ...(body.mainCategoryId !== undefined ? { main_category_id: body.mainCategoryId } : {}),
+        }),
       }),
+    disable: (id: number, body: { replacedById?: number; moveToId?: number } = {}) =>
+      request<CategoryState>(`/categories/${id}/disable`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...(body.replacedById !== undefined ? { replaced_by_id: body.replacedById } : {}),
+          ...(body.moveToId !== undefined ? { move_to_id: body.moveToId } : {}),
+        }),
+      }),
+    enable: (id: number) =>
+      request<CategoryState>(`/categories/${id}/enable`, { method: "POST" }),
     updateBudget: (id: number, budget: number, currency?: string) =>
       request<{ user_id: number; category_id: number; budget: number; currency: string }>(`/categories/${id}/budget`, {
         method: "PUT",

@@ -204,6 +204,42 @@ export const es: Dictionary = {
     failedToSave: "Error al guardar",
     failedToAdd: "Error al agregar",
     failedToLoad: "Error al cargar",
+    showDisabled: (n: number) => `Mostrar deshabilitadas (${n})`,
+    disabled: "Deshabilitada",
+    disabledTag: "(deshabilitada)",
+    replacedBy: (name: string) => `Las nuevas van a ${name}`,
+    allDisabled: "Todas las subcategorías están deshabilitadas.",
+    disable: (name: string) => `Deshabilitar ${name}`,
+    enable: "Habilitar",
+    failedToEnable: "Error al habilitar",
+    moveAction: (name: string) => `Mover ${name} a otra categoría`,
+    disabledNotice: (name: string, moved: number, kept: number) =>
+      `${name} deshabilitada.` +
+      (moved > 0 ? ` Se movió${moved === 1 ? "" : "n"} ${moved} gasto${moved === 1 ? "" : "s"}.` : "") +
+      (kept > 0 ? ` ${kept} gasto${kept === 1 ? " se queda" : "s se quedan"} en ella.` : ""),
+    moveDialog: {
+      title: (name: string) => `Mover ${name}`,
+      mainCategory: "Categoría principal",
+      choose: "Elige una categoría",
+      hint: "Sus gastos, presupuesto y pago recurrente se mueven con ella.",
+      confirm: "Mover",
+      failed: "Error al mover",
+    },
+    disableDialog: {
+      title: (name: string) => `¿Deshabilitar ${name}?`,
+      body: "Sus gastos existentes se quedan en ella y siguen apareciendo en reportes, gráficos y búsquedas. Los gastos nuevos no pueden usarla y su presupuesto deja de contar. Puedes volver a habilitarla cuando quieras.",
+      blockedByRecurring: (names: string) =>
+        `La usa el pago recurrente ${names}. Elimínalo o desactívalo primero.`,
+      manageRecurring: "Ir a pagos recurrentes",
+      advanced: "Avanzado",
+      replacement: "Categoría de reemplazo",
+      replacementHint: "Los gastos categorizados automáticamente (correos del banco, SINPE) que habrían caído aquí van a esta.",
+      moveExpenses: "Mover los gastos existentes a",
+      moveExpensesHint: "Cambia la categoría de gastos pasados. No se puede deshacer automáticamente. Los gastos que pagan un periodo recurrente se quedan donde están.",
+      none: "Ninguna",
+      confirm: "Deshabilitar",
+      failed: "Error al deshabilitar",
+    },
   },
   charts: {
     link: "Otros gráficos",

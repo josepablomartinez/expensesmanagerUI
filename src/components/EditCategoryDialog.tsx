@@ -23,6 +23,8 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
   const [reason, setReason] = React.useState(expense.motive ?? "");
   const [error, setError] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
+  const currentIsDisabled =
+    expense.category_id != null && !categories.some((c) => c.id === expense.category_id);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +53,11 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
               <option value="" disabled>
                 {t.dialogs.editCategory.chooseCategory}
               </option>
+              {currentIsDisabled && (
+                <option value={expense.category_id!}>
+                  {expense.category_name ?? `#${expense.category_id}`} {t.categories.disabledTag}
+                </option>
+              )}
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.category} / {c.subcategory}

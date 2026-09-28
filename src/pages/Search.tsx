@@ -68,9 +68,15 @@ export default function Search() {
   const [clearFlagTarget, setClearFlagTarget] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const pickerCategories = React.useMemo(() => categories.filter((c) => c.disabled_at == null), [categories]);
 
   React.useEffect(() => {
-    api.categories.list().then(setCategories).catch(() => {});
+    // Disabled categories stay searchable (their expenses are still there);
+    // they're listed last in the filter and kept out of the edit pickers.
+    api.categories
+      .list({ includeDisabled: true })
+      .then((cats) => setCategories([...cats].sort((a, b) => Number(a.disabled_at != null) - Number(b.disabled_at != null))))
+      .catch(() => {});
     api.creditCards.list().then(setCreditCards).catch(() => {});
   }, []);
 
@@ -220,7 +226,10 @@ export default function Search() {
             <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full">
               <option value="">{t.search.allCategories}</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.category} / {c.subcategory}</option>
+                <option key={c.id} value={c.id}>
+                  {c.category} / {c.subcategory}
+                  {c.disabled_at != null ? ` ${t.categories.disabledTag}` : ""}
+                </option>
               ))}
             </Select>
           </label>
@@ -306,7 +315,7 @@ export default function Search() {
       {splitTarget && (
         <SplitExpenseDialog
           expense={splitTarget}
-          categories={categories}
+          categories={pickerCategories}
           onClose={() => setSplitTarget(null)}
           onSplit={() => {
             setSplitTarget(null);
@@ -318,7 +327,7 @@ export default function Search() {
       {editTarget && (
         <EditCategoryDialog
           expense={editTarget}
-          categories={categories}
+          categories={pickerCategories}
           onClose={() => setEditTarget(null)}
           onSave={() => {
             setEditTarget(null);
