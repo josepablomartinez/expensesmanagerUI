@@ -279,6 +279,16 @@ export interface ExchangeRateHistoryRow {
 
 // One subcategory's spend on a card in its open statement cycle; a null
 // category is the card's uncategorized spend.
+// One cell of the weekday x hour grid; the API always returns all 168.
+// weekday is ISO (1 = Monday .. 7 = Sunday), hour 0-23.
+export interface HourProfileCell {
+  weekday: number;
+  hour: number;
+  expense_count: number;
+  total_crc: number;
+  total_usd: number;
+}
+
 export interface CreditCardCycleRow {
   category_id: number | null;
   main_category_id: number | null;
@@ -796,6 +806,9 @@ export const api = {
     // Statement cycle containing the caller's local today.
     creditCardCycle: (cardId: number) =>
       request<CreditCardCycleRow[]>(`/reports/credit-card-cycle?card_id=${cardId}&today=${localISODate(new Date())}`),
+    // from omitted = all history.
+    hourProfile: (from?: string) =>
+      request<HourProfileCell[]>(`/reports/hour-profile${from ? `?from=${from}` : ""}`),
   },
 };
 

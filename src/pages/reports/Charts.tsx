@@ -2,6 +2,7 @@ import * as React from "react";
 import { api } from "@/lib/api";
 import { ExchangeRateChart } from "@/components/reports/ExchangeRateChart";
 import { CreditCardChart } from "@/components/reports/CreditCardChart";
+import { HourProfileChart } from "@/components/reports/HourProfileChart";
 import { useT } from "@/lib/language";
 
 // Reports → Charts: simple standalone charts, reached from the link in the
@@ -22,6 +23,7 @@ export default function Charts() {
       </div>
       <ExchangeRateChart favoriteBanks={favoriteBanks} />
       <CreditCardChart />
+      <HourProfileChart />
     </div>
   );
 }

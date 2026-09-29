@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { api, type Bank } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useT } from "@/lib/language";
+import { useScrollToHash } from "@/lib/useScrollToHash";
 
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
 const formatHour = (h: number) => `${String(h).padStart(2, "0")}:00`;
@@ -28,6 +30,8 @@ export default function Advanced() {
   const [medianRatio, setMedianRatio] = React.useState("1.5");
   const [quietStart, setQuietStart] = React.useState(0);
   const [quietEnd, setQuietEnd] = React.useState(6);
+  // Reached from the punch card's "Change" link (Reports -> Charts).
+  useScrollToHash("quiet-hours", !loading);
 
   React.useEffect(() => {
     Promise.all([api.settings.get(), api.banks.list()])
@@ -256,7 +260,7 @@ export default function Advanced() {
             </div>
           </div>
 
-          <div className="mt-4 flex flex-col gap-1.5">
+          <div id="quiet-hours" className="mt-4 flex scroll-mt-20 flex-col gap-1.5">
             <span className="text-xs font-medium text-muted-foreground">{t.settings.quietHours}</span>
             <div className="flex flex-wrap items-center gap-2">
               <label className="text-xs text-muted-foreground" htmlFor="quiet_hours_start">
@@ -297,6 +301,9 @@ export default function Advanced() {
               </Select>
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">{t.settings.quietHoursHelp}</p>
+            <Link to="/reports/charts#hour-profile" className="w-fit text-xs font-medium text-primary hover:underline">
+              {t.settings.quietHoursSeeChart} →
+            </Link>
           </div>
 
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{t.settings.alertFlagsNote}</p>
