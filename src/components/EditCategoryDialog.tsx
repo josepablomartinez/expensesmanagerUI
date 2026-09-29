@@ -1,6 +1,7 @@
 import * as React from "react";
-import { api, type Category, type Expense } from "@/lib/api";
+import { api, type Category, type Expense, type Project } from "@/lib/api";
 import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
+import { ProjectForm } from "@/components/projects/ProjectForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -13,6 +14,9 @@ interface Props {
   onSave: () => void;
 }
 
+// Picker value for "+ New project…" -- never a real id.
+const NEW_PROJECT = "new";
+
 export function EditCategoryDialog({ expense, categories, onClose, onSave }: Props) {
   const t = useT();
   const [categoryId, setCategoryId] = React.useState(
@@ -21,10 +25,25 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
   // expense.motive is what GET /expenses returns for the underlying `reason`
   // column -- PUT /expenses/{id} just names the same field "reason".
   const [reason, setReason] = React.useState(expense.motive ?? "");
+  const [projects, setProjects] = React.useState<Project[]>([]);
+  const [projectId, setProjectId] = React.useState(expense.project_id ? String(expense.project_id) : "");
+  // "+ New project…" swaps this dialog for the project form (two stacked
+  // dialogs would fight over focus and Escape); the edit state above
+  // survives, and the new project comes back selected.
+  const [creatingProject, setCreatingProject] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
   const currentIsDisabled =
     expense.category_id != null && !categories.some((c) => c.id === expense.category_id);
+
+  React.useEffect(() => {
+    api.projects.list().then(setProjects).catch(() => {});
+  }, []);
+
+  // Only active projects take new expenses; the expense's current project
+  // stays listed (tagged) whatever its status, so opening the dialog never
+  // silently changes it.
+  const projectOptions = projects.filter((p) => p.status === "active" || p.id === expense.project_id);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,12 +57,30 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
     setSaving(true);
     try {
       await api.expenses.update(expense.id, { categoryId: Number(categoryId), reason });
+      const newProjectId = projectId ? Number(projectId) : null;
+      if (newProjectId !== (expense.project_id ?? null)) {
+        await api.projects.assign([expense.id], newProjectId);
+      }
       onSave();
     } catch (err) {
       setError(err instanceof Error ? err.message : t.dialogs.editCategory.failedToUpdate);
     } finally {
       setSaving(false);
     }
+  }
+
+  if (creatingProject) {
+    return (
+      <ProjectForm
+        existing={null}
+        onClose={() => setCreatingProject(false)}
+        onSaved={(project) => {
+          setProjects((list) => [project, ...list]);
+          setProjectId(String(project.id));
+          setCreatingProject(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -65,6 +102,23 @@ export function EditCategoryDialog({ expense, categories, onClose, onSave }: Pro
               ))}
             </Select>
             <Input aria-label={t.dialogs.editCategory.reasonPlaceholder} placeholder={t.dialogs.editCategory.reasonPlaceholder} value={reason} onChange={(e) => setReason(e.target.value)} />
+            <Select
+              aria-label={t.projects.picker.label}
+              value={projectId}
+              onChange={(e) => {
+                if (e.target.value === NEW_PROJECT) setCreatingProject(true);
+                else setProjectId(e.target.value);
+              }}
+            >
+              <option value="">{t.projects.picker.none}</option>
+              {projectOptions.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                  {p.status !== "active" ? ` ${t.projects.picker.notActive(t.projects.status[p.status])}` : ""}
+                </option>
+              ))}
+              <option value={NEW_PROJECT}>{t.projects.picker.newProject}</option>
+            </Select>
             {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="button" variant="outline" className="flex-1" onClick={onClose}>

@@ -15,6 +15,7 @@ import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
 import { Greeting } from "@/components/dashboard/Greeting";
 import { ExchangeRateWidget } from "@/components/dashboard/ExchangeRateWidget";
 import { FavoriteCategoriesWidget } from "@/components/dashboard/FavoriteCategoriesWidget";
+import { ActiveProjectsWidget } from "@/components/dashboard/ActiveProjectsWidget";
 import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
 
 const HOME_WINDOW_DAYS = 30;
@@ -39,6 +40,7 @@ export default function Home() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [settings, setSettings] = React.useState<Settings | null>(null);
+  const [projectsKey, setProjectsKey] = React.useState(0);
 
   React.useEffect(() => {
     api.categories.list().then(setCategories).catch(() => {});
@@ -126,6 +128,8 @@ export default function Home() {
         <FavoriteCategoriesWidget favoriteCategoryIds={settings?.favorite_category_ids ?? []} />
       </div>
 
+      <ActiveProjectsWidget refreshKey={projectsKey} />
+
       <Card className="border-border/80 shadow-sm">
         <CardContent className="flex flex-col gap-3 pt-4">
           <h2 className="border-b border-border pb-2 text-sm font-semibold text-foreground">{t.home.recentExpenses}</h2>
@@ -177,6 +181,7 @@ export default function Home() {
           onClose={() => setEditTarget(null)}
           onSave={() => {
             setEditTarget(null);
+            setProjectsKey((k) => k + 1);
             load();
           }}
         />

@@ -8,12 +8,14 @@ import { EChart, chartColors, lineMarkers } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
+import { useIncludeProjects } from "@/pages/reports/ReportsLayout";
 import type { EChartsOption } from "echarts";
 
 export default function SubcategoriesByMonth() {
   const { currency } = useCurrency();
   const t = useT();
   const { theme } = useTheme();
+  const includeProjects = useIncludeProjects();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
 
@@ -31,10 +33,10 @@ export default function SubcategoriesByMonth() {
   // exist doesn't depend on it -- January is just a fixed pick.
   React.useEffect(() => {
     api.reports
-      .budgetVsActual(year, 1)
+      .budgetVsActual(year, 1, includeProjects)
       .then((data) => setCategories(groupByMainCategory(data)))
       .catch(() => setCategories([]));
-  }, [year]);
+  }, [year, includeProjects]);
 
   React.useEffect(() => {
     setCategoryId((current) => {
@@ -52,11 +54,11 @@ export default function SubcategoriesByMonth() {
     setLoading(true);
     setError(null);
     api.reports
-      .categoryMonthMatrix(year, categoryId)
+      .categoryMonthMatrix(year, categoryId, includeProjects)
       .then(setRows)
       .catch((err) => setError(err instanceof Error ? err.message : t.subcategoriesByMonth.failedToLoad))
       .finally(() => setLoading(false));
-  }, [year, categoryId]);
+  }, [year, categoryId, includeProjects]);
 
   const chartOption = React.useMemo(() => {
     if (rows.length === 0) return null;

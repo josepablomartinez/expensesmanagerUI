@@ -6,10 +6,12 @@ import { Select } from "@/components/ui/select";
 import { PaymentWindowCategory, groupPaymentWindow } from "@/components/reports/PaymentWindowCategory";
 import { splitCategoryName } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
+import { useIncludeProjects } from "@/pages/reports/ReportsLayout";
 
 export default function PaymentWindow() {
   const { currency } = useCurrency();
   const t = useT();
+  const includeProjects = useIncludeProjects();
   const [monthsBack, setMonthsBack] = React.useState(2);
   const [mainCategoryId, setMainCategoryId] = React.useState<number | null>(null);
   const [rows, setRows] = React.useState<PaymentWindowRow[]>([]);
@@ -22,11 +24,11 @@ export default function PaymentWindow() {
     setLoading(true);
     setError(null);
     api.reports
-      .paymentWindow(monthsBack)
+      .paymentWindow(monthsBack, undefined, includeProjects)
       .then(setRows)
       .catch((err) => setError(err instanceof Error ? err.message : t.paymentWindow.failedToLoad))
       .finally(() => setLoading(false));
-  }, [monthsBack, t.paymentWindow.failedToLoad]);
+  }, [monthsBack, includeProjects, t.paymentWindow.failedToLoad]);
 
   const mainCategories = React.useMemo(() => {
     const map = new Map<number, string>();

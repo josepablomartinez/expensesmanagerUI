@@ -9,6 +9,7 @@ import { EChart, chartColors } from "@/components/charts/EChart";
 import { groupByMainCategory, type MainCategoryGroup } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
+import { useIncludeProjects } from "@/pages/reports/ReportsLayout";
 import type { EChartsOption } from "echarts";
 
 function dayOfMonth(dateStr: string) {
@@ -20,6 +21,7 @@ export default function Burndown() {
   const { currency } = useCurrency();
   const t = useT();
   const { theme } = useTheme();
+  const includeProjects = useIncludeProjects();
   const now = new Date();
   const [year, setYear] = React.useState(now.getFullYear());
   const [month, setMonth] = React.useState(now.getMonth() + 1);
@@ -40,10 +42,10 @@ export default function Burndown() {
   // adding a dedicated main-category endpoint.
   React.useEffect(() => {
     api.reports
-      .budgetVsActual(year, month)
+      .budgetVsActual(year, month, includeProjects)
       .then((data) => setCategories(groupByMainCategory(data)))
       .catch(() => setCategories([]));
-  }, [year, month]);
+  }, [year, month, includeProjects]);
 
   React.useEffect(() => {
     setCategoryId((current) => {
@@ -61,11 +63,11 @@ export default function Burndown() {
     setLoading(true);
     setError(null);
     api.reports
-      .burndown(year, month, categoryId)
+      .burndown(year, month, categoryId, includeProjects)
       .then(setRows)
       .catch((err) => setError(err instanceof Error ? err.message : t.burndown.failedToLoad))
       .finally(() => setLoading(false));
-  }, [year, month, categoryId]);
+  }, [year, month, categoryId, includeProjects]);
 
   React.useEffect(() => {
     if (categoryId == null) {
@@ -76,11 +78,11 @@ export default function Burndown() {
     setSubLoading(true);
     setSubError(null);
     api.reports
-      .burndownBySubcategory(year, month, categoryId)
+      .burndownBySubcategory(year, month, categoryId, includeProjects)
       .then(setSubRows)
       .catch((err) => setSubError(err instanceof Error ? err.message : t.burndown.failedToLoad))
       .finally(() => setSubLoading(false));
-  }, [year, month, categoryId]);
+  }, [year, month, categoryId, includeProjects]);
 
   const subChartOption = React.useMemo(() => {
     if (subRows.length === 0) return null;

@@ -12,6 +12,7 @@ import { monthRangeFor } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import { groupByMainCategory, splitCategoryName } from "@/lib/categoryGrouping";
 import { useT } from "@/lib/language";
+import { useIncludeProjects } from "@/pages/reports/ReportsLayout";
 
 function severityBarClass(pct: number) {
   if (pct >= 100) return "bg-destructive";
@@ -24,6 +25,7 @@ export default function BudgetVsActual() {
   const { currency } = useCurrency();
   const t = useT();
   const navigate = useNavigate();
+  const includeProjects = useIncludeProjects();
   const now = new Date();
   const [searchParams] = useSearchParams();
   const [year, setYear] = React.useState(now.getFullYear());
@@ -41,11 +43,11 @@ export default function BudgetVsActual() {
     setError(null);
     setVisibleCount(5);
     api.reports
-      .budgetVsActual(year, month)
+      .budgetVsActual(year, month, includeProjects)
       .then(setRows)
       .catch((err) => setError(err instanceof Error ? err.message : t.budgetVsActual.failedToLoad))
       .finally(() => setLoading(false));
-  }, [year, month, t.budgetVsActual.failedToLoad]);
+  }, [year, month, includeProjects, t.budgetVsActual.failedToLoad]);
 
   const groups = React.useMemo(() => groupByMainCategory(rows), [rows]);
   React.useEffect(() => {

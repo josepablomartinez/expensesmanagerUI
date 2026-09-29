@@ -1,10 +1,39 @@
-import { NavLink, Outlet } from "react-router-dom";
+import * as React from "react";
+import { NavLink, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline } from "lucide-react";
+import { api } from "@/lib/api";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/language";
 
+interface ReportsContext {
+  includeProjects: boolean;
+}
+
+// The "Include projects" toggle, shared by every report tab so switching tabs
+// keeps the choice. Off on each visit -- project spending (weddings, trips)
+// stays out of budgets and averages unless asked for.
+export function useIncludeProjects() {
+  return useOutletContext<ReportsContext>().includeProjects;
+}
+
 export default function ReportsLayout() {
   const t = useT();
+  const { pathname } = useLocation();
+  const [includeProjects, setIncludeProjects] = React.useState(false);
+  const [hasProjects, setHasProjects] = React.useState(false);
+
+  // No projects, nothing to include -- keep the toggle out of the way.
+  React.useEffect(() => {
+    api.projects
+      .list()
+      .then((list) => setHasProjects(list.length > 0))
+      .catch(() => {});
+  }, []);
+
+  // Charts' card-cycle view always counts project charges (they're on the
+  // statement), so the toggle would do nothing there.
+  const showToggle = hasProjects && !pathname.startsWith("/reports/charts");
   const REPORT_TABS = [
     { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
     { to: "/reports/payment-window", label: t.reportsLayout.tabs.paymentWindow, icon: CalendarClock },
@@ -57,7 +86,23 @@ export default function ReportsLayout() {
         ))}
       </nav>
 
-      <Outlet />
+      {showToggle && (
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2">
+          <div className="flex min-w-0 flex-col">
+            <span id="reports-include-projects" className="text-sm font-medium">
+              {t.reportsLayout.includeProjects}
+            </span>
+            <span className="text-xs text-muted-foreground">{t.reportsLayout.includeProjectsHelp}</span>
+          </div>
+          <Switch
+            checked={includeProjects}
+            onCheckedChange={setIncludeProjects}
+            aria-labelledby="reports-include-projects"
+          />
+        </div>
+      )}
+
+      <Outlet context={{ includeProjects: includeProjects && showToggle } satisfies ReportsContext} />
     </div>
   );
 }

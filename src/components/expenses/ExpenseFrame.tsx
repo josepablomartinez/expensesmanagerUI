@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, FolderOpen } from "lucide-react";
 import type { CreditCard, Expense } from "@/lib/api";
 import { formatExpenseAmount } from "@/lib/format";
 import { useCurrency } from "@/lib/currency";
@@ -21,6 +21,8 @@ interface ExpenseFrameProps {
   onDelete?: () => void;
   status?: ReactNode;
   showDate?: boolean;
+  // The project page lists only its own expenses, so the tag would repeat.
+  hideProject?: boolean;
   className?: string;
 }
 
@@ -39,6 +41,7 @@ export function ExpenseFrame({
   onDelete,
   status,
   showDate = false,
+  hideProject = false,
   className,
 }: ExpenseFrameProps) {
   const { currency } = useCurrency();
@@ -68,6 +71,12 @@ export function ExpenseFrame({
             <span className="block truncate font-medium">{merchant}</span>
             <span className="block truncate text-xs text-muted-foreground">{metadata.join(" · ")}</span>
             <ExpenseFlag expense={expense} />
+            {expense.project_name && !hideProject && (
+              <span className="mt-0.5 flex min-w-0 items-center gap-1 text-xs text-primary">
+                <FolderOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span className="truncate">{expense.project_name}</span>
+              </span>
+            )}
           </span>
           {expanded ? (
             <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />

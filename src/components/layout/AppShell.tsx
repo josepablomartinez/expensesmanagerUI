@@ -5,19 +5,17 @@ import {
   Bell,
   Home,
   ListChecks,
-  LogOut,
   Moon,
   Plus,
   Search,
-  Settings,
   Sun,
 } from "lucide-react";
 import { MiHarinaLogo } from "@/components/brand/MiHarinaLogo";
 import { Button } from "@/components/ui/button";
 import { AlertsPanel } from "@/components/alerts/AlertsPanel";
+import { MoreMenu } from "@/components/layout/MoreMenu";
 import { api } from "@/lib/api";
 import { useAlerts } from "@/lib/alerts";
-import { useAuth } from "@/lib/auth";
 import { useCurrency } from "@/lib/currency";
 import { useExpenseEvents } from "@/lib/events";
 import { useT } from "@/lib/language";
@@ -25,7 +23,6 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 export function AppShell() {
-  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { currency, toggleCurrency } = useCurrency();
   const location = useLocation();
@@ -174,31 +171,7 @@ export function AppShell() {
               </Button>
               {alertsOpen && <AlertsPanel onClose={() => setAlertsOpen(false)} />}
             </div>
-            <NavLink
-              to="/settings"
-              aria-label={t.nav.settings}
-              title={t.nav.settings}
-              className={({ isActive }) =>
-                cn(
-                  "flex h-9 w-9 items-center justify-center rounded-md",
-                  isActive ? "bg-secondary text-secondary-foreground" : "hover:bg-accent",
-                )
-              }
-            >
-              <Settings className="h-4 w-4" aria-hidden="true" />
-            </NavLink>
-            {user && (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label={t.nav.logOut}
-                title={t.nav.logOut}
-                onClick={logout}
-                className="h-9 w-9"
-              >
-                <LogOut className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            )}
+            <MoreMenu />
           </div>
         </div>
       </header>

@@ -46,6 +46,9 @@ export interface Expense {
   flag_reason: string | null;
   payment_date: string;
   foreign: ForeignCurrency | null;
+  // The project (wedding, trip...) this expense belongs to, if any.
+  project_id: number | null;
+  project_name: string | null;
 }
 
 export interface DayExpenses {
@@ -435,6 +438,54 @@ export interface RecurrentCandidate {
   linked_status: "matched" | "paid" | null;
 }
 
+export type ProjectStatus = "active" | "inactive" | "canceled";
+
+// A temporary grouping of one-off spending across categories. See
+// API/README.md's "Projects" section. spent_* cover every expense in the
+// project whatever its status; counted_as_regular is true when a canceled
+// project's expenses are back in the regular reports. pct_used compares the
+// spend in budget_currency against budget (null without a budget).
+export interface Project {
+  id: number;
+  name: string;
+  status: ProjectStatus;
+  canceled_counts_as_regular: boolean;
+  counted_as_regular: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  budget: number | null;
+  budget_currency: "CRC" | "USD";
+  notes: string | null;
+  expense_count: number;
+  spent_colones: number;
+  spent_dollars: number;
+  pct_used: number | null;
+}
+
+export interface ProjectCategorySpend {
+  category_id: number | null; // null for the project's uncategorized expenses
+  main_category_id: number | null;
+  category_name: string | null;
+  expense_count: number;
+  spent_colones: number;
+  spent_dollars: number;
+}
+
+export interface ProjectSummary extends Project {
+  first_date: string | null;
+  last_date: string | null;
+  categories: ProjectCategorySpend[];
+}
+
+export interface ProjectRequest {
+  name: string;
+  start_date: string | null; // YYYY-MM-DD
+  end_date: string | null;
+  budget: number | null;
+  budget_currency: "CRC" | "USD";
+  notes: string | null;
+}
+
 export interface SplitRequest {
   amount: number;
   category_id?: number;
@@ -495,6 +546,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
+// Query-string suffix for the reports' include_projects flag; omitted when
+// false since that's the API's default.
+function projectsParam(include: boolean) {
+  return include ? "&include_projects=true" : "";
+}
+
 export const api = {
   auth: {
     login: (email: string, password: string) =>
@@ -508,7 +565,7 @@ export const api = {
   expenses: {
     review: (minConfidence = 1.0) =>
       request<Expense[]>(`/expenses/review?min_confidence=${minConfidence}`),
-    list: (params: { from: string; to: string; categoryId?: number; type?: string; entity?: string; limit?: number; offset?: number; dateField?: "event" | "payment"; q?: string }) => {
+    list: (params: { from: string; to: string; categoryId?: number; type?: string; entity?: string; limit?: number; offset?: number; dateField?: "event" | "payment"; q?: string; projectId?: number }) => {
       const q = new URLSearchParams({ from: params.from, to: params.to });
       if (params.categoryId) q.set("category_id", String(params.categoryId));
       if (params.type) q.set("type", params.type);
@@ -517,6 +574,7 @@ export const api = {
       if (params.offset) q.set("offset", String(params.offset));
       if (params.dateField) q.set("date_field", params.dateField);
       if (params.q?.trim()) q.set("q", params.q.trim());
+      if (params.projectId) q.set("project_id", String(params.projectId));
       return request<{ days: DayExpenses[] }>(`/expenses?${q}`);
     },
     updateCategory: (id: number, categoryId: number) =>
@@ -688,28 +746,49 @@ export const api = {
         body: JSON.stringify({ expense_id: expenseId }),
       }),
   },
+  projects: {
+    list: () => request<Project[]>("/projects"),
+    create: (body: ProjectRequest) =>
+      request<Project>("/projects", { method: "POST", body: JSON.stringify(body) }),
+    // Full replace: a null date/budget/notes clears it.
+    update: (id: number, body: ProjectRequest & { status: ProjectStatus; canceled_counts_as_regular: boolean }) =>
+      request<Project>(`/projects/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+    delete: (id: number) => request<{ id: number }>(`/projects/${id}`, { method: "DELETE" }),
+    summary: (id: number) => request<ProjectSummary>(`/projects/${id}/summary`),
+    // projectId null takes the expenses out of their project. Only the rows
+    // that actually changed come back.
+    assign: (ids: number[], projectId: number | null) =>
+      request<{ id: number; project_id: number | null; flag_type: string | null }[]>("/expenses/project", {
+        method: "PUT",
+        body: JSON.stringify({ ids, project_id: projectId }),
+      }),
+  },
   reports: {
-    budgetVsActual: (year: number, month: number) =>
-      request<BudgetVsActual[]>(`/reports/budget-vs-actual?year=${year}&month=${month}`),
+    // includeProjects adds project spending (weddings, trips...), which these
+    // reports leave out by default.
+    budgetVsActual: (year: number, month: number, includeProjects = false) =>
+      request<BudgetVsActual[]>(
+        `/reports/budget-vs-actual?year=${year}&month=${month}${projectsParam(includeProjects)}`,
+      ),
     // Window ends next month and walks back monthsBack months from `today`
     // (the caller's local date, so it can't drift to UTC's day).
-    paymentWindow: (monthsBack: number, mainCategoryId?: number) => {
+    paymentWindow: (monthsBack: number, mainCategoryId?: number, includeProjects = false) => {
       const q = new URLSearchParams({ months_back: String(monthsBack), today: localISODate(new Date()) });
       if (mainCategoryId) q.set("main_category_id", String(mainCategoryId));
-      return request<PaymentWindowRow[]>(`/reports/payment-window?${q}`);
+      return request<PaymentWindowRow[]>(`/reports/payment-window?${q}${projectsParam(includeProjects)}`);
     },
-    burndown: (year: number, month: number, categoryId?: number) => {
+    burndown: (year: number, month: number, categoryId?: number, includeProjects = false) => {
       const q = new URLSearchParams({ year: String(year), month: String(month) });
       if (categoryId) q.set("category_id", String(categoryId));
-      return request<BudgetBurndownRow[]>(`/reports/burndown?${q}`);
+      return request<BudgetBurndownRow[]>(`/reports/burndown?${q}${projectsParam(includeProjects)}`);
     },
-    burndownBySubcategory: (year: number, month: number, categoryId: number) =>
+    burndownBySubcategory: (year: number, month: number, categoryId: number, includeProjects = false) =>
       request<BudgetBurndownBySubcategoryRow[]>(
-        `/reports/burndown-by-subcategory?year=${year}&month=${month}&category_id=${categoryId}`,
+        `/reports/burndown-by-subcategory?year=${year}&month=${month}&category_id=${categoryId}${projectsParam(includeProjects)}`,
       ),
-    categoryMonthMatrix: (year: number, categoryId: number) =>
+    categoryMonthMatrix: (year: number, categoryId: number, includeProjects = false) =>
       request<CategoryMonthMatrixRow[]>(
-        `/reports/category-month-matrix?year=${year}&category_id=${categoryId}`,
+        `/reports/category-month-matrix?year=${year}&category_id=${categoryId}${projectsParam(includeProjects)}`,
       ),
     // Window ends at the bank's latest rate on file, not today.
     exchangeRateHistory: (bankId: number, days: number) =>
