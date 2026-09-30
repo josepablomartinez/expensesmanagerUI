@@ -289,6 +289,25 @@ export interface HourProfileCell {
   total_usd: number;
 }
 
+// One subcategory line of GET /reports/category-summary (CRC only).
+export interface CategorySummaryRow {
+  category_id: number;
+  main_category_id: number;
+  main_category_name: string;
+  subcategory_name: string;
+  expense_count: number;
+  total_colones: number;
+  pct: number; // share of the report total, one decimal
+}
+
+export interface CategorySummary {
+  from: string;
+  to: string;
+  total_colones: number;
+  expense_count: number;
+  rows: CategorySummaryRow[];
+}
+
 export interface CreditCardCycleRow {
   category_id: number | null;
   main_category_id: number | null;
@@ -806,6 +825,12 @@ export const api = {
     // Statement cycle containing the caller's local today.
     creditCardCycle: (cardId: number) =>
       request<CreditCardCycleRow[]>(`/reports/credit-card-cycle?card_id=${cardId}&today=${localISODate(new Date())}`),
+    // Spend per subcategory for the chosen subcategories and period (from/to
+    // YYYY-MM-DD, inclusive) -- the printable category report.
+    categorySummary: (from: string, to: string, categoryIds: number[], includeProjects = false) =>
+      request<CategorySummary>(
+        `/reports/category-summary?from=${from}&to=${to}&category_ids=${categoryIds.join(",")}${projectsParam(includeProjects)}`,
+      ),
     // from omitted = all history.
     hourProfile: (from?: string) =>
       request<HourProfileCell[]>(`/reports/hour-profile${from ? `?from=${from}` : ""}`),

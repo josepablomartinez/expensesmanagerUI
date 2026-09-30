@@ -69,8 +69,8 @@ export function AppShell() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-card text-card-foreground">
+    <div className="min-h-screen bg-background text-foreground print:bg-white">
+      <header className="border-b border-border bg-card text-card-foreground print:hidden">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-3 sm:px-4 md:px-6">
           <NavLink
             to="/"
@@ -176,13 +176,13 @@ export function AppShell() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1040px] px-4 py-6 pb-24 sm:px-6 md:py-7 md:pb-8">
+      <main className="mx-auto max-w-[1040px] px-4 py-6 pb-24 sm:px-6 md:py-7 md:pb-8 print:max-w-none print:p-0">
         <Outlet />
       </main>
 
       <nav
         aria-label="Mobile primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur md:hidden print:hidden"
       >
         <div className="mx-auto grid max-w-lg grid-cols-5 px-1 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5">
           {mobileNavItems.map((item) => (

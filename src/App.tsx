@@ -22,6 +22,7 @@ import Burndown from "@/pages/reports/Burndown";
 import PaymentWindow from "@/pages/reports/PaymentWindow";
 import SubcategoriesByMonth from "@/pages/reports/SubcategoriesByMonth";
 import Charts from "@/pages/reports/Charts";
+import CategoryReport from "@/pages/reports/CategoryReport";
 
 export default function App() {
   return (
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="burndown" element={<Burndown />} />
           <Route path="subcategories-by-month" element={<SubcategoriesByMonth />} />
           <Route path="charts" element={<Charts />} />
+          <Route path="category-report" element={<CategoryReport />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

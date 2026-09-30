@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NavLink, Outlet, useLocation, useOutletContext } from "react-router-dom";
-import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline } from "lucide-react";
+import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline, FileText } from "lucide-react";
 import { api } from "@/lib/api";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,11 @@ export default function ReportsLayout() {
   // Charts' card-cycle view always counts project charges (they're on the
   // statement), so the toggle would do nothing there.
   const showToggle = hasProjects && !pathname.startsWith("/reports/charts");
+  const sideLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "flex min-h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium",
+      isActive ? "bg-secondary text-secondary-foreground" : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+    );
   const REPORT_TABS = [
     { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
     { to: "/reports/payment-window", label: t.reportsLayout.tabs.paymentWindow, icon: CalendarClock },
@@ -43,29 +48,27 @@ export default function ReportsLayout() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex items-start justify-between gap-4 print:hidden">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">{t.reportsLayout.title}</h1>
           <p className="text-sm text-muted-foreground">{t.reportsLayout.subtitle}</p>
         </div>
-        {/* Charts is a side section, deliberately kept out of the tab bar. */}
-        <NavLink
-          to="/reports/charts"
-          className={({ isActive }) =>
-            cn(
-              "flex min-h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium",
-              isActive ? "bg-secondary text-secondary-foreground" : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-            )
-          }
-        >
-          <ChartSpline className="h-4 w-4" aria-hidden="true" />
-          {t.charts.link}
-        </NavLink>
+        {/* Charts and the category report are side sections, deliberately kept out of the tab bar. */}
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+          <NavLink to="/reports/category-report" className={sideLinkClass}>
+            <FileText className="h-4 w-4" aria-hidden="true" />
+            {t.categoryReport.link}
+          </NavLink>
+          <NavLink to="/reports/charts" className={sideLinkClass}>
+            <ChartSpline className="h-4 w-4" aria-hidden="true" />
+            {t.charts.link}
+          </NavLink>
+        </div>
       </header>
 
       <nav
         aria-label={t.reportsLayout.sectionsLabel}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg border border-border bg-secondary/40 p-1"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg border border-border bg-secondary/40 p-1 print:hidden"
       >
         {REPORT_TABS.map((tab) => (
           <NavLink
@@ -87,7 +90,7 @@ export default function ReportsLayout() {
       </nav>
 
       {showToggle && (
-        <div className="flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2">
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2 print:hidden">
           <div className="flex min-w-0 flex-col">
             <span id="reports-include-projects" className="text-sm font-medium">
               {t.reportsLayout.includeProjects}
