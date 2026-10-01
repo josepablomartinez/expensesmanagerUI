@@ -1,4 +1,4 @@
-import { FlagOff, Pencil, Split, Trash2 } from "lucide-react";
+import { FlagOff, HandCoins, Pencil, Split, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/language";
 import { cn } from "@/lib/utils";
@@ -6,15 +6,16 @@ import { cn } from "@/lib/utils";
 interface ExpenseActionsProps {
   onEdit?: () => void;
   onSplit?: () => void;
+  onReimburse?: () => void;
   onClearFlag?: () => void;
   onDelete?: () => void;
   className?: string;
 }
 
-export function ExpenseActions({ onEdit, onSplit, onClearFlag, onDelete, className }: ExpenseActionsProps) {
+export function ExpenseActions({ onEdit, onSplit, onReimburse, onClearFlag, onDelete, className }: ExpenseActionsProps) {
   const t = useT();
 
-  if (!onEdit && !onSplit && !onClearFlag && !onDelete) return null;
+  if (!onEdit && !onSplit && !onReimburse && !onClearFlag && !onDelete) return null;
 
   return (
     <div className={cn("flex items-center gap-0.5", className)} aria-label={t.common.expenseActions}>
@@ -26,6 +27,11 @@ export function ExpenseActions({ onEdit, onSplit, onClearFlag, onDelete, classNa
       {onSplit && (
         <Button size="icon" variant="ghost" className="h-8 w-8" aria-label={t.common.splitExpense} onClick={onSplit}>
           <Split className="h-4 w-4" aria-hidden="true" />
+        </Button>
+      )}
+      {onReimburse && (
+        <Button size="icon" variant="ghost" className="h-8 w-8" aria-label={t.common.reimburseExpense} title={t.common.reimburseExpense} onClick={onReimburse}>
+          <HandCoins className="h-4 w-4" aria-hidden="true" />
         </Button>
       )}
       {onClearFlag && (

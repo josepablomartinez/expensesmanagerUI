@@ -515,6 +515,56 @@ export interface ProjectRequest {
   notes: string | null;
 }
 
+export interface IncomeCategory {
+  id: number;
+  name: string;
+  // "reimbursement" for the one category only the reimbursement flow uses.
+  system_key: "reimbursement" | null;
+}
+
+// Money coming in. For a reimbursement the linked_expense_* fields describe
+// the original expense that was paid back.
+export interface Income {
+  id: number;
+  income_category_id: number;
+  category_name: string;
+  system_key: "reimbursement" | null;
+  amount: number;
+  currency: "CRC" | "USD";
+  colones_amount: number;
+  dollars_amount: number;
+  date: string;
+  description: string | null;
+  linked_expense_id: number | null;
+  linked_expense_merchant: string | null;
+  linked_expense_date: string | null;
+}
+
+export interface IncomeRequest {
+  income_category_id: number;
+  amount: number;
+  currency: "CRC" | "USD";
+  date: string; // YYYY-MM-DD
+  description: string | null;
+}
+
+export interface ReimbursementRequest {
+  expense_id: number;
+  amount: number;
+  currency: "CRC" | "USD";
+  date: string;
+  description: string | null;
+}
+
+// "full": the expense was removed from the reports; "partial": it shrank to
+// remaining_amount (in the expense's own currency).
+export interface ReimbursementResult {
+  income_id: number;
+  expense_id: number;
+  outcome: "full" | "partial";
+  remaining_amount: number;
+}
+
 export interface SplitRequest {
   amount: number;
   category_id?: number;
@@ -791,6 +841,24 @@ export const api = {
         method: "PUT",
         body: JSON.stringify({ ids, project_id: projectId }),
       }),
+  },
+  income: {
+    categories: () => request<IncomeCategory[]>("/income-categories"),
+    list: (params: { from: string; to: string; categoryId?: number }) => {
+      const q = new URLSearchParams({ from: params.from, to: params.to });
+      if (params.categoryId) q.set("category_id", String(params.categoryId));
+      return request<Income[]>(`/income?${q}`);
+    },
+    create: (body: IncomeRequest) =>
+      request<{ id: number }>("/income", { method: "POST", body: JSON.stringify(body) }),
+    reimburse: (body: ReimbursementRequest) =>
+      request<ReimbursementResult>("/income/reimbursement", { method: "POST", body: JSON.stringify(body) }),
+    // Every field optional; description "" clears it. A reimbursement only
+    // accepts description.
+    update: (id: number, body: Partial<IncomeRequest>) =>
+      request<{ id: number }>(`/income/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+    delete: (id: number, deletedReason: string) =>
+      request<{ id: number }>(`/income/${id}`, { method: "DELETE", body: JSON.stringify({ deleted_reason: deletedReason }) }),
   },
   reports: {
     // includeProjects adds project spending (weddings, trips...), which these

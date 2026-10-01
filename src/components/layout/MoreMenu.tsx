@@ -1,13 +1,13 @@
 import * as React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { FolderOpen, LogOut, Menu, Settings } from "lucide-react";
+import { FolderOpen, LogOut, Menu, Settings, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { useT } from "@/lib/language";
 import { cn } from "@/lib/utils";
 
 // Header menu for everything that isn't a daily destination: occasional
-// sections (Projects; Income once it exists goes next to it, above the
+// sections (Projects, Income, above the
 // divider) and the account items (Settings, Log out). Same place on desktop
 // and mobile -- the bottom bar's five slots are all daily use.
 export function MoreMenu() {
@@ -57,7 +57,7 @@ export function MoreMenu() {
       "flex min-h-10 w-full items-center gap-2.5 rounded-md px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       isActive ? "bg-secondary font-medium text-secondary-foreground" : "hover:bg-accent hover:text-accent-foreground",
     );
-  const sectionActive = pathname.startsWith("/projects") || pathname.startsWith("/settings");
+  const sectionActive = pathname.startsWith("/projects") || pathname.startsWith("/income") || pathname.startsWith("/settings");
 
   return (
     <div className="relative" ref={rootRef}>
@@ -85,6 +85,10 @@ export function MoreMenu() {
           <NavLink to="/projects" role="menuitem" className={itemClass}>
             <FolderOpen className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
             {t.nav.projects}
+          </NavLink>
+          <NavLink to="/income" role="menuitem" className={itemClass}>
+            <Wallet className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            {t.nav.income}
           </NavLink>
           <div role="separator" className="my-1 h-px bg-border" />
           <NavLink to="/settings" role="menuitem" className={itemClass}>

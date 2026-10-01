@@ -17,6 +17,7 @@ interface ExpenseFrameProps {
   onToggle: () => void;
   onEdit?: () => void;
   onSplit?: () => void;
+  onReimburse?: () => void;
   onClearFlag?: () => void;
   onDelete?: () => void;
   status?: ReactNode;
@@ -37,6 +38,7 @@ export function ExpenseFrame({
   onToggle,
   onEdit,
   onSplit,
+  onReimburse,
   onClearFlag,
   onDelete,
   status,
@@ -91,6 +93,7 @@ export function ExpenseFrame({
           <ExpenseActions
             onEdit={onEdit}
             onSplit={onSplit}
+            onReimburse={onReimburse}
             onClearFlag={onClearFlag}
             onDelete={onDelete}
           />

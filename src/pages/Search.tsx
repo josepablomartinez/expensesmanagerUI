@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
+import { IncomeForm } from "@/components/income/IncomeForm";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
 import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
@@ -63,6 +64,7 @@ export default function Search() {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([]);
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
+  const [reimburseTarget, setReimburseTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
   const [clearFlagTarget, setClearFlagTarget] = React.useState<Expense | null>(null);
@@ -288,6 +290,7 @@ export default function Search() {
               onToggle={() => setExpandedId(expandedId === expense.id ? null : expense.id)}
               onEdit={() => setEditTarget(expense)}
               onSplit={() => setSplitTarget(expense)}
+              onReimburse={() => setReimburseTarget(expense)}
               onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
               onDelete={() => setDeleteTarget(expense)}
               showDate
@@ -310,6 +313,18 @@ export default function Search() {
           ))}
         </CardContent>
         </Card>
+      )}
+
+      {reimburseTarget && (
+        <IncomeForm
+          existing={null}
+          presetExpense={reimburseTarget}
+          onClose={() => setReimburseTarget(null)}
+          onSaved={() => {
+            setReimburseTarget(null);
+            load();
+          }}
+        />
       )}
 
       {splitTarget && (

@@ -11,6 +11,7 @@ import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { SplitExpenseDialog } from "@/components/SplitExpenseDialog";
+import { IncomeForm } from "@/components/income/IncomeForm";
 import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -53,6 +54,7 @@ export default function Activity() {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([]);
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
   const [splitTarget, setSplitTarget] = React.useState<Expense | null>(null);
+  const [reimburseTarget, setReimburseTarget] = React.useState<Expense | null>(null);
   const [editTarget, setEditTarget] = React.useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<Expense | null>(null);
   const [clearFlagTarget, setClearFlagTarget] = React.useState<Expense | null>(null);
@@ -157,6 +159,7 @@ export default function Activity() {
                         onToggle={() => setExpandedId(expandedId === expense.id ? null : expense.id)}
                         onEdit={() => setEditTarget(expense)}
                         onSplit={() => setSplitTarget(expense)}
+                        onReimburse={() => setReimburseTarget(expense)}
                         onClearFlag={expense.flag_type ? () => setClearFlagTarget(expense) : undefined}
                         onDelete={() => setDeleteTarget(expense)}
                         className="border-0 bg-secondary/40"
@@ -173,6 +176,18 @@ export default function Activity() {
       <Button type="button" variant="outline" onClick={loadOlder} disabled={loadingOlder}>
         {loadingOlder ? t.activity.loadingOlder : t.activity.showOlder}
       </Button>
+
+      {reimburseTarget && (
+        <IncomeForm
+          existing={null}
+          presetExpense={reimburseTarget}
+          onClose={() => setReimburseTarget(null)}
+          onSaved={() => {
+            setReimburseTarget(null);
+            loadCurrentWindow();
+          }}
+        />
+      )}
 
       {splitTarget && (
         <SplitExpenseDialog
