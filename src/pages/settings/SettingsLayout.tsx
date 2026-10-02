@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { ArrowLeft, CalendarClock, ChevronRight, CreditCard, Settings2, SlidersHorizontal, Tags } from "lucide-react";
+import { ArrowLeft, CalendarClock, ChevronRight, CreditCard, Settings2, SlidersHorizontal, Tags, Wallet } from "lucide-react";
 import SettingsBasic from "@/pages/settings/Basic";
 import { useT } from "@/lib/language";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,12 @@ function useSettingsSections() {
       label: t.settingsLayout.tabs.categories,
       description: t.settingsLayout.descriptions.categories,
       icon: Tags,
+    },
+    {
+      to: "/settings/income-categories",
+      label: t.settingsLayout.tabs.incomeCategories,
+      description: t.settingsLayout.descriptions.incomeCategories,
+      icon: Wallet,
     },
     {
       to: "/settings/recurring",

@@ -533,6 +533,8 @@ export interface IncomeCategory {
   name: string;
   // "reimbursement" for the one category only the reimbursement flow uses.
   system_key: "reimbursement" | null;
+  // Some income (deleted ones too) uses it: it can be renamed, not deleted.
+  in_use: boolean;
 }
 
 // Money coming in. For a reimbursement the linked_expense_* fields describe
@@ -856,7 +858,13 @@ export const api = {
       }),
   },
   income: {
-    categories: () => request<IncomeCategory[]>("/income-categories"),
+    categories: (includeSystem = false) =>
+      request<IncomeCategory[]>(`/income-categories${includeSystem ? "?include_system=true" : ""}`),
+    createCategory: (name: string) =>
+      request<IncomeCategory>("/income-categories", { method: "POST", body: JSON.stringify({ name }) }),
+    renameCategory: (id: number, name: string) =>
+      request<IncomeCategory>(`/income-categories/${id}`, { method: "PUT", body: JSON.stringify({ name }) }),
+    deleteCategory: (id: number) => request<{ id: number }>(`/income-categories/${id}`, { method: "DELETE" }),
     list: (params: { from: string; to: string; categoryId?: number }) => {
       const q = new URLSearchParams({ from: params.from, to: params.to });
       if (params.categoryId) q.set("category_id", String(params.categoryId));
