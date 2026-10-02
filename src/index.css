@@ -18,6 +18,8 @@
     --primary: 168 82% 13%;
     --primary-foreground: 40 100% 99%;
     --brand-secondary: 161 65% 23%;
+    --brand-hero: 151 29% 87%;
+    --brand-hero-foreground: 168 82% 13%;
     --logo: 43 33% 94%;
     --logo-foreground: 168 82% 13%;
 
@@ -60,6 +62,8 @@
     --primary: 153 48% 76%;
     --primary-foreground: 160 41% 5%;
     --brand-secondary: 153 40% 62%;
+    --brand-hero: 168 82% 13%;
+    --brand-hero-foreground: 40 100% 99%;
     --logo: 161 39% 30%;
     --logo-foreground: 43 33% 96%;
 

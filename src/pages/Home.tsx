@@ -13,8 +13,7 @@ import { IncomeForm } from "@/components/income/IncomeForm";
 import { EditCategoryDialog } from "@/components/EditCategoryDialog";
 import { DeleteExpenseDialog } from "@/components/DeleteExpenseDialog";
 import { ClearExpenseFlagDialog } from "@/components/ClearExpenseFlagDialog";
-import { Greeting } from "@/components/dashboard/Greeting";
-import { ExchangeRateWidget } from "@/components/dashboard/ExchangeRateWidget";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { FavoriteCategoriesWidget } from "@/components/dashboard/FavoriteCategoriesWidget";
 import { ActiveProjectsWidget } from "@/components/dashboard/ActiveProjectsWidget";
 import { ExpenseFrame } from "@/components/expenses/ExpenseFrame";
@@ -85,10 +84,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <Greeting name={settings?.first_name} />
-        <ExchangeRateWidget favoriteBanks={settings?.favorite_banks ?? []} />
-      </div>
+      <DashboardHero name={settings?.first_name} favoriteBanks={settings?.favorite_banks ?? []} />
 
       <div className="grid items-start gap-6 md:grid-cols-2">
         <Card className="border-border/80 shadow-sm">

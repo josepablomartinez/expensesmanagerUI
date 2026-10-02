@@ -487,6 +487,7 @@ export const en = {
       night: "Good night",
     },
     exchangeRate: {
+      title: "Exchange rates",
       noRateData: "No rate data for your favorite banks yet.",
       showMore: "Show another favorite bank",
       showLess: "Hide additional favorite banks",

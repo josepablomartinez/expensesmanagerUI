@@ -11,16 +11,16 @@ export function Greeting({ name }: { name?: string | null }) {
   }).format(new Date());
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-        <Icon className="h-5 w-5" />
+    <div className="relative z-10 flex min-w-0 items-center gap-4">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-logo text-gold shadow-sm sm:h-14 sm:w-14">
+        <Icon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
       </span>
       <div className="min-w-0">
-        <h1 className="truncate text-xl font-semibold">
+        <h1 className="truncate text-2xl font-semibold tracking-tight sm:text-3xl">
           {text}
           {name ? `, ${name}` : ""}
         </h1>
-        <p className="mt-0.5 text-sm capitalize text-muted-foreground">{date}</p>
+        <p className="mt-1 text-sm capitalize text-brand-hero-foreground/80">{date}</p>
       </div>
     </div>
   );

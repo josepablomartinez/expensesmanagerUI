@@ -78,8 +78,7 @@ export function AppShell() {
             aria-label={t.nav.brand}
             className="rounded-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <MiHarinaLogo className="hidden md:inline-flex" />
-            <MiHarinaLogo compact className="md:hidden" />
+            <MiHarinaLogo />
           </NavLink>
 
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">

@@ -36,6 +36,10 @@ export default {
         },
         raised: "hsl(var(--raised))",
         "brand-secondary": "hsl(var(--brand-secondary))",
+        "brand-hero": {
+          DEFAULT: "hsl(var(--brand-hero))",
+          foreground: "hsl(var(--brand-hero-foreground))",
+        },
         logo: {
           DEFAULT: "hsl(var(--logo))",
           foreground: "hsl(var(--logo-foreground))",

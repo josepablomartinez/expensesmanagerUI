@@ -484,6 +484,7 @@ export const es: Dictionary = {
       night: "Buenas noches",
     },
     exchangeRate: {
+      title: "Tipos de cambio",
       noRateData: "Aún no hay tipo de cambio para tus bancos favoritos.",
       showMore: "Mostrar otro banco favorito",
       showLess: "Ocultar bancos favoritos adicionales",
