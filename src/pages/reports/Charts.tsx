@@ -4,10 +4,7 @@ import { api } from "@/lib/api";
 import { ExchangeRateChart } from "@/components/reports/ExchangeRateChart";
 import { CreditCardChart } from "@/components/reports/CreditCardChart";
 import { HourProfileChart } from "@/components/reports/HourProfileChart";
-
-
-// Reports → Charts: simple standalone charts, reached from the link in the
-// Reports header rather than the report tab bar.
+// Preserve existing chart URLs and the settings link to #hour-profile.
 export default function Charts() {
   const { search, hash } = useLocation();
   const view = hash === "#hour-profile" ? "hour-profile" : new URLSearchParams(search).get("view");
