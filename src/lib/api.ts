@@ -289,6 +289,20 @@ export interface HourProfileCell {
   total_usd: number;
 }
 
+// One leaf of GET /reports/spending-hierarchy: spend for one merchant within
+// one subcategory. Category fields are null for uncategorized spend, merchant
+// is null when the expenses have none.
+export interface SpendingHierarchyRow {
+  main_category_id: number | null;
+  main_category_name: string | null;
+  category_id: number | null;
+  subcategory_name: string | null;
+  merchant: string | null;
+  expense_count: number;
+  total_crc: number;
+  total_usd: number;
+}
+
 // One row of GET /reports/income-vs-expenses: kind "income" has one row per
 // income category and month, "expense" one row per month with the category
 // fields null. month is the first day of the month (YYYY-MM-DD). Months with
@@ -924,6 +938,12 @@ export const api = {
     // from omitted = all history.
     hourProfile: (from?: string) =>
       request<HourProfileCell[]>(`/reports/hour-profile${from ? `?from=${from}` : ""}`),
+    // Spend per main category -> subcategory -> merchant (leaf rows) for
+    // from..to (YYYY-MM-DD, inclusive).
+    spendingHierarchy: (from: string, to: string, includeProjects = false) =>
+      request<SpendingHierarchyRow[]>(
+        `/reports/spending-hierarchy?from=${from}&to=${to}${projectsParam(includeProjects)}`,
+      ),
     // Monthly income per income category plus monthly expenses; from omitted
     // = all history.
     incomeVsExpenses: (from?: string, includeProjects = false) =>

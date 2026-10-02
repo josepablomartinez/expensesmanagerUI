@@ -19,11 +19,13 @@ import SettingsRecurring from "@/pages/settings/Recurring";
 import SettingsIncomeCategories from "@/pages/settings/IncomeCategories";
 import SettingsAdvanced from "@/pages/settings/Advanced";
 import ReportsLayout from "@/pages/reports/ReportsLayout";
+import ReportsHome from "@/pages/reports/ReportsHome";
 import BudgetVsActual from "@/pages/reports/BudgetVsActual";
 import Burndown from "@/pages/reports/Burndown";
 import PaymentWindow from "@/pages/reports/PaymentWindow";
 import SubcategoriesByMonth from "@/pages/reports/SubcategoriesByMonth";
 import IncomeVsExpenses from "@/pages/reports/IncomeVsExpenses";
+import SpendingSunburst from "@/pages/reports/SpendingSunburst";
 import Charts from "@/pages/reports/Charts";
 import CategoryReport from "@/pages/reports/CategoryReport";
 
@@ -57,12 +59,13 @@ export default function App() {
           <Route path="advanced" element={<SettingsAdvanced />} />
         </Route>
         <Route path="/reports" element={<ReportsLayout />}>
-          <Route index element={<Navigate to="budget-vs-actual" replace />} />
+          <Route index element={<ReportsHome />} />
           <Route path="budget-vs-actual" element={<BudgetVsActual />} />
           <Route path="payment-window" element={<PaymentWindow />} />
           <Route path="burndown" element={<Burndown />} />
           <Route path="subcategories-by-month" element={<SubcategoriesByMonth />} />
           <Route path="income-vs-expenses" element={<IncomeVsExpenses />} />
+          <Route path="spending-sunburst" element={<SpendingSunburst />} />
           <Route path="charts" element={<Charts />} />
           <Route path="category-report" element={<CategoryReport />} />
         </Route>
