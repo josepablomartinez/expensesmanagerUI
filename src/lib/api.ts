@@ -289,6 +289,19 @@ export interface HourProfileCell {
   total_usd: number;
 }
 
+// One row of GET /reports/income-vs-expenses: kind "income" has one row per
+// income category and month, "expense" one row per month with the category
+// fields null. month is the first day of the month (YYYY-MM-DD). Months with
+// nothing are absent.
+export interface IncomeVsExpensesRow {
+  month: string;
+  kind: "income" | "expense";
+  income_category_id: number | null;
+  category_name: string | null;
+  total_crc: number;
+  total_usd: number;
+}
+
 // One subcategory line of GET /reports/category-summary (CRC only).
 export interface CategorySummaryRow {
   category_id: number;
@@ -902,6 +915,12 @@ export const api = {
     // from omitted = all history.
     hourProfile: (from?: string) =>
       request<HourProfileCell[]>(`/reports/hour-profile${from ? `?from=${from}` : ""}`),
+    // Monthly income per income category plus monthly expenses; from omitted
+    // = all history.
+    incomeVsExpenses: (from?: string, includeProjects = false) =>
+      request<IncomeVsExpensesRow[]>(
+        `/reports/income-vs-expenses?${from ? `from=${from}` : ""}${projectsParam(includeProjects)}`.replace("?&", "?"),
+      ),
   },
 };
 

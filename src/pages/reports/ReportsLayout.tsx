@@ -1,8 +1,9 @@
 import * as React from "react";
-import { NavLink, Outlet, useLocation, useOutletContext } from "react-router-dom";
-import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline, FileText } from "lucide-react";
+import { Link, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { PieChart, TrendingDown, LineChart, CalendarClock, ChartSpline, FileText, Scale, CreditCard, Clock } from "lucide-react";
 import { api } from "@/lib/api";
 import { Switch } from "@/components/ui/switch";
+import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/language";
 
@@ -19,7 +20,8 @@ export function useIncludeProjects() {
 
 export default function ReportsLayout() {
   const t = useT();
-  const { pathname } = useLocation();
+  const { pathname, search, hash } = useLocation();
+  const navigate = useNavigate();
   const [includeProjects, setIncludeProjects] = React.useState(false);
   const [hasProjects, setHasProjects] = React.useState(false);
 
@@ -34,17 +36,29 @@ export default function ReportsLayout() {
   // Charts' card-cycle view always counts project charges (they're on the
   // statement), so the toggle would do nothing there.
   const showToggle = hasProjects && !pathname.startsWith("/reports/charts");
-  const sideLinkClass = ({ isActive }: { isActive: boolean }) =>
-    cn(
-      "flex min-h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-sm font-medium",
-      isActive ? "bg-secondary text-secondary-foreground" : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-    );
-  const REPORT_TABS = [
-    { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
-    { to: "/reports/payment-window", label: t.reportsLayout.tabs.paymentWindow, icon: CalendarClock },
-    { to: "/reports/burndown", label: t.reportsLayout.tabs.burndown, icon: TrendingDown },
-    { to: "/reports/subcategories-by-month", label: t.reportsLayout.tabs.subcategoriesByMonth, icon: LineChart },
+  const groups = [
+    { label: t.reportsLayout.groups.budget, items: [
+      { to: "/reports/budget-vs-actual", label: t.reportsLayout.tabs.budgetVsActual, icon: PieChart },
+      { to: "/reports/burndown", label: t.reportsLayout.tabs.burndown, icon: TrendingDown },
+    ] },
+    { label: t.reportsLayout.groups.cashFlow, items: [
+      { to: "/reports/income-vs-expenses", label: t.reportsLayout.tabs.incomeVsExpenses, icon: Scale },
+      { to: "/reports/payment-window", label: t.reportsLayout.tabs.paymentWindow, icon: CalendarClock },
+      { to: "/reports/charts?view=credit-card", label: t.charts.creditCard.title, icon: CreditCard },
+    ] },
+    { label: t.reportsLayout.groups.spending, items: [
+      { to: "/reports/subcategories-by-month", label: t.reportsLayout.tabs.subcategoriesByMonth, icon: LineChart },
+      { to: "/reports/charts?view=hour-profile", label: t.charts.hourProfile.title, icon: Clock },
+      { to: "/reports/category-report", label: t.categoryReport.link, icon: FileText },
+    ] },
+    { label: t.reportsLayout.groups.exchangeRates, items: [
+      { to: "/reports/charts?view=exchange-rate", label: t.charts.exchangeRate.title, icon: ChartSpline },
+    ] },
   ];
+  const requestedChart = new URLSearchParams(search).get("view");
+  const chartView = hash === "#hour-profile" ? "hour-profile"
+    : requestedChart === "credit-card" || requestedChart === "hour-profile" ? requestedChart : "exchange-rate";
+  const activeTo = pathname === "/reports/charts" ? pathname + "?view=" + chartView : pathname;
 
   return (
     <div className="flex flex-col gap-6">
@@ -53,42 +67,36 @@ export default function ReportsLayout() {
           <h1 className="text-2xl font-semibold tracking-tight">{t.reportsLayout.title}</h1>
           <p className="text-sm text-muted-foreground">{t.reportsLayout.subtitle}</p>
         </div>
-        {/* Charts and the category report are side sections, deliberately kept out of the tab bar. */}
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-          <NavLink to="/reports/category-report" className={sideLinkClass}>
-            <FileText className="h-4 w-4" aria-hidden="true" />
-            {t.categoryReport.link}
-          </NavLink>
-          <NavLink to="/reports/charts" className={sideLinkClass}>
-            <ChartSpline className="h-4 w-4" aria-hidden="true" />
-            {t.charts.link}
-          </NavLink>
-        </div>
       </header>
-
-      <nav
-        aria-label={t.reportsLayout.sectionsLabel}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg border border-border bg-secondary/40 p-1 print:hidden"
-      >
-        {REPORT_TABS.map((tab) => (
-          <NavLink
-            key={tab.to}
-            to={tab.to}
-            className={({ isActive }) =>
-              cn(
-                "flex min-h-11 min-w-0 flex-col items-center justify-center gap-1.5 rounded-md px-2 py-2 text-center text-xs font-medium transition-colors sm:flex-row sm:px-4 sm:text-sm",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground",
-              )
-            }
-          >
-            <tab.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>{tab.label}</span>
-          </NavLink>
-        ))}
-      </nav>
-
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[220px_minmax(0,1fr)] print:block">
+        <nav aria-label={t.reportsLayout.sectionsLabel} className="print:hidden">
+          <Select aria-label={t.reportsLayout.sectionsLabel} value={activeTo}
+            onChange={(event) => navigate(event.target.value)} className="w-full lg:hidden">
+            {groups.map((group) => (
+              <optgroup key={group.label} label={group.label} className="bg-background text-foreground">
+                {group.items.map((item) => <option key={item.to} value={item.to}>{item.label}</option>)}
+              </optgroup>
+            ))}
+          </Select>
+          <div className="hidden space-y-5 rounded-xl border border-border bg-card p-3 lg:block">
+            {groups.map((group) => (
+              <div key={group.label}>
+                <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{group.label}</p>
+                <div className="space-y-1">
+                  {group.items.map((item) => (
+                    <Link key={item.to} to={item.to} aria-current={activeTo === item.to ? "page" : undefined}
+                      className={cn("flex min-h-10 items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        activeTo === item.to ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground")}>
+                      <item.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </nav>
+        <div className="flex min-w-0 flex-col gap-4">
       {showToggle && (
         <div className="flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2 print:hidden">
           <div className="flex min-w-0 flex-col">
@@ -106,6 +114,8 @@ export default function ReportsLayout() {
       )}
 
       <Outlet context={{ includeProjects: includeProjects && showToggle } satisfies ReportsContext} />
+        </div>
+      </div>
     </div>
   );
 }

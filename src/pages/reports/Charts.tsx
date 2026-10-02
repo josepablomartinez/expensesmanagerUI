@@ -1,14 +1,16 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 import { api } from "@/lib/api";
 import { ExchangeRateChart } from "@/components/reports/ExchangeRateChart";
 import { CreditCardChart } from "@/components/reports/CreditCardChart";
 import { HourProfileChart } from "@/components/reports/HourProfileChart";
-import { useT } from "@/lib/language";
+
 
 // Reports → Charts: simple standalone charts, reached from the link in the
 // Reports header rather than the report tab bar.
 export default function Charts() {
-  const t = useT();
+  const { search, hash } = useLocation();
+  const view = hash === "#hour-profile" ? "hour-profile" : new URLSearchParams(search).get("view");
   const [favoriteBanks, setFavoriteBanks] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -17,13 +19,9 @@ export default function Charts() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-xl font-semibold">{t.charts.title}</h2>
-        <p className="text-sm text-muted-foreground">{t.charts.description}</p>
-      </div>
-      <ExchangeRateChart favoriteBanks={favoriteBanks} />
-      <CreditCardChart />
-      <HourProfileChart />
+      {view === "credit-card" ? <CreditCardChart />
+        : view === "hour-profile" ? <HourProfileChart />
+        : <ExchangeRateChart favoriteBanks={favoriteBanks} />}
     </div>
   );
 }
