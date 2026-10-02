@@ -2,9 +2,14 @@ import * as React from "react";
 import type { EChartsOption } from "echarts";
 import { api, type CreditCard, type CreditCardCycleRow } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
+import { localISODate } from "@/lib/date";
+import { localDate } from "@/lib/recurrent";
+import { cycleBounds, shiftISODate } from "@/lib/cardCycle";
 import { useCurrency } from "@/lib/currency";
 import { splitCategoryName } from "@/lib/categoryGrouping";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card,CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { EChart, chartColors } from "@/components/charts/EChart";
 import { useLanguage } from "@/lib/language";
@@ -34,6 +39,8 @@ export function CreditCardChart() {
   const { currency } = useCurrency();
   const [cards, setCards] = React.useState<CreditCard[] | null>(null);
   const [cardId, setCardId] = React.useState<number | null>(null);
+  // Any day inside the cycle being viewed; the arrows move it a cycle at a time.
+  const [anchor, setAnchor] = React.useState(() => localISODate(new Date()));
   const [rows, setRows] = React.useState<CreditCardCycleRow[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -57,13 +64,18 @@ export function CreditCardChart() {
     setLoading(true);
     setError(null);
     api.reports
-      .creditCardCycle(cardId)
+      .creditCardCycle(cardId, anchor)
       .then(setRows)
       .catch((err) => setError(err instanceof Error ? err.message : t.charts.failedToLoad))
       .finally(() => setLoading(false));
-  }, [cardId, cards, t.charts.failedToLoad]);
+  }, [cardId, anchor, cards, t.charts.failedToLoad]);
 
   const card = cards?.find((c) => c.id === cardId) ?? null;
+  // Bounds come from the card, not the rows, so an empty cycle can still be
+  // labelled and stepped past.
+  const bounds = card ? cycleBounds(card.cutoff_day ?? null, localDate(anchor)) : null;
+  const todayISO = localISODate(new Date());
+  const isCurrent = bounds ? bounds.start <= todayISO && todayISO <= bounds.end : true;
   const pick = (r: CreditCardCycleRow, cur: string) => (cur === "USD" ? r.spent_usd : r.spent_crc);
 
   const slices = React.useMemo<Slice[]>(() => {
@@ -139,7 +151,10 @@ export function CreditCardChart() {
         {cards && cards.length > 0 && (
           <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-medium text-muted-foreground sm:flex-none">
             {t.charts.creditCard.card}
-            <Select className="w-full" value={cardId ?? ""} onChange={(e) => setCardId(Number(e.target.value))}>
+            <Select className="w-full" value={cardId ?? ""} onChange={(e) => {
+              setCardId(Number(e.target.value));
+              setAnchor(localISODate(new Date()));
+            }}>
               {cards.map((c) => <option key={c.id} value={c.id}>{cardLabel(c)}</option>)}
             </Select>
           </label>
@@ -161,10 +176,34 @@ export function CreditCardChart() {
                     <span className="text-lg font-semibold">{formatMoney(totalInLimit, limitCurrency)}</span>{" "}
                     <span className="text-muted-foreground">{t.charts.creditCard.ofLimit(formatMoney(limit, limitCurrency))}</span>
                   </p>
-                  {rows[0] && (
-                    <p className="text-xs text-muted-foreground">
-                      {t.charts.creditCard.cycle(formatDay(rows[0].cycle_start), formatDay(rows[0].cycle_end))}
-                    </p>
+                  {bounds && (
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={t.charts.creditCard.previousCycle}
+                        onClick={() => setAnchor(shiftISODate(bounds.start, -1))}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <p className="min-w-[10rem] text-center text-xs text-muted-foreground" aria-live="polite">
+                        {t.charts.creditCard.cycle(formatDay(bounds.start), formatDay(bounds.end))}
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={t.charts.creditCard.nextCycle}
+                        disabled={isCurrent}
+                        onClick={() => setAnchor(shiftISODate(bounds.end, 1))}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                      {!isCurrent && (
+                        <Button variant="outline" size="sm" onClick={() => setAnchor(todayISO)}>
+                          {t.charts.creditCard.backToCurrent}
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div

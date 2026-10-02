@@ -904,8 +904,9 @@ export const api = {
     exchangeRateHistory: (bankId: number, days: number) =>
       request<ExchangeRateHistoryRow[]>(`/reports/exchange-rate-history?bank_id=${bankId}&days=${days}`),
     // Statement cycle containing the caller's local today.
-    creditCardCycle: (cardId: number) =>
-      request<CreditCardCycleRow[]>(`/reports/credit-card-cycle?card_id=${cardId}&today=${localISODate(new Date())}`),
+    // date = any day inside the wanted cycle (default today).
+    creditCardCycle: (cardId: number, date: string = localISODate(new Date())) =>
+      request<CreditCardCycleRow[]>(`/reports/credit-card-cycle?card_id=${cardId}&today=${date}`),
     // Spend per subcategory for the chosen subcategories and period (from/to
     // YYYY-MM-DD, inclusive) -- the printable category report.
     categorySummary: (from: string, to: string, categoryIds: number[], includeProjects = false) =>
