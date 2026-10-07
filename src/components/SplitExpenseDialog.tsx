@@ -34,7 +34,10 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
       setError(t.dialogs.splitExpense.enterValidAmount);
       return;
     }
-    if (expense.amount != null && parsed >= expense.amount) {
+    // The amount is typed in the display currency; compare against the
+    // matching stored column so the user never converts by hand.
+    const basis = currency === expense.currency ? expense.amount : equivalent;
+    if (basis != null && parsed >= basis) {
       setError(t.dialogs.splitExpense.amountMustBeLess);
       return;
     }
@@ -43,6 +46,7 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
     try {
       await api.expenses.split(expense.id, {
         amount: parsed,
+        currency,
         category_id: categoryId ? Number(categoryId) : undefined,
         reason: reason || undefined,
       });
@@ -59,10 +63,10 @@ export function SplitExpenseDialog({ expense, categories, onClose, onSplit }: Pr
       title={t.dialogs.splitExpense.title(expense.merchant ?? expense.entity)}
       description={
         <p className="mt-1 text-xs text-muted-foreground">
-            {t.dialogs.splitExpense.total} {formatMoney(expense.amount, expense.currency)}
-            {equivalent != null && expense.currency !== currency && (
-              <> · {formatMoney(equivalent, currency)}</>
-            )}
+            {t.dialogs.splitExpense.total}{" "}
+            {currency === expense.currency || equivalent == null
+              ? formatMoney(expense.amount, expense.currency)
+              : formatMoney(equivalent, currency)}
         </p>
       }
       onClose={onClose}

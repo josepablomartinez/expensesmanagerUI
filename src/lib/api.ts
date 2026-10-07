@@ -596,6 +596,8 @@ export interface ReimbursementResult {
 
 export interface SplitRequest {
   amount: number;
+  /** Currency `amount` was typed in; omitted = the expense's own currency. */
+  currency?: "CRC" | "USD";
   category_id?: number;
   reason?: string;
 }
