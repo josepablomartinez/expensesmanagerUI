@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { CalendarClock, ChevronDown, ChevronUp, X } from "lucide-react";
-import { api, type Category } from "@/lib/api";
+import { CalendarClock, ChevronDown, ChevronUp, Loader2, ReceiptText, X } from "lucide-react";
+import { ApiError, api, type Category } from "@/lib/api";
 import { localISODate } from "@/lib/date";
 import { readPayPrefill } from "@/lib/recurrent";
+import { prepareReceiptImage } from "@/lib/receiptImage";
 import { ExpenseDialog } from "@/components/expenses/ExpenseDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,13 @@ export default function AddExpense() {
   const city = "SJO";
   const [categoryId, setCategoryId] = React.useState(initialCategoryId);
   const [motive, setMotive] = React.useState("");
+  // Bank reference read off an uploaded receipt; without one we derive a
+  // stable code from the entry's own fields (see onSubmit).
+  const [receiptAuth, setReceiptAuth] = React.useState<string | null>(null);
+  const [reading, setReading] = React.useState(false);
+  const [receiptNote, setReceiptNote] = React.useState<string | null>(null);
+  const [receiptError, setReceiptError] = React.useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [error, setError] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);
@@ -91,6 +99,7 @@ export default function AddExpense() {
       motive ||
       currency !== initialCurrency ||
       type !== "CASH" ||
+      receiptAuth != null ||
       date !== initialDate.current ||
       hour !== initialHour.current,
   );
@@ -98,6 +107,36 @@ export default function AddExpense() {
   React.useEffect(() => {
     api.categories.list().then(setCategories).catch(() => {});
   }, []);
+
+  async function onReceiptPicked(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow picking the same file again
+    if (!file) return;
+    setReceiptNote(null);
+    setReceiptError(null);
+    setReading(true);
+    try {
+      const { blob, name } = await prepareReceiptImage(file);
+      const draft = await api.receipts.extract(blob, name);
+      if (draft.amount != null) setAmount(String(draft.amount));
+      if (draft.merchant) setMerchant(draft.merchant);
+      if (draft.date) setDate(draft.date);
+      if (draft.hour) setHour(draft.hour);
+      if (draft.motive) setMotive(draft.motive);
+      setType(draft.type);
+      setCurrency("CRC");
+      setReceiptAuth(draft.authorization);
+      const found = draft.amount != null || draft.merchant != null;
+      setReceiptNote(found ? t.addExpense.receiptRead : t.addExpense.receiptUnreadable);
+    } catch (err) {
+      // Only the API's own validation messages (bad type, too big, ...) are
+      // worth showing; a 404/502/503 means the service is down or misconfigured.
+      const friendly = err instanceof ApiError && [400, 413, 415].includes(err.status);
+      setReceiptError(friendly ? err.message : t.addExpense.receiptFailed);
+    } finally {
+      setReading(false);
+    }
+  }
 
   function requestCancel() {
     if (saving) return;
@@ -119,7 +158,7 @@ export default function AddExpense() {
     }
 
     const seed = `${date}|${parsedAmount}|${merchant || "Desconocido"}|${type}`;
-    const authorization = `GEN-${generateAuthCode(seed)}`;
+    const authorization = receiptAuth ?? `GEN-${generateAuthCode(seed)}`;
 
     setSaving(true);
     try {
@@ -194,6 +233,42 @@ export default function AddExpense() {
                     </p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{t.addExpense.payingRecurrentHelp}</p>
                   </div>
+                </div>
+              )}
+
+              {!prefill && (
+                <div className="rounded-lg border border-dashed border-border p-3">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={onReceiptPicked}
+                    aria-label={t.addExpense.uploadReceipt}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={reading || saving}
+                  >
+                    {reading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <ReceiptText className="mr-2 h-4 w-4" aria-hidden="true" />
+                    )}
+                    {reading ? t.addExpense.readingReceipt : t.addExpense.uploadReceipt}
+                  </Button>
+                  {receiptError ? (
+                    <p className="mt-2 text-sm text-destructive" role="alert">
+                      {receiptError}
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground" role="status">
+                      {receiptNote ?? t.addExpense.receiptHint}
+                    </p>
+                  )}
                 </div>
               )}
 

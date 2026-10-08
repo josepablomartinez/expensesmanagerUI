@@ -399,6 +399,18 @@ export interface UpdateDebitCardRequest {
   active?: boolean;
 }
 
+// Draft read off an uploaded SINPE receipt (POST /receipts/extract). Nothing
+// is saved; any field the model couldn't read is null.
+export interface ReceiptDraft {
+  merchant: string | null;
+  amount: number | null;
+  date: string | null; // YYYY-MM-DD
+  hour: string | null; // HH:MM
+  type: "SINPE" | "CASH";
+  authorization: string | null;
+  motive: string | null;
+}
+
 export interface CreateExpenseRequest {
   country?: string;
   city?: string;
@@ -643,7 +655,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     // on every request from here on. No token to read or attach ourselves.
     credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      // A FormData body needs the browser to set its own multipart boundary.
+      ...(init?.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
       ...init?.headers,
     },
   });
@@ -671,6 +684,13 @@ export const api = {
       }),
     logout: () => request<{ status: string }>("/auth/logout", { method: "POST" }),
     me: () => request<AuthUser>("/auth/me"),
+  },
+  receipts: {
+    extract: (image: Blob, filename: string) => {
+      const form = new FormData();
+      form.append("image", image, filename);
+      return request<ReceiptDraft>("/receipts/extract", { method: "POST", body: form });
+    },
   },
   expenses: {
     review: (minConfidence = 1.0) =>
