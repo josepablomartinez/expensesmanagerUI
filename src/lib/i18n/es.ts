@@ -678,6 +678,13 @@ export const es: Dictionary = {
     creditCardExpenseDateEvent: "El día en que ocurrió",
     creditCardExpenseDateDue: "La fecha de vencimiento de la tarjeta",
     alertSettings: "Alertas",
+    pushTitle: "Notificaciones en este dispositivo",
+    pushToggle: "Notificaciones de alertas",
+    pushHelp:
+      "Recibe una notificación cuando un gasto parezca duplicado o inusual. Nunca muestra comercios ni montos, y solo aparece cuando la app no está abierta.",
+    pushBlocked:
+      "Las notificaciones están bloqueadas para este sitio. Permítelas en los ajustes del navegador o del teléfono y vuelve a intentarlo.",
+    pushFailed: "No se pudieron cambiar las notificaciones. Inténtalo de nuevo.",
     alertsEnabled: "Activar alertas",
     alertsEnabledHelp: "Permite que MiHarina genere las notificaciones disponibles.",
     duplicateAlerts: "Alertas de posibles duplicados",

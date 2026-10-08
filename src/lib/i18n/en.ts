@@ -681,6 +681,12 @@ export const en = {
     creditCardExpenseDateEvent: "The day it happened",
     creditCardExpenseDateDue: "The card's due date",
     alertSettings: "Alerts",
+    pushTitle: "Notifications on this device",
+    pushToggle: "Alert notifications",
+    pushHelp:
+      "Get a notification when an expense looks like a duplicate or unusual. It never shows merchants or amounts, and only appears when the app isn't open.",
+    pushBlocked: "Notifications are blocked for this site. Allow them in your browser or phone settings, then try again.",
+    pushFailed: "Couldn't change notifications. Try again.",
     alertsEnabled: "Enable alerts",
     alertsEnabledHelp: "Allow MiHarina to generate supported notifications.",
     duplicateAlerts: "Possible duplicate alerts",

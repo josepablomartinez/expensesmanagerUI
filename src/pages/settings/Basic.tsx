@@ -7,6 +7,7 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useCurrency } from "@/lib/currency";
 import { useLanguage } from "@/lib/language";
+import { PushNotificationsCard } from "@/components/settings/PushNotificationsCard";
 
 interface CategoryGroup {
   name: string;
@@ -229,6 +230,8 @@ export default function Basic() {
           </div>
         </CardContent>
       </Card>
+
+      <PushNotificationsCard />
 
       <Card>
         <CardHeader>

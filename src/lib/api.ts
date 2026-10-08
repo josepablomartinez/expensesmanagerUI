@@ -685,6 +685,15 @@ export const api = {
     logout: () => request<{ status: string }>("/auth/logout", { method: "POST" }),
     me: () => request<AuthUser>("/auth/me"),
   },
+  // Web Push opt-in for this device (see API/README.md "Web Push").
+  push: {
+    // 503 when the server has no VAPID keys -- the toggle hides itself.
+    config: () => request<{ public_key: string }>("/push/config"),
+    subscribe: (subscription: PushSubscriptionJSON) =>
+      request<{ id: number }>("/push/subscriptions", { method: "POST", body: JSON.stringify(subscription) }),
+    unsubscribe: (endpoint: string) =>
+      request<void>("/push/subscriptions", { method: "DELETE", body: JSON.stringify({ endpoint }) }),
+  },
   receipts: {
     extract: (image: Blob, filename: string) => {
       const form = new FormData();
