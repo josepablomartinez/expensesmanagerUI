@@ -45,7 +45,9 @@ function ensureSharedSource() {
   }
 
   if (sharedSource) return;
-  const source = new EventSource(`${API_URL}/events`);
+  // The stream is per-user: the API resolves who is asking from the session
+  // cookie, which a cross-origin EventSource only sends with this flag.
+  const source = new EventSource(`${API_URL}/events`, { withCredentials: true });
   sharedSource = source;
   // Fires on the first connect and again after every automatic reconnect --
   // either way the stream is resuming from an unknown gap, so treat it the
