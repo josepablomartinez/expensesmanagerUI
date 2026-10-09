@@ -17,6 +17,7 @@ import { MoreMenu } from "@/components/layout/MoreMenu";
 import { api } from "@/lib/api";
 import { useAlerts } from "@/lib/alerts";
 import { useCurrency } from "@/lib/currency";
+import { clearAppBadge, setAppBadge } from "@/lib/appBadge";
 import { useExpenseEvents } from "@/lib/events";
 import { useT } from "@/lib/language";
 import { useTheme } from "@/lib/theme";
@@ -51,6 +52,19 @@ export function AppShell() {
   React.useEffect(() => {
     setAlertsOpen(false);
   }, [location.pathname]);
+
+  // The icon badge shows what the header shows: unread alerts plus the
+  // Review badge. Kept exact while the app is open; while it's closed each
+  // push carries the server's own count of the same total (fn_push_badge_count).
+  // Waits for both counts so a half-loaded state never flashes a wrong number.
+  React.useEffect(() => {
+    if (unreadCount === null || pendingCount === null) return;
+    setAppBadge(unreadCount + pendingCount);
+  }, [unreadCount, pendingCount]);
+
+  // Signing out unmounts the shell: don't leave the previous user's number
+  // on the icon.
+  React.useEffect(() => clearAppBadge, []);
 
   useExpenseEvents(loadPendingCount);
 

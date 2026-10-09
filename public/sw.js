@@ -27,6 +27,19 @@ self.addEventListener("push", (event) => {
       // the site is visible, which is exactly this case.
       const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
       if (windows.some((w) => w.visibilityState === "visible")) return;
+
+      // The server sends the icon-badge total with the push (same number the
+      // app computes itself). Missing means it couldn't be computed: leave
+      // the badge alone rather than show a wrong one.
+      if (typeof data.badge === "number") {
+        try {
+          if (data.badge > 0) await self.navigator.setAppBadge(data.badge);
+          else await self.navigator.clearAppBadge();
+        } catch {
+          // Badging unsupported or not allowed: the notification still shows.
+        }
+      }
+
       await self.registration.showNotification(data.title || "MiHarina", {
         body: data.body || "",
         tag: data.tag || "miharina-alert", // a newer one replaces the older of its type
