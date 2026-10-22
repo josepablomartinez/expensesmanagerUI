@@ -674,7 +674,7 @@ export const es: Dictionary = {
     creditCardExpenseDate: "Reporte de tarjetas de crédito",
     expenseDate: "Fecha del gasto",
     creditCardExpenseDateHelp:
-      "Elegí si un gasto con tarjeta cuenta para el mes en que ocurrió, o para el mes en que realmente vence su pago.",
+      "Elige si un gasto con tarjeta cuenta para el mes en que ocurrió, o para el mes en que realmente vence su pago (según el día de corte y de pago de cada tarjeta). Esto aplica a todos los reportes y gráficos que agrupan gastos por fecha: presupuestos, consumo del presupuesto, reporte por categoría, ingresos vs gastos y a dónde va. La lista de gastos y la búsqueda siempre muestran el día en que ocurrió.",
     creditCardExpenseDateEvent: "El día en que ocurrió",
     creditCardExpenseDateDue: "La fecha de vencimiento de la tarjeta",
     alertSettings: "Alertas",

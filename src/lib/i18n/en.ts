@@ -677,7 +677,7 @@ export const en = {
     creditCardExpenseDate: "Credit card reporting",
     expenseDate: "Expense date",
     creditCardExpenseDateHelp:
-      "Choose whether a card expense counts toward the month it happened in, or the month its payment is actually due.",
+      "Choose whether a card expense counts toward the month it happened in, or the month its payment is actually due (based on each card's cutoff and due day). This applies to all reports and charts that group spending by date: budgets, burndown, category report, income vs expenses and where it goes. The expense list and search always show the day it happened.",
     creditCardExpenseDateEvent: "The day it happened",
     creditCardExpenseDateDue: "The card's due date",
     alertSettings: "Alerts",
