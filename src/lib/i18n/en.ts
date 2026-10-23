@@ -327,7 +327,7 @@ export const en = {
       title: "Income vs expenses",
       description: "Bars are the money that came in each month, split by source. The line is what you spent.",
       range: "Range",
-      months: (n: number) => `Last ${n} months`,
+      months: (n: number) => `${n} months, through next month`,
       expenses: "Expenses",
       other: "Other sources",
       net: "Net",

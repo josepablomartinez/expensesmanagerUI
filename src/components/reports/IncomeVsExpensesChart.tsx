@@ -19,10 +19,11 @@ const BAR_OPACITY = 0.8;
 
 const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 
-// The n months ending with the current one, oldest first, as YYYY-MM keys.
+// The n months ending with next month (so card statements due next month and
+// income expected then show up), oldest first, as YYYY-MM keys.
 function lastMonths(n: number) {
   const now = new Date();
-  return Array.from({ length: n }, (_, i) => monthKey(new Date(now.getFullYear(), now.getMonth() - (n - 1 - i), 1)));
+  return Array.from({ length: n }, (_, i) => monthKey(new Date(now.getFullYear(), now.getMonth() + 1 - (n - 1 - i), 1)));
 }
 
 interface Source {

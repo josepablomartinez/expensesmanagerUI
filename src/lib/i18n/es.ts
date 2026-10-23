@@ -322,7 +322,7 @@ export const es: Dictionary = {
       title: "Cuándo gastas",
       description: "Cada punto es un día y una hora: más grande significa más gastos, color más intenso significa más dinero.",
       range: "Rango",
-      months: (n: number) => `Últimos ${n} meses`,
+      months: (n: number) => `${n} meses, hasta el próximo mes`,
       allTime: "Todo",
       noData: "No hay gastos con hora en este rango.",
       expenses: (n: number) => (n === 1 ? "1 gasto" : `${n} gastos`),
