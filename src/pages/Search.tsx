@@ -53,6 +53,7 @@ export default function Search() {
   const [quickRange, setQuickRange] = React.useState<QuickRange>("");
   const [mainCategoryId, setMainCategoryId] = React.useState(() => searchParams.get("main_category") || "");
   const [categoryId, setCategoryId] = React.useState(() => searchParams.get("category") || "");
+  const [creditCardId, setCreditCardId] = React.useState(() => searchParams.get("credit_card") || "");
   const [dateField, setDateField] = React.useState<DateField>(() => (searchParams.get("date_field") === "payment" ? "payment" : "event"));
   const [query, setQuery] = React.useState("");
   const [debouncedQuery, setDebouncedQuery] = React.useState("");
@@ -83,7 +84,12 @@ export default function Search() {
   );
 
   // A link that names only the subcategory still lights up its main category.
+  // Once, when the categories arrive: afterwards "All main categories" has to
+  // be able to stay empty.
+  const derivedMain = React.useRef(false);
   React.useEffect(() => {
+    if (derivedMain.current || categories.length === 0) return;
+    derivedMain.current = true;
     if (!categoryId || mainCategoryId) return;
     const sub = categories.find((c) => String(c.id) === categoryId);
     if (sub) setMainCategoryId(String(sub.main_category_id));
@@ -111,7 +117,7 @@ export default function Search() {
     setLoading(true);
     setError(null);
     return api.expenses
-      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, mainCategoryId: mainCategoryId ? Number(mainCategoryId) : undefined, limit: LIST_LIMIT, dateField, q: debouncedQuery })
+      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, mainCategoryId: mainCategoryId ? Number(mainCategoryId) : undefined, creditCardId: creditCardId ? Number(creditCardId) : undefined, limit: LIST_LIMIT, dateField, q: debouncedQuery })
       .then((res) => {
         if (seq === requestSeq.current) setExpenses(res.days.flatMap((d) => d.expenses));
       })
@@ -121,7 +127,7 @@ export default function Search() {
       .finally(() => {
         if (seq === requestSeq.current) setLoading(false);
       });
-  }, [from, to, mainCategoryId, categoryId, dateField, debouncedQuery]);
+  }, [from, to, mainCategoryId, categoryId, creditCardId, dateField, debouncedQuery]);
 
   React.useEffect(() => {
     load();
@@ -248,7 +254,7 @@ export default function Search() {
                 const next = e.target.value;
                 setMainCategoryId(next);
                 const sub = categories.find((c) => String(c.id) === categoryId);
-                if (next && sub && String(sub.main_category_id) !== next) setCategoryId("");
+                if (!next || (sub && String(sub.main_category_id) !== next)) setCategoryId("");
               }}
               className="w-full"
             >
@@ -278,6 +284,18 @@ export default function Search() {
                 <option key={c.id} value={c.id}>
                   {mainCategoryId ? c.subcategory : `${c.category} / ${c.subcategory}`}
                   {c.disabled_at != null ? ` ${t.categories.disabledTag}` : ""}
+                </option>
+              ))}
+            </Select>
+          </label>
+
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.creditCard}
+            <Select value={creditCardId} onChange={(e) => setCreditCardId(e.target.value)} className="w-full">
+              <option value="">{t.search.allCards}</option>
+              {creditCards.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.bank_name} {c.card_type} •••• {c.last4}
                 </option>
               ))}
             </Select>

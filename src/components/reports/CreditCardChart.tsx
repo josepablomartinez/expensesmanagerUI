@@ -8,6 +8,7 @@ import { cycleBounds, shiftISODate } from "@/lib/cardCycle";
 import { useCurrency } from "@/lib/currency";
 import { splitCategoryName } from "@/lib/categoryGrouping";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card,CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
@@ -37,6 +38,7 @@ export function CreditCardChart() {
   const { t, language } = useLanguage();
   const { theme } = useTheme();
   const { currency } = useCurrency();
+  const navigate = useNavigate();
   const [cards, setCards] = React.useState<CreditCard[] | null>(null);
   const [cardId, setCardId] = React.useState<number | null>(null);
   // Any day inside the cycle being viewed; the arrows move it a cycle at a time.
@@ -228,6 +230,17 @@ export function CreditCardChart() {
                   </span>
                 </div>
                 {card.cutoff_day == null && <p className="text-xs text-muted-foreground">{t.charts.creditCard.noCutoff}</p>}
+                {bounds && (
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/search?${new URLSearchParams({ from: bounds.start, to: bounds.end, credit_card: String(card.id) })}`)}
+                    >
+                      {t.charts.creditCard.seeExpenses}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
