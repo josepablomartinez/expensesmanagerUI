@@ -51,6 +51,7 @@ export default function Search() {
   const [from, setFrom] = React.useState(() => searchParams.get("from") || (focusedExpenseId ? ninetyDaysAgo() : firstOfMonth()));
   const [to, setTo] = React.useState(() => searchParams.get("to") || today());
   const [quickRange, setQuickRange] = React.useState<QuickRange>("");
+  const [mainCategoryId, setMainCategoryId] = React.useState(() => searchParams.get("main_category") || "");
   const [categoryId, setCategoryId] = React.useState(() => searchParams.get("category") || "");
   const [dateField, setDateField] = React.useState<DateField>(() => (searchParams.get("date_field") === "payment" ? "payment" : "event"));
   const [query, setQuery] = React.useState("");
@@ -71,6 +72,22 @@ export default function Search() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const pickerCategories = React.useMemo(() => categories.filter((c) => c.disabled_at == null), [categories]);
+  const mainCategories = React.useMemo(() => {
+    const seen = new Map<number, string>();
+    for (const c of categories) if (!seen.has(c.main_category_id)) seen.set(c.main_category_id, c.category);
+    return [...seen].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
+  }, [categories]);
+  const subcategories = React.useMemo(
+    () => (mainCategoryId ? categories.filter((c) => String(c.main_category_id) === mainCategoryId) : categories),
+    [categories, mainCategoryId],
+  );
+
+  // A link that names only the subcategory still lights up its main category.
+  React.useEffect(() => {
+    if (!categoryId || mainCategoryId) return;
+    const sub = categories.find((c) => String(c.id) === categoryId);
+    if (sub) setMainCategoryId(String(sub.main_category_id));
+  }, [categories, categoryId, mainCategoryId]);
 
   React.useEffect(() => {
     // Disabled categories stay searchable (their expenses are still there);
@@ -94,7 +111,7 @@ export default function Search() {
     setLoading(true);
     setError(null);
     return api.expenses
-      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, limit: LIST_LIMIT, dateField, q: debouncedQuery })
+      .list({ from, to, categoryId: categoryId ? Number(categoryId) : undefined, mainCategoryId: mainCategoryId ? Number(mainCategoryId) : undefined, limit: LIST_LIMIT, dateField, q: debouncedQuery })
       .then((res) => {
         if (seq === requestSeq.current) setExpenses(res.days.flatMap((d) => d.expenses));
       })
@@ -104,7 +121,7 @@ export default function Search() {
       .finally(() => {
         if (seq === requestSeq.current) setLoading(false);
       });
-  }, [from, to, categoryId, dateField, debouncedQuery]);
+  }, [from, to, mainCategoryId, categoryId, dateField, debouncedQuery]);
 
   React.useEffect(() => {
     load();
@@ -224,12 +241,42 @@ export default function Search() {
           </label>
 
           <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
-            {t.search.category}
-            <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full">
-              <option value="">{t.search.allCategories}</option>
-              {categories.map((c) => (
+            {t.search.mainCategory}
+            <Select
+              value={mainCategoryId}
+              onChange={(e) => {
+                const next = e.target.value;
+                setMainCategoryId(next);
+                const sub = categories.find((c) => String(c.id) === categoryId);
+                if (next && sub && String(sub.main_category_id) !== next) setCategoryId("");
+              }}
+              className="w-full"
+            >
+              <option value="">{t.search.allMainCategories}</option>
+              {mainCategories.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </Select>
+          </label>
+
+          <label className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
+            {t.search.subcategory}
+            <Select
+              value={categoryId}
+              onChange={(e) => {
+                const next = e.target.value;
+                setCategoryId(next);
+                const sub = categories.find((c) => String(c.id) === next);
+                if (sub) setMainCategoryId(String(sub.main_category_id));
+              }}
+              className="w-full"
+            >
+              <option value="">{t.search.allSubcategories}</option>
+              {subcategories.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.category} / {c.subcategory}
+                  {mainCategoryId ? c.subcategory : `${c.category} / ${c.subcategory}`}
                   {c.disabled_at != null ? ` ${t.categories.disabledTag}` : ""}
                 </option>
               ))}

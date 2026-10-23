@@ -88,6 +88,7 @@ export default function BudgetVsActual() {
   function seeExpenses(row: BudgetVsActualRow) {
     const { from, to } = monthRangeFor(year, month);
     const params = new URLSearchParams({ from, to, category: String(row.category_id), date_field: "payment" });
+    if (row.main_category_id != null) params.set("main_category", String(row.main_category_id));
     navigate(`/search?${params}`);
   }
 
