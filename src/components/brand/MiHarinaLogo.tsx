@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import christmasBagMark from "@/assets/branding/miharina-xmas-watermark.png";
+import bagMark from "@/assets/branding/miharina-bag-xmas-watermark.png";
 
 interface MiHarinaLogoProps {
   compact?: boolean;
@@ -9,15 +9,7 @@ interface MiHarinaLogoProps {
 export function MiHarinaLogo({ compact = false, className }: MiHarinaLogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap sm:gap-2", className)}>
-      <span className="inline-flex h-9 w-9 shrink-0 sm:h-10 sm:w-10 md:h-11 md:w-11">
-        <img
-          src={christmasBagMark}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-          className="h-full w-full object-contain"
-        />
-      </span>
+      <img src={bagMark} alt="" draggable={false} className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10 md:h-11 md:w-11" />
       {!compact && (
         <span className="text-base font-semibold leading-none tracking-tight sm:text-lg md:text-xl">
           <span className="text-[#2F6B57] dark:text-[#8FBCA8]">Mi</span>
