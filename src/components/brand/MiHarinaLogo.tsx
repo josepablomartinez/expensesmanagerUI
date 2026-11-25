@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import christmasBagMark from "@/assets/branding/miharina-christmas.png";
+import christmasBagMark from "@/assets/branding/miharina-xmas-watermark.png";
 
 interface MiHarinaLogoProps {
   compact?: boolean;
